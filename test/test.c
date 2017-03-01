@@ -3,10 +3,10 @@
 //
 
 #include <stdio.h>
-#include "defs.h"
+#include "table_services.h"
 
 int main(int argc, char** argv) {
-  printf("%x = %d", TABL, TABL);
-  printf("\ntest done");
+  ctApdu_t m;
+  printf("%zu\n", sizeof m);
   return 0;
 }
