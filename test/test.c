@@ -3,14 +3,12 @@
 //
 
 #include <stdio.h>
-#include "table_services.h"
+#include "CT_table_services.h"
 
 int main(int argc, char** argv) {
-  uint8_t p[] = {1,2,4,6,8,10,15};
-  ctApdu_t m = ctFullWriteRequest(0xabcd, sizeof p, p);
-  int i;
-  for(i = 0; i <= 5 + sizeof p; ++i)
-    printf("%x ", m.apdu[i]);
-  printf("\nsize of msg: %zu\n", sizeof m);
+  uint8_t b[1024], d[] = {0xd1,0xd3,0xd6}, o[] = {0,1,1};
+  int i, s = ctWriteResponse(b, CT__RES_ERR);
+  for(i = 0; i < s; ++i) printf("%x\n", b[i]);
+  printf("\nsize of msg: %zu\n", sizeof b);
   return 0;
 }
