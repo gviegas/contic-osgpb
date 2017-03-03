@@ -8,14 +8,26 @@
 #include <stdint.h>
 #include "CT_defs.h"
 
-// OSGP authentication for request/response
+// OSGP authentication
 //
 int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response, 
-  size_t req_count, size_t res_count, ctTarget_t* target);
+  uint8_t req_count, uint8_t res_count, ctTarget_t* target);
 
-// OSGP authentication for request
+// OSGP validation
 //
-int ctAuthenticate_req(uint8_t* buffer, uint8_t* request, size_t req_count,
+int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response, 
+  uint8_t req_count, uint8_t res_count, ctTarget_t* target);
+
+// OSGP encryption
+//
+// int ctEncrypt(uint8_t* buffer, ...);
+
+// // OSGP decryption
+// //
+// int ctDecrypt(uint8_t* buffer, ...);{
+
+// Digest algorithm used for authentication
+void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count, 
   ctTarget_t* target);
 
 #endif // CT_SECURITY_H
