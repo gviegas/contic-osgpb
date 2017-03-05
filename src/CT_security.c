@@ -12,21 +12,15 @@ int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response,
   d[cur++] = target->node;
   memcpy(d+cur, request, req_count);
   cur += req_count;
-  memcpy(d+cur, target->sequence, CT__LEN_SEQN);
-  cur += CT__LEN_SEQN;
+  // memcpy(d+cur, target->sequence, CT__LEN_SEQN);
+  // cur += CT__LEN_SEQN;
   if(response) {
     memcpy(d+cur, response, res_count);
     cur += res_count;
     d[cur++] = res_count;
   }
-  
-  // DOING
-  
-  // memcpy(buffer, d, cur); // test
-
   ctDigest(buffer, d, cur, target);
-  
-  return cur;
+  return CT__LEN_DIGEST;
 }
 
 int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response, 
@@ -36,12 +30,15 @@ int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response,
   return 0;
 }
 
+// NOTE: needs fix
 void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count, 
   ctTarget_t* target)
 {
 
-  printf("\ndigesting... "); int q; for(q = 0; q < data_count; ++q) printf("%x ", data[q]); printf("\n"); // test
+  printf("\ndigesting... "); int q; for(q = 0; q < data_count; ++q) printf("%x ", data[q]); // test
+  printf("\noma key: "); for(q = 0; q < CT__LEN_OMAK; ++q) printf("%x ", target->s_omak[q]); printf("\n"); // test
 
+  memset(buffer, 0, 8);
   int k, i = 0;
   uint8_t a = 0, b = 0, m = 0, n = 0;
   do {
@@ -67,5 +64,6 @@ void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count,
       a++;
     } while(a < 18);
     a = 0;
+    printf("\n:)"); // test
   } while(data_count > 0);
 }

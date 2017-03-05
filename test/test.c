@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "CT_table_services.h"
 #include "CT_security.h"
+#include "CT_apdu.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -31,22 +32,63 @@ void securityTest() {
   printf("\n");
 }
 
+void apduTest() {
+  // req
+  ctFRRequest_t frreq;
+  frreq.table_id = 0xffff;
+
+  ctParam_t param;
+  param.service = REQUEST_FULL_READ;
+  param.fr_request = &frreq;
+
+  ctApdu_t apdu;
+
+  int c = ctCreateApdu(&apdu, &param, &t);
+
+  int i;
+  printf("\napdu req: ");
+  for(i = 0; i < c; ++i) printf("%x ", apdu.apdu[i]);
+  printf("\n");
+  
+  //////////////////////////////
+  // res
+  ctRResponse_t rres;
+  uint8_t d[] = {2,4,6,8,0x0a,0x0c};
+  rres.response = 0;
+  rres.count = sizeof d;
+  memcpy(rres.data, d, rres.count);
+  rres.request = apdu.apdu;
+  rres.req_count = abs(c - CT__LEN_DIGEST);
+
+  ctParam_t param1;
+  param1.service = RESPONSE_FULL_READ;
+  param1.r_response = &rres;
+
+  ctApdu_t apdu1;
+
+  int c1 = ctCreateApdu(&apdu1, &param1, &t);
+
+  printf("\napdu res: ");
+  for(i = 0; i < c1; ++i) printf("%x ", apdu1.apdu[i]);
+  printf("\n");
+}
+
 int main(int argc, char** argv) {
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
-  uint8_t key[] = {0xdf,0xdf,0xdf,0xdf,0xdf,0xdf,0xdf,0xdf,0xdf,0xdf,0xdf,0xdf};
+  uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
   memcpy(t.sequence, seq, sizeof seq);
   memcpy(t.s_omak, key, sizeof key);
   
-  int i;
-  printf("\nsubnet: %x", t.subnet);
-  printf("\nnode: %x", t.node);
-  printf("\nseq: ");
-  for(i = 0; i < CT__LEN_SEQN; ++i) printf("%x ", t.sequence[i]);
-  printf("\nkey: ");
-  for(i = 0; i < CT__LEN_OMAK; ++i) printf("%x ", t.s_omak[i]);
-  printf("\n");
+  // int i;
+  // printf("\nsubnet: %x", t.subnet);
+  // printf("\nnode: %x", t.node);
+  // printf("\nseq: ");
+  // for(i = 0; i < CT__LEN_SEQN; ++i) printf("%x ", t.sequence[i]);
+  // printf("\nkey: ");
+  // for(i = 0; i < CT__LEN_OMAK; ++i) printf("%x ", t.s_omak[i]);
+  // printf("\n");
   
-  securityTest();
+  apduTest();
   
   return 0;
 }
