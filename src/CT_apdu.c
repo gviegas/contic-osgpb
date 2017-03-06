@@ -59,7 +59,97 @@ int ctCreateApdu(ctApdu_t* apdu, ctParam_t* param, ctTarget_t* target) {
   return c;
 }
 
-int ctProcessApdu(ctApdu_t* apdu, ctTarget_t* target) {
-  // to do
-  return 0;
+int ctProcessRequest(ctApdu_t* apdu, ctTarget_t* target) {
+  int r;
+  uint16_t c, a;
+  switch(apdu->apdu[0]) {
+    case CT__TYPE_CODE:
+      switch(apdu->apdu[1]) {
+        case CT__CMD_FULLREAD:
+          c = 1 + 1 + 2 + CT__LEN_SEQN;
+        break;
+        case CT__CMD_PARTREAD:
+          c = 1 + 1 + 2 + 3 + 2 + CT__LEN_SEQN;
+        break;
+        case CT__CMD_FULLWRITE:
+          a = ((uint16_t)apdu->apdu[4] << 8) | 
+            ((uint16_t)apdu->apdu[5] & 0x00ff);
+          c = 1 + 1 + 2 + 2 + a + CT__LEN_SEQN;
+        break;
+        case CT__CMD_PARTWRITE:
+          a = ((uint16_t)apdu->apdu[7] << 8) | 
+            ((uint16_t)apdu->apdu[8] & 0x00ff);
+          c = 1 + 1 + 2 + 3 + 2 + a + CT__LEN_SEQN;
+        break;
+        default:
+          fprintf(stderr, "\nInvalid command %x\n", apdu->apdu[1]);
+          return CT__FAILURE;
+      }
+    break;
+    default:
+      fprintf(stderr, "\nInvalid apdu type code %x\n", apdu->apdu[0]);
+      return CT__FAILURE;
+  }
+  return ctValidate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target); // to do: should continue after validation...
+}
+
+int ctProcessResponse(ctApdu_t* apdu, ctApdu_t* req_apdu, ctTarget_t* target) {
+  int r;
+  uint16_t req_c, res_c, a;
+  switch(apdu->apdu[0]) {
+    case CT__TYPE_CODE:
+      switch(apdu->apdu[1]) {
+        case CT__RES_OK:
+        case CT__RES_ERR:
+        case CT__RES_BSY:
+        case CT__RES_DIG:
+        case CT__RES_IAR:
+        case CT__RES_ICA:
+        case CT__RES_INC:
+        case CT__RES_ISC:
+        case CT__RES_ISS:
+        case CT__RES_ONP:
+        case CT__RES_SEQ:
+        case CT__RES_SNS:
+          switch(req_apdu->apdu[1]) {
+            case CT__CMD_FULLREAD:
+              req_c = 1 + 1 + 2 + CT__LEN_SEQN;
+              a = ((uint16_t)apdu->apdu[2] << 8) | 
+                ((uint16_t)apdu->apdu[3] & 0x00ff);
+              res_c = 1 + 1 + 2 + a;
+            break;
+            case CT__CMD_PARTREAD:
+              req_c = 1 + 1 + 2 + 3 + 2 + CT__LEN_SEQN;
+              a = ((uint16_t)apdu->apdu[2] << 8) | 
+                ((uint16_t)apdu->apdu[3] & 0x00ff);
+              res_c = 1 + 1 + 2 + a;
+            break;
+            case CT__CMD_FULLWRITE:
+              a = ((uint16_t)req_apdu->apdu[4] << 8) | 
+                ((uint16_t)req_apdu->apdu[5] & 0x00ff);
+              req_c = 1 + 1 + 2 + 2 + a + CT__LEN_SEQN;
+              res_c = 1 + 1;
+            break;
+            case CT__CMD_PARTWRITE:
+              a = ((uint16_t)req_apdu->apdu[7] << 8) | 
+                ((uint16_t)req_apdu->apdu[8] & 0x00ff);
+              req_c = 1 + 1 + 2 + 3 + 2 + a + CT__LEN_SEQN;
+              res_c = 1 + 1;
+            break;
+            default:
+              fprintf(stderr, "\nInvalid request\n");
+              return CT__FAILURE;
+          }
+        break;
+        default:
+          fprintf(stderr, "\nInvalid response %x\n", apdu->apdu[1]);
+          return CT__FAILURE;
+      }
+    break;
+    default:
+      fprintf(stderr, "\nInvalid apdu type code %x\n", apdu->apdu[0]);
+      return CT__FAILURE;
+  }
+  return ctValidate(apdu->apdu+res_c, req_apdu->apdu, apdu->apdu, req_c, res_c,
+    target); // to do: should continue after validation...
 }

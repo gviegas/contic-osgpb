@@ -5,6 +5,9 @@
 #ifndef CT_DEFS_H
 #define CT_DEFS_H
 
+// General definitions
+#define CT__SUCCESS 0
+#define CT__FAILURE 1
 // EN14908-1 type code
 #define CT__TYPE_CODE 0
 // Request command codes

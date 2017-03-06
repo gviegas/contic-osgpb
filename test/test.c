@@ -71,6 +71,16 @@ void apduTest() {
   printf("\napdu res: ");
   for(i = 0; i < c1; ++i) printf("%x ", apdu1.apdu[i]);
   printf("\n");
+
+  //////////////////////////////
+  // validate req
+  // apdu.apdu[3] = 0xdd;
+  printf("\nprocess req: %d\n", ctProcessRequest(&apdu, &t));
+
+  //////////////////////////////
+  // validate req
+  // apdu1.apdu[6] = 0xff;
+  printf("\nprocess res: %d\n", ctProcessResponse(&apdu1, &apdu, &t));
 }
 
 int main(int argc, char** argv) {

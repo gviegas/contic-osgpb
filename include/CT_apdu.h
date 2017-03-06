@@ -85,8 +85,12 @@ typedef struct {
 //
 int ctCreateApdu(ctApdu_t* apdu, ctParam_t* param, ctTarget_t* target);
 
-// Process an APDU
+// Process an APDU Request
 //
-int ctProcessApdu(ctApdu_t* apdu, ctTarget_t* target);
+int ctProcessRequest(ctApdu_t* apdu, ctTarget_t* target);
+
+// Process an APDU Response
+//
+int ctProcessResponse(ctApdu_t* apdu, ctApdu_t* req_apdu, ctTarget_t* target);
 
 #endif // CT_APDU_H
