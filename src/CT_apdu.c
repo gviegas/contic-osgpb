@@ -7,6 +7,7 @@
 #include "CT_apdu.h"
 #include "CT_table_services.h"
 #include "CT_security.h"
+#include "CT_table_access.h"
 
 int ctCreateApdu(ctApdu_t* apdu, ctParam_t* param, ctTarget_t* target) {
   int c = 1;
@@ -55,31 +56,37 @@ int ctCreateApdu(ctApdu_t* apdu, ctParam_t* param, ctTarget_t* target) {
     break;
     default:
       fprintf(stderr, "\nInvalid service %d\n", param->service);
+      return CT__FAILURE;
   }
   return c;
 }
 
-int ctProcessRequest(ctApdu_t* apdu, ctTarget_t* target) {
+int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
   int r;
   uint16_t c, a;
+  ctParam_t p;
   switch(apdu->apdu[0]) {
     case CT__TYPE_CODE:
       switch(apdu->apdu[1]) {
         case CT__CMD_FULLREAD:
           c = 1 + 1 + 2 + CT__LEN_SEQN;
+          p.service = RESPONSE_FULL_READ;
         break;
         case CT__CMD_PARTREAD:
           c = 1 + 1 + 2 + 3 + 2 + CT__LEN_SEQN;
+          p.service = RESPONSE_PART_READ;
         break;
         case CT__CMD_FULLWRITE:
           a = ((uint16_t)apdu->apdu[4] << 8) | 
             ((uint16_t)apdu->apdu[5] & 0x00ff);
           c = 1 + 1 + 2 + 2 + a + CT__LEN_SEQN;
+          p.service = RESPONSE_FULL_WRITE;
         break;
         case CT__CMD_PARTWRITE:
           a = ((uint16_t)apdu->apdu[7] << 8) | 
             ((uint16_t)apdu->apdu[8] & 0x00ff);
           c = 1 + 1 + 2 + 3 + 2 + a + CT__LEN_SEQN;
+          p.service = RESPONSE_PART_WRITE;
         break;
         default:
           fprintf(stderr, "\nInvalid command %x\n", apdu->apdu[1]);
@@ -90,7 +97,41 @@ int ctProcessRequest(ctApdu_t* apdu, ctTarget_t* target) {
       fprintf(stderr, "\nInvalid apdu type code %x\n", apdu->apdu[0]);
       return CT__FAILURE;
   }
-  return ctValidate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target); // to do: should continue after validation...
+  // return ctValidate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target); // to do: should continue after validation...
+  
+  r = ctValidate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target);
+  if(r == CT__FAILURE) {
+    fprintf(stderr, "Validation failed");
+    return r;
+  }
+  // doing
+  switch(p.service) {
+    case RESPONSE_FULL_READ:
+    case RESPONSE_PART_READ:
+      ctRResponse_t rres;
+      rres.request = apdu;
+      rres.req_count = c; // no digest
+      p.r_response = &rres;
+      r = ctTableOp(&p, target);
+      if(r == CT__FAILURE)
+        fprintf(stderr, "Table operation failed");
+      else
+        r = ctCreateApdu(res_apdu, &p, target);
+    break;
+    case RESPONSE_FULL_WRITE:
+    case RESPONSE_PART_WRITE:
+      ctWResponse_t wres;
+      wres.request = apdu;
+      wres.req_count = c; // no digest
+      p.w_response = &wres;
+      r = ctTableOp(&p, target);
+      if(r == CT__FAILURE)
+        fprintf(stderr, "Table operation failed");
+      else
+        r = ctCreateApdu(res_apdu, &p, target);
+    break;
+  }
+  return r;
 }
 
 int ctProcessResponse(ctApdu_t* apdu, ctApdu_t* req_apdu, ctTarget_t* target) {

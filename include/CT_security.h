@@ -5,7 +5,6 @@
 #ifndef CT_SECURITY_H
 #define CT_SECURITY_H
 
-#include <stdint.h>
 #include "CT_defs.h"
 
 // OSGP authentication

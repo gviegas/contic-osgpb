@@ -5,7 +5,6 @@
 #ifndef CT_APDU_H
 #define CT_APDU_H
 
-#include <stdint.h>
 #include "CT_defs.h"
 
 // Available services

@@ -5,6 +5,8 @@
 #ifndef CT_DEFS_H
 #define CT_DEFS_H
 
+#include <stdint.h>
+
 // General definitions
 #define CT__SUCCESS 0
 #define CT__FAILURE 1
