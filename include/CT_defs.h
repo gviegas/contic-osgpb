@@ -2,6 +2,14 @@
 // Created by Gustavo Viegas on 2017/02
 //
 
+#ifndef CT_DEFS_H
+#define CT_DEFS_H
+
+#include <stdint.h>
+
+// General definitions
+#define CT__SUCCESS 0
+#define CT__FAILURE 1
 // EN14908-1 type code
 #define CT__TYPE_CODE 0
 // Request command codes
@@ -23,6 +31,19 @@
 #define CT__RES_INC 0x1E
 #define CT__RES_ICA 0x1F
 // Buffer size
-#define CT__LEN_MAX       114
+#define CT__LEN_MAXAPDU   114
 #define CT__LEN_PARTREAD  84
 #define CT__LEN_PARTWRITE 75
+#define CT__LEN_SEQN      4
+#define CT__LEN_DIGEST    8
+#define CT__LEN_OMAK      12
+
+// OSGP target/device/slave info
+typedef struct {
+  uint8_t subnet;
+  uint8_t node;
+  uint8_t sequence[CT__LEN_SEQN];
+  uint8_t s_omak[CT__LEN_OMAK];
+} ctTarget_t;
+
+#endif // CT_DEFS_H
