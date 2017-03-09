@@ -97,36 +97,35 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
       fprintf(stderr, "\nInvalid apdu type code %x\n", apdu->apdu[0]);
       return CT__FAILURE;
   }
-  // return ctValidate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target); // to do: should continue after validation...
   
   r = ctValidate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target);
-  if(r == CT__FAILURE) {
-    fprintf(stderr, "Validation failed");
+  if(r != CT__SUCCESS) {
+    fprintf(stderr, "\nValidation failed\n");
     return r;
   }
-  // doing
+  // needs testing
   switch(p.service) {
     case RESPONSE_FULL_READ:
     case RESPONSE_PART_READ:
       ctRResponse_t rres;
-      rres.request = apdu;
+      rres.request = apdu->apdu;
       rres.req_count = c; // no digest
       p.r_response = &rres;
-      r = ctTableOp(&p, target);
+      r = ctTableOp(&p, target); // to do
       if(r == CT__FAILURE)
-        fprintf(stderr, "Table operation failed");
+        fprintf(stderr, "\nTable operation failed\n");
       else
         r = ctCreateApdu(res_apdu, &p, target);
     break;
     case RESPONSE_FULL_WRITE:
     case RESPONSE_PART_WRITE:
       ctWResponse_t wres;
-      wres.request = apdu;
+      wres.request = apdu->apdu;
       wres.req_count = c; // no digest
       p.w_response = &wres;
       r = ctTableOp(&p, target);
       if(r == CT__FAILURE)
-        fprintf(stderr, "Table operation failed");
+        fprintf(stderr, "\nTable operation failed\n");
       else
         r = ctCreateApdu(res_apdu, &p, target);
     break;
@@ -134,7 +133,9 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
   return r;
 }
 
-int ctProcessResponse(ctApdu_t* apdu, ctApdu_t* req_apdu, ctTarget_t* target) {
+int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
+  ctTarget_t* target)
+{
   int r;
   uint16_t req_c, res_c, a;
   switch(apdu->apdu[0]) {
@@ -158,24 +159,28 @@ int ctProcessResponse(ctApdu_t* apdu, ctApdu_t* req_apdu, ctTarget_t* target) {
               a = ((uint16_t)apdu->apdu[2] << 8) | 
                 ((uint16_t)apdu->apdu[3] & 0x00ff);
               res_c = 1 + 1 + 2 + a;
+              buffer->service = RESPONSE_FULL_READ;
             break;
             case CT__CMD_PARTREAD:
               req_c = 1 + 1 + 2 + 3 + 2 + CT__LEN_SEQN;
               a = ((uint16_t)apdu->apdu[2] << 8) | 
                 ((uint16_t)apdu->apdu[3] & 0x00ff);
               res_c = 1 + 1 + 2 + a;
+              buffer->service = RESPONSE_PART_READ;
             break;
             case CT__CMD_FULLWRITE:
               a = ((uint16_t)req_apdu->apdu[4] << 8) | 
                 ((uint16_t)req_apdu->apdu[5] & 0x00ff);
               req_c = 1 + 1 + 2 + 2 + a + CT__LEN_SEQN;
               res_c = 1 + 1;
+              buffer->service = RESPONSE_FULL_WRITE;
             break;
             case CT__CMD_PARTWRITE:
               a = ((uint16_t)req_apdu->apdu[7] << 8) | 
                 ((uint16_t)req_apdu->apdu[8] & 0x00ff);
               req_c = 1 + 1 + 2 + 3 + 2 + a + CT__LEN_SEQN;
               res_c = 1 + 1;
+              buffer->service = RESPONSE_PART_WRITE;
             break;
             default:
               fprintf(stderr, "\nInvalid request\n");
@@ -191,6 +196,27 @@ int ctProcessResponse(ctApdu_t* apdu, ctApdu_t* req_apdu, ctTarget_t* target) {
       fprintf(stderr, "\nInvalid apdu type code %x\n", apdu->apdu[0]);
       return CT__FAILURE;
   }
-  return ctValidate(apdu->apdu+res_c, req_apdu->apdu, apdu->apdu, req_c, res_c,
-    target); // to do: should continue after validation...
+
+  r = ctValidate(apdu->apdu+res_c, req_apdu->apdu, apdu->apdu, req_c, res_c, 
+    target);
+  if(r == CT__FAILURE) {
+    fprintf(stderr, "\nValidation failed\n");
+    return r;
+  }
+  // needs testing
+  buffer->response = apdu->apdu[1];
+  switch(buffer->service) {
+    case RESPONSE_FULL_READ:
+    case RESPONSE_PART_READ:
+      buffer->read_count = a;
+      // LP: instead of returning raw bytes, create a function on CT_table_access 
+      // to format it (will require a new structured type per table...)
+      memcpy(buffer->read_data, apdu->apdu+4, a);
+    break;
+    case RESPONSE_FULL_WRITE:
+    case RESPONSE_PART_WRITE:
+      buffer->read_count = 0;
+    break;
+  }
+  return CT__SUCCESS;
 }

@@ -40,7 +40,7 @@ int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response,
   int i;
   for(i = 0; i < 8; ++i) {
     if(digest[i] != b[i]) return CT__FAILURE;
-    printf("\ndig[%d]: %x ; buf[%d]: %x", i, digest[i], i, b[i]); // debug
+    // printf("\ndig[%d]: %x ; buf[%d]: %x", i, digest[i], i, b[i]); // debug
   }
   return CT__SUCCESS;
 }
@@ -50,9 +50,8 @@ void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count,
   ctTarget_t* target)
 {
 
-  printf("\ndigesting... "); int q; for(q = 0; q < data_count; ++q) printf("%x ", data[q]); // test
-  printf("\noma key: "); for(q = 0; q < CT__LEN_OMAK; ++q) printf("%x ", target->s_omak[q]); printf("\n"); // test
-
+  printf("\ndigesting... "); int q; for(q = 0; q < data_count; ++q) printf("%x ", data[q]); printf("\n"); // test
+  
   memset(buffer, 0, 8);
   int k, i = 0;
   uint8_t a = 0, b = 0, m = 0, n = 0;

@@ -53,7 +53,7 @@ void apduTest() {
   //////////////////////////////
   // res
   ctRResponse_t rres;
-  uint8_t d[] = {2,4,6,8,0x0a,0x0c};
+  uint8_t d[] = {2,4,6,8,0x0a,0x0c,0x0e};
   rres.response = 0;
   rres.count = sizeof d;
   memcpy(rres.data, d, rres.count);
@@ -74,13 +74,33 @@ void apduTest() {
 
   //////////////////////////////
   // validate req
+  ctApdu_t apdu2;
+
   // apdu.apdu[3] = 0xdd;
-  printf("\nprocess req: %d\n", ctProcessRequest(&apdu, &t));
+  int c2 = ctProcessRequest(&apdu2, &apdu, &t);
+
+  if(c2 != CT__FAILURE) {
+    printf("\nprocess req: %d\n", c2);
+    for(i = 0; i < c2; ++i) printf("%x ", apdu2.apdu[i]);
+    printf("\n");
+  } else printf("\nrequest failed\n");
 
   //////////////////////////////
   // validate req
+  ctResponse_t b;
+
+  int v = ctProcessResponse(&b, &apdu1, &apdu, &t);
+
   // apdu1.apdu[6] = 0xff;
-  printf("\nprocess res: %d\n", ctProcessResponse(&apdu1, &apdu, &t));
+  printf("\nprocess res: %d\n", v);
+  if(v == CT__SUCCESS) {
+    printf("service: %x \n", b.service);
+    printf("response: %x \n", b.response);
+    printf("read_count: %x \n", b.read_count);
+    printf("read_data: ");
+    for(i = 0; i < b.read_count; ++i) printf("%x ", b.read_data[i]);
+  }
+  printf("\n");
 }
 
 int main(int argc, char** argv) {

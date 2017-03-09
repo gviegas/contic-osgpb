@@ -80,16 +80,25 @@ typedef struct {
   uint8_t apdu[CT__LEN_MAXAPDU];
 } ctApdu_t;
 
+// Processed Response
+typedef struct {
+  int service;
+  uint8_t response;
+  uint16_t read_count;
+  uint8_t read_data[CT__LEN_MAXAPDU - CT__LEN_DIGEST - 4];
+} ctResponse_t;
+
 // Creates a new APDU
 //
 int ctCreateApdu(ctApdu_t* apdu, ctParam_t* param, ctTarget_t* target);
 
 // Process an APDU Request
 //
-int ctProcessRequest(ctApdu_t* apdu, ctTarget_t* target);
+int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target);
 
 // Process an APDU Response
 //
-int ctProcessResponse(ctApdu_t* apdu, ctApdu_t* req_apdu, ctTarget_t* target);
+int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
+  ctTarget_t* target);
 
 #endif // CT_APDU_H
