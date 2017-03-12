@@ -6,6 +6,8 @@
 #include "CT_table_services.h"
 #include "CT_security.h"
 #include "CT_apdu.h"
+#include <string.h>
+#include <stdlib.h>
 
 ctTarget_t t = {0x02, 0x03};
 

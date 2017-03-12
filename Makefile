@@ -13,4 +13,6 @@ FLAGS = -I$(INC_DIR)
 OUT = bin/alpha
 
 all: $(OBJS)
-		$(CC) $(OBJS) $(FLAGS) -o $(OUT)
+		$(CC) -Wall $(OBJS) $(FLAGS) $(TEST) -o $(OUT)
+clean: 
+	rm -f bin/*

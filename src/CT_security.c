@@ -3,6 +3,8 @@
 //
 
 #include "CT_security.h"
+#include <string.h>
+#include <stdio.h>
 
 int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response, 
   uint8_t req_count, uint8_t res_count, ctTarget_t* target)

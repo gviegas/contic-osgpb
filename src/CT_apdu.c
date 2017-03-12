@@ -107,7 +107,9 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
   switch(p.service) {
     case RESPONSE_FULL_READ:
     case RESPONSE_PART_READ:
+      ;
       ctRResponse_t rres;
+      
       rres.request = apdu->apdu;
       rres.req_count = c; // no digest
       p.r_response = &rres;
@@ -119,6 +121,7 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
     break;
     case RESPONSE_FULL_WRITE:
     case RESPONSE_PART_WRITE:
+      ;
       ctWResponse_t wres;
       wres.request = apdu->apdu;
       wres.req_count = c; // no digest

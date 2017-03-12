@@ -3,6 +3,7 @@
 //
 
 #include "CT_table_access.h"
+#include <string.h>
 
 int ctTableOp(ctParam_t* param, ctTarget_t* target) {
   // to do
