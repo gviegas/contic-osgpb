@@ -8,6 +8,7 @@
 #include "CT_defs.h"
 
 // Available services
+//
 enum ctService_e {
   REQUEST_FULL_READ,
   REQUEST_PART_READ,
@@ -20,11 +21,13 @@ enum ctService_e {
 };
 
 // Full Table Read Request parameters
+//
 typedef struct {
   uint16_t table_id;
 } ctFRRequest_t;
 
 // Partial Table Read Request parameters
+//
 typedef struct {
   uint16_t table_id;
   uint8_t offset[3];
@@ -32,6 +35,7 @@ typedef struct {
 } ctPRRequest_t;
 
 // Full Table Write Request parameters
+//
 typedef struct {
   uint16_t table_id;
   uint16_t count;
@@ -39,6 +43,7 @@ typedef struct {
 } ctFWRequest_t;
 
 // Partial Table Write Request parameters
+//
 typedef struct {
   uint16_t table_id;
   uint8_t offset[3];
@@ -47,6 +52,7 @@ typedef struct {
 } ctPWRequest_t;
 
 // Table Read Response parameters
+//
 typedef struct {
   uint8_t response;
   uint16_t count;
@@ -56,6 +62,7 @@ typedef struct {
 } ctRResponse_t;
 
 // Table Write Response parameters
+//
 typedef struct {
   uint8_t response;
   uint8_t* request;
@@ -63,6 +70,7 @@ typedef struct {
 } ctWResponse_t;
 
 // Creation parameters
+//
 typedef struct {
   int service;
   union {
@@ -76,11 +84,13 @@ typedef struct {
 } ctParam_t;
 
 // Application Protocol Data Unit
+//
 typedef struct {
   uint8_t apdu[CT__LEN_MAXAPDU];
 } ctApdu_t;
 
 // Processed Response
+//
 typedef struct {
   int service;
   uint8_t response;

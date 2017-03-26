@@ -8,8 +8,12 @@
 #include "CT_defs.h"
 #include "CT_apdu.h"
 
-// Table Operation
+// Table Read Operation
 //
-int ctTableOp(ctParam_t* param, ctTarget_t* target);
+int ctTableRead(ctParam_t* param, ctTarget_t* target);
+
+// Table Write Operation
+//
+int ctTableWrite(ctParam_t* param, ctTarget_t* target);
 
 #endif // CT_TABLE_ACCESS_H

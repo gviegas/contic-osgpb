@@ -6,13 +6,15 @@ SRC_DIR = src
 INC_DIR = include
 TEST = test/test.c
 
-OBJS = $(SRC_DIR)/*
+OBJS = $(SRC_DIR)/* $(TEST)
 
 CC = gcc
+OPTS = -Wall
 FLAGS = -I$(INC_DIR)
-OUT = bin/alpha
+OUT = -o bin/alpha
 
 all: $(OBJS)
-		$(CC) -Wall $(OBJS) $(FLAGS) $(TEST) -o $(OUT)
+		$(CC) $(OPTS) $(OBJS) $(FLAGS) $(OUT)
+
 clean: 
-	rm -f bin/*
+		rm -f bin/*
