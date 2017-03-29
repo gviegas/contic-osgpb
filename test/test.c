@@ -9,6 +9,7 @@
 #include "CT_security.h"
 #include "CT_apdu.h"
 #include "CT_table_access.h"
+#include "BT/CT_bt00.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -134,13 +135,23 @@ void apduTest() {
   // printf("\n");
 }
 
+void tableTest() {
+  ctBT00_t bt00;
+  bt00.data_order = 0;
+  bt00.char_format = 0b011;
+  printf("bt00: %d\n", bt00.data_order);
+  printf("bt00: %d\n", bt00.char_format);
+  printf("bt00: %lu\n", sizeof bt00);
+}
+
 int main(int argc, char** argv) {
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
   uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
   memcpy(t.sequence, seq, sizeof seq);
   memcpy(t.s_omak, key, sizeof key);
   
-  apduTest();
+  // apduTest();
+  tableTest();
 
   return 0;
 }

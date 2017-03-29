@@ -6,6 +6,11 @@
 #include <stdio.h>
 #include "CT_file.h"
 
+// typedef struct {
+//   uint16_t table_id;
+//   long offset;
+// } ctTableOffset_t;
+
 int ctRead(uint16_t table_id, void* buffer, size_t count, size_t offset) {
   // test
   // printf("\ntid: %d\n", table_id);
