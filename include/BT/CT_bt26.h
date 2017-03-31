@@ -7,11 +7,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "CT_date.h"
 
-// STime and Date type
-typedef struct {} ctStimeDate_t; // to do & to move
-
-// Self Read Data Record
+// Self Read Data record
 //
 typedef struct {
   uint16_t bidn;
