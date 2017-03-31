@@ -9,7 +9,7 @@
 #include "CT_security.h"
 #include "CT_apdu.h"
 #include "CT_table_access.h"
-#include "BT/CT_bt00.h"
+#include "CT_tables.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -137,11 +137,57 @@ void apduTest() {
 
 void tableTest() {
   ctBT00_t bt00;
-  bt00.data_order = 0;
-  bt00.char_format = 0b011;
-  printf("bt00: %d\n", bt00.data_order);
-  printf("bt00: %d\n", bt00.char_format);
+  // bt00.data_order = 0;
+  // bt00.char_format = 0b011;
+  // printf("bt00: %d\n", bt00.data_order);
+  // printf("bt00: %d\n", bt00.char_format);
   printf("bt00: %lu\n", sizeof bt00);
+  ctBT05_t bt05;
+  printf("bt05: %lu\n", sizeof bt05);
+  ctBT06_t bt06;
+  printf("bt06: %lu\n", sizeof bt06);
+  ctBT07_t bt07;
+  printf("bt07: %lu\n", sizeof bt07);
+  ctBT08_t bt08;
+  printf("bt08: %lu\n", sizeof bt08);
+  ctBT10_t bt10;
+  printf("bt10: %lu\n", sizeof bt10);
+  ctBT12_t bt12;
+  printf("bt12: %lu\n", sizeof bt12);
+  ctBT13_t bt13;
+  printf("bt13: %lu\n", sizeof bt13);
+  ctBT15_t bt15;
+  printf("bt15: %lu\n", sizeof bt15);
+  ctBT16_t bt16;
+  printf("bt16: %lu\n", sizeof bt16);
+  ctBT20_t bt20;
+  printf("bt20: %lu\n", sizeof bt20);
+  ctBT21_t bt21;
+  printf("bt21: %lu\n", sizeof bt21);
+  ctBT22_t bt22;
+  printf("bt22: %lu\n", sizeof bt22);
+  ctBT23_t bt23;
+  printf("bt23: %lu\n", sizeof bt23);
+  ctBT26_t bt26;
+  printf("bt26: %lu\n", sizeof bt26);
+  ctBT50_t bt50;
+  printf("bt50: %lu\n", sizeof bt50);
+  ctBT52_t bt52;
+  printf("bt52: %lu\n", sizeof bt52);
+  ctBT54_t bt54;
+  printf("bt54: %lu\n", sizeof bt54);
+  ctBT55_t bt55;
+  printf("bt55: %lu\n", sizeof bt55);
+  ctBT60_t bt60;
+  printf("bt60: %lu\n", sizeof bt60);
+  ctBT61_t bt61;
+  printf("bt61: %lu\n", sizeof bt61);
+  ctBT62_t bt62;
+  printf("bt62: %lu\n", sizeof bt62);
+  ctBT63_t bt63;
+  printf("bt63: %lu\n", sizeof bt63);
+  ctBT64_t bt64;
+  printf("bt64: %lu\n", sizeof bt64);
 }
 
 int main(int argc, char** argv) {

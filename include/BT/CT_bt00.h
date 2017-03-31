@@ -1,5 +1,5 @@
 //
-// Created by Gustavo Viegas on 2017/3
+// Created by Gustavo Viegas on 2017/03
 //
 
 #ifndef CT_BT00_H
@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// BT00 - General Configuration
+//
 typedef struct {
   unsigned data_order : 1;
   unsigned char_format : 3;
@@ -48,7 +50,7 @@ typedef struct {
   bool bt14_used : 1;
   bool bt15_used : 1;
   bool bt16_used : 1;
-  bool : 1, : 1, : 1;
+  unsigned : 3;
   bool bt20_used : 1;
   bool bt21_used : 1;
   bool bt22_used : 1;
@@ -64,14 +66,14 @@ typedef struct {
   bool bt32_used : 1;
   bool bt33_used : 1;
   bool bt34_used : 1;
-  bool : 1, : 1, : 1, : 1, : 1;
+  unsigned : 5;
   bool bt40_used : 1;
   bool bt41_used : 1;
   bool bt42_used : 1;
   bool bt43_used : 1;
   bool bt44_used : 1;
   bool bt45_used : 1;
-  bool : 1, : 1, : 1, : 1;
+  unsigned : 4;
   bool bt50_used : 1;
   bool bt51_used : 1;
   bool bt52_used : 1;
@@ -79,7 +81,7 @@ typedef struct {
   bool bt54_used : 1;
   bool bt55_used : 1;
   bool bt56_used : 1;
-  bool : 1, : 1, : 1;
+  unsigned : 3;
   bool bt60_used : 1;
   bool bt61_used : 1;
   bool bt62_used : 1;
@@ -88,7 +90,7 @@ typedef struct {
   bool bt65_used : 1;
   bool bt66_used : 1;
   bool bt67_used : 1;
-  bool : 1, : 1;
+  unsigned : 2;
   bool bt70_used : 1;
   bool bt71_used : 1;
   bool bt72_used : 1;
@@ -96,7 +98,7 @@ typedef struct {
   bool bt74_used : 1;
   bool bt75_used : 1;
   bool bt76_used : 1;
-  bool : 1, : 1, : 1, : 1;
+  unsigned : 4;
   // Set of extended tables used
   bool et00_used : 1;
   bool et01_used : 1;
@@ -170,7 +172,7 @@ typedef struct {
   bool et69_used : 1;
   bool et70_used : 1;
   bool et71_used : 1;
-  bool : 1, : 1, : 1, : 1, : 1, : 1, : 1, : 1;
+  unsigned : 8;
   // Set of basic procedures used
   bool bp00_used : 1;
   bool bp01_used : 1;
@@ -237,7 +239,7 @@ typedef struct {
   bool ep45_used : 1;
   bool ep46_used : 1;
   bool ep47_used : 1;
-  bool : 1, : 1, : 1, : 1, : 1, : 1, : 1, : 1;
+  unsigned : 8;
   // Set of basic tables write privileges
   bool bt00_write : 1;
   bool bt01_write : 1;
@@ -256,7 +258,7 @@ typedef struct {
   bool bt14_write : 1;
   bool bt15_write : 1;
   bool bt16_write : 1;
-  bool : 1, : 1, : 1;
+  unsigned : 3;
   bool bt20_write : 1;
   bool bt21_write : 1;
   bool bt22_write : 1;
@@ -272,14 +274,14 @@ typedef struct {
   bool bt32_write : 1;
   bool bt33_write : 1;
   bool bt34_write : 1;
-  bool : 1, : 1, : 1, : 1, : 1;
+  unsigned : 5;
   bool bt40_write : 1;
   bool bt41_write : 1;
   bool bt42_write : 1;
   bool bt43_write : 1;
   bool bt44_write : 1;
   bool bt45_write : 1;
-  bool : 1, : 1, : 1, : 1;
+  unsigned : 4;
   bool bt50_write : 1;
   bool bt51_write : 1;
   bool bt52_write : 1;
@@ -287,7 +289,7 @@ typedef struct {
   bool bt54_write : 1;
   bool bt55_write : 1;
   bool bt56_writee : 1;
-  bool : 1, : 1, : 1;
+  unsigned : 3;
   bool bt60_write : 1;
   bool bt61_write : 1;
   bool bt62_write : 1;
@@ -296,7 +298,7 @@ typedef struct {
   bool bt65_write : 1;
   bool bt66_write : 1;
   bool bt67_write : 1;
-  bool : 1, : 1;
+  unsigned : 2;
   bool bt70_write : 1;
   bool bt71_write : 1;
   bool bt72_write : 1;
@@ -304,7 +306,7 @@ typedef struct {
   bool bt74_write : 1;
   bool bt75_write : 1;
   bool bt76_write : 1;
-  bool : 1, : 1, : 1, : 1;
+  unsigned : 4;
   // Set of extended tables write privileges
   bool et00_write : 1;
   bool et01_write : 1;
@@ -378,7 +380,7 @@ typedef struct {
   bool et69_write : 1;
   bool et70_write : 1;
   bool et71_write : 1;
-  bool : 1, : 1, : 1, : 1, : 1, : 1, : 1, : 1;
+  unsigned : 8;
 } ctBT00_t;
 
 #endif // CT_BT00_H
