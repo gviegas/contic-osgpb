@@ -135,7 +135,7 @@ void apduTest() {
   // printf("\n");
 }
 
-void tableTest() {
+void btTest() {
   ctBT00_t bt00;
   // bt00.data_order = 0;
   // bt00.char_format = 0b011;
@@ -190,6 +190,20 @@ void tableTest() {
   printf("bt64: %lu\n", sizeof bt64);
 }
 
+void etTest() {
+  ctET04_t et04;
+  printf("et04: %lu\n", sizeof et04);
+  ctET11_t et11;
+  printf("et11: %lu\n", sizeof et11);
+  ctET12_t et12;
+  printf("et12: %lu\n", sizeof et12);
+  ctET21_t et21;
+  printf("et21: %lu\n", sizeof et21);
+  ctET42_t et42;
+  printf("et42: %lu\n", sizeof et42);
+}
+
+
 int main(int argc, char** argv) {
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
   uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
@@ -197,7 +211,8 @@ int main(int argc, char** argv) {
   memcpy(t.s_omak, key, sizeof key);
   
   // apduTest();
-  tableTest();
+  // btTest();
+  etTest();
 
   return 0;
 }

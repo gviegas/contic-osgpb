@@ -5,6 +5,7 @@
 #ifndef CT_TABLES_H
 #define CT_TABLES_H
 
+// Basic tables
 #include "BT/CT_bt00.h"
 #include "BT/CT_bt05.h"
 #include "BT/CT_bt06.h"
@@ -29,5 +30,11 @@
 #include "BT/CT_bt62.h"
 #include "BT/CT_bt63.h"
 #include "BT/CT_bt64.h"
+// Extended tables
+#include "ET/CT_et04.h"
+#include "ET/CT_et11.h"
+#include "ET/CT_et12.h"
+#include "ET/CT_et21.h"
+#include "ET/CT_et42.h"
 
 #endif // CT_TABLES_H
