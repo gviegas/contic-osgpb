@@ -12,7 +12,7 @@
 // Load Profile data
 //
 typedef struct {
-  ctStimeDate_t end_time;
+  ctSTimeDate_t end_time;
   uint32_t end_readings[256]; // to do: length macro
   bool simple_status[256/8]; // to do: length macro
   uint8_t intervals[256]; // to do: length macro

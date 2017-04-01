@@ -31,6 +31,8 @@
 #include "BT/CT_bt63.h"
 #include "BT/CT_bt64.h"
 // Extended tables
+#include "ET/CT_et00.h"
+#include "ET/CT_et01.h"
 #include "ET/CT_et04.h"
 #include "ET/CT_et11.h"
 #include "ET/CT_et12.h"

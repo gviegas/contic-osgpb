@@ -191,6 +191,10 @@ void btTest() {
 }
 
 void etTest() {
+  ctET00_t et00;
+  printf("et00: %lu\n", sizeof et00);
+  ctET01_t et01;
+  printf("et01: %lu\n", sizeof et01);  
   ctET04_t et04;
   printf("et04: %lu\n", sizeof et04);
   ctET11_t et11;

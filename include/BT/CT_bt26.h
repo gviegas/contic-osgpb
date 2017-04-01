@@ -13,7 +13,7 @@
 //
 typedef struct {
   uint16_t bidn;
-  ctStimeDate_t time_date;
+  ctSTimeDate_t time_date;
   uint8_t season;
 } ctSelfRead_t;
 

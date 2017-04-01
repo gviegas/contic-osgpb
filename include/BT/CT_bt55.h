@@ -12,7 +12,7 @@
 // BT55 - Clock State
 //
 typedef struct {
-  ctLtimeDate_t clock_calendar;
+  ctLTimeDate_t clock_calendar;
   unsigned day_week : 3;
   bool daylight_saving_time : 1;
   bool greenwich_mean_time : 1;

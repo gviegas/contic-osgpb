@@ -45,7 +45,7 @@ typedef struct {
   uint8_t transceiver_state;
   uint8_t phse_rotation_changed;
   uint16_t plc_comm_inactive_time_threshold;
-  ctLtimeDate_t broadcast_receipt;
+  ctLTimeDate_t broadcast_receipt;
   uint32_t broadcast_base;
   uint16_t broadcast_delta;
   uint16_t reverse_rotation_alarm_current_threshold;

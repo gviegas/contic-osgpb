@@ -29,7 +29,7 @@ typedef struct {
 // Recurring Date record
 //
 typedef struct {
-  ctRdate_t recurring_date;
+  ctRDate_t recurring_date;
   // ... should be here
   // ctCalendarAction_t action;
 } ctRecurrDate_t;
