@@ -223,9 +223,15 @@ void writeTest() {
   printf("%d\n", ctWrite(0, buf+9, 1, 0));
 }
 
+void createTest() {
+  ctCreate();
+}
+
 void unitTest() {
   ctDefaultUnitCommission();
 }
+
+void dcTest() {};
 
 int main(int argc, char** argv) {
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
@@ -238,7 +244,46 @@ int main(int argc, char** argv) {
   // etTest();
   // readTest();
   // writeTest();
+  
+  createTest();
   unitTest();
+
+  // uint8_t buf[38];
+  // ctRead(CT__ET00, &buf, sizeof buf, 0);
+  // int i = 0;
+  // for(; i< sizeof buf; i++) printf("%x ", buf[i]);
+  // printf("\n");
+
+  // ctET00_t et00;
+  // ctRead(CT__ET00, &et00, sizeof et00, 0);
+  // printf("%x\n", et00.measure_devices_used);
+
+  ctBT00_t bt00;
+  ctRead(CT__BT00, &bt00, sizeof bt00, 0);
+  
+  printf("%x\n", bt00.char_format);
+  printf("%x\n", bt00.time_format);
+  printf("%x\n", bt00.data_access_method);
+  printf("%x\n", bt00.non_int_format_1);
+  printf("%x\n", bt00.non_int_format_2);
+  printf("%s\n", bt00.manufacturer);
+  printf("%x\n", bt00.nameplate_type);
+  printf("%x\n", bt00.procedure_param_length);
+  printf("%x\n", bt00.response_data_length);
+  printf("%x\n", bt00.standard_version);
+  printf("%x\n", bt00.dim_basic_tables_used);
+  printf("%x\n", bt00.dim_extended_tables_used);
+  printf("%x\n", bt00.dim_basic_procedures_used);
+  printf("%x\n", bt00.dim_extended_procedures_used);
+  printf("%x\n", bt00.manufacturer_status_length);
+  printf("%x\n", bt00.number_pending_tables);
+  printf("%x\n", bt00.bt00_used);
+  printf("%x\n", bt00.et00_used);
+  printf("%x\n", bt00.et01_used);
+  printf("%x\n", bt00.et00_write);
+  printf("%x\n", bt00.et01_write);
+  
+  // dcTest();
 
   return 0;
 }
