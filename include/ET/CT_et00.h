@@ -23,8 +23,9 @@ typedef struct {
 // ET00 - Simplified Measurement Info [Manufacturer Specific]
 //
 typedef struct {
+  ctLTimeDate_t clock;
+  
   // Clock synchronization
-  ctLTimeDate_t last_sync;
   ctLTimeDate_t sync;
   uint8_t sync_timer_sec;
   bool sync_programmed : 1;

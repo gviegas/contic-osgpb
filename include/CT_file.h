@@ -7,6 +7,8 @@
 
 #include "CT_defs.h"
 
+#define CT__DBLOCK "d.block"
+
 // File read
 //
 int ctRead(uint16_t table_id, void* buffer, size_t count, size_t offset);

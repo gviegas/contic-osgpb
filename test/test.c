@@ -10,6 +10,8 @@
 #include "CT_apdu.h"
 #include "CT_table_access.h"
 #include "CT_tables.h"
+#include "CT_file.h"
+#include "CT_unit.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -207,6 +209,23 @@ void etTest() {
   printf("et42: %lu\n", sizeof et42);
 }
 
+void readTest() {
+  uint8_t buf[3];
+  memset(buf, 0, 3);
+  printf("%d\n", ctRead(0, &buf, 3, 0));
+  int i;
+  for(i = 0; i < 3; i++) printf("%x ", buf[i]);
+  printf("\n");
+}
+
+void writeTest() {
+  uint8_t buf[] = {1,2,3,4,5,6,7,8,9,10};
+  printf("%d\n", ctWrite(0, buf+9, 1, 0));
+}
+
+void unitTest() {
+  ctDefaultUnitCommission();
+}
 
 int main(int argc, char** argv) {
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
@@ -216,7 +235,10 @@ int main(int argc, char** argv) {
   
   // apduTest();
   // btTest();
-  etTest();
+  // etTest();
+  // readTest();
+  // writeTest();
+  unitTest();
 
   return 0;
 }

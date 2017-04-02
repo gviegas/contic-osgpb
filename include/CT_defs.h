@@ -67,6 +67,8 @@
 // Extended table IDs
 //
 #define CT__ETOFFSET 2048
+#define CT__ET00 CT__ETOFFSET
+#define CT__ET01 CT__ETOFFSET + 1
 #define CT__ET04 CT__ETOFFSET + 4
 #define CT__ET11 CT__ETOFFSET + 11
 #define CT__ET12 CT__ETOFFSET + 12

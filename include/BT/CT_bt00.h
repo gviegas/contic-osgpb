@@ -21,9 +21,10 @@ typedef struct {
   unsigned non_int_format_1 : 4;
   unsigned non_int_format_2 : 4;
   char manufacturer[4];
+  uint8_t nameplate_type;
   uint8_t default_set_used;
   uint8_t procedure_param_length;
-  uint8_t resposne_data_length;
+  uint8_t response_data_length;
   uint8_t standard_version;
   uint8_t standard_revision;
   uint8_t dim_basic_tables_used;
