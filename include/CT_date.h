@@ -6,6 +6,7 @@
 #define CT_DATE_C
 
 #include <stdint.h>
+#include <time.h>
 
 // Date type
 //
@@ -43,5 +44,13 @@ typedef struct {
 // RTime_Date type
 //
 typedef struct {} ctRDate_t; // to do
+
+// Get Current LTimeDate
+//
+void ctGetLTimeDate(ctLTimeDate_t* buffer);
+
+// POSIX time to ctLTimeDate
+//
+void ctPosixToLTimeDate(ctLTimeDate_t* buffer, time_t* ptime);
 
 #endif // CT_DATE_C

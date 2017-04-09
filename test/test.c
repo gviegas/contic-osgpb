@@ -12,6 +12,7 @@
 #include "CT_tables.h"
 #include "CT_file.h"
 #include "CT_unit.h"
+#include "CT_internal.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -233,6 +234,16 @@ void unitTest() {
 
 void dcTest() {};
 
+void measureTest() {
+  ctMeasureData_t md;
+  ctMeasureNow(&md, NULL, 1);
+  printf("%d\n", md.value_high);
+  printf("%d\n", md.value_low);
+  printf("%d %d %d %d %d %d\n", 
+    md.timestamp.year, md.timestamp.month, md.timestamp.day, 
+    md.timestamp.hour, md.timestamp.minute, md.timestamp.second);
+}
+
 int main(int argc, char** argv) {
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
   uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
@@ -245,45 +256,43 @@ int main(int argc, char** argv) {
   // readTest();
   // writeTest();
   
-  createTest();
-  unitTest();
-
+  // createTest();
+  // unitTest();
+  // ctBT00_t bt00;
+  // ctRead(CT__BT00, &bt00, sizeof bt00, 0);
+  // printf("%x\n", bt00.char_format);
+  // printf("%x\n", bt00.time_format);
+  // printf("%x\n", bt00.data_access_method);
+  // printf("%x\n", bt00.non_int_format_1);
+  // printf("%x\n", bt00.non_int_format_2);
+  // printf("%s\n", bt00.manufacturer);
+  // printf("%x\n", bt00.nameplate_type);
+  // printf("%x\n", bt00.procedure_param_length);
+  // printf("%x\n", bt00.response_data_length);
+  // printf("%x\n", bt00.standard_version);
+  // printf("%x\n", bt00.dim_basic_tables_used);
+  // printf("%x\n", bt00.dim_extended_tables_used);
+  // printf("%x\n", bt00.dim_basic_procedures_used);
+  // printf("%x\n", bt00.dim_extended_procedures_used);
+  // printf("%x\n", bt00.manufacturer_status_length);
+  // printf("%x\n", bt00.number_pending_tables);
+  // printf("%x\n", bt00.bt00_used);
+  // printf("%x\n", bt00.et00_used);
+  // printf("%x\n", bt00.et01_used);
+  // printf("%x\n", bt00.et00_write);
+  // printf("%x\n", bt00.et01_write);
   // uint8_t buf[38];
   // ctRead(CT__ET00, &buf, sizeof buf, 0);
   // int i = 0;
   // for(; i< sizeof buf; i++) printf("%x ", buf[i]);
   // printf("\n");
-
   // ctET00_t et00;
   // ctRead(CT__ET00, &et00, sizeof et00, 0);
   // printf("%x\n", et00.measure_devices_used);
 
-  ctBT00_t bt00;
-  ctRead(CT__BT00, &bt00, sizeof bt00, 0);
-  
-  printf("%x\n", bt00.char_format);
-  printf("%x\n", bt00.time_format);
-  printf("%x\n", bt00.data_access_method);
-  printf("%x\n", bt00.non_int_format_1);
-  printf("%x\n", bt00.non_int_format_2);
-  printf("%s\n", bt00.manufacturer);
-  printf("%x\n", bt00.nameplate_type);
-  printf("%x\n", bt00.procedure_param_length);
-  printf("%x\n", bt00.response_data_length);
-  printf("%x\n", bt00.standard_version);
-  printf("%x\n", bt00.dim_basic_tables_used);
-  printf("%x\n", bt00.dim_extended_tables_used);
-  printf("%x\n", bt00.dim_basic_procedures_used);
-  printf("%x\n", bt00.dim_extended_procedures_used);
-  printf("%x\n", bt00.manufacturer_status_length);
-  printf("%x\n", bt00.number_pending_tables);
-  printf("%x\n", bt00.bt00_used);
-  printf("%x\n", bt00.et00_used);
-  printf("%x\n", bt00.et01_used);
-  printf("%x\n", bt00.et00_write);
-  printf("%x\n", bt00.et01_write);
-  
   // dcTest();
+
+  measureTest();
 
   return 0;
 }
