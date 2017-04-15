@@ -52,7 +52,7 @@ static void* _ctPerformInternalTask(void* args) {
   // To do: read this info from et00
   int i = 0; // start entry
   int n = 10; // size of circular mem block
-  double delay = 1; // seconds
+  double delay = 60; // seconds
   //
   time_t st, et;
   double diff; 
@@ -63,20 +63,21 @@ static void* _ctPerformInternalTask(void* args) {
     _ctMeasureNow(&md, &mi, CT__BEHAVIOR_E);
     ctWrite(CT__ET01, &md, sizeof md, sizeof md * i);
     i = (i + 1) % n;
-    // // debug
-    // printf("\nnext entry: %d\n", i);
-    // ctMeasureData_t entries[10];
-    // ctRead(CT__ET01, entries, sizeof entries, 0);
-    // int j;
-    // for(j = 0; j < sizeof entries / sizeof entries[0]; ++j) {
-    //   printf("value: %f\n", entries[j].value);
-    //   printf("timestamp: %d/%d/%d %d:%d:%d\n",
-    //     entries[j].timestamp.year, entries[j].timestamp.month, 
-    //     entries[j].timestamp.day, entries[j].timestamp.hour, 
-    //     entries[j].timestamp.minute, entries[j].timestamp.second
-    //   );
-    // }
-    // //
+    // debug
+    printf("\nET01 (10 entries)\n");
+    printf("next entry: %d\n", i);
+    ctMeasureData_t entries[10];
+    ctRead(CT__ET01, entries, sizeof entries, 0);
+    int j;
+    for(j = 0; j < sizeof entries / sizeof entries[0]; ++j) {
+      printf("value: %f\n", entries[j].value);
+      printf("timestamp: %d/%d/%d %d:%d:%d\n",
+        entries[j].timestamp.year, entries[j].timestamp.month, 
+        entries[j].timestamp.day, entries[j].timestamp.hour, 
+        entries[j].timestamp.minute, entries[j].timestamp.second
+      );
+    }
+    //
     et = time(NULL);
     diff = difftime(et, st);
     if(diff < delay) 
@@ -85,10 +86,11 @@ static void* _ctPerformInternalTask(void* args) {
   return NULL;
 }
 
-static pthread_t tid;
-static int targ = 0xf;
+// static pthread_t tid;
+// static int targ = 0;
 static void _ctCreateInternalTask() {
-  // pthread_t tid; // no join no go...
+  pthread_t tid; // no join no go...
+  int targ = 0; // ^^^
   int err = pthread_create(&tid, NULL, _ctPerformInternalTask, &targ);
   if(err) {
     fprintf(stderr, "\nCreate Internal Task failed\n");
@@ -96,6 +98,7 @@ static void _ctCreateInternalTask() {
   }
   pthread_join(tid, NULL);
   // To do: should reach this point when ctStopInternal() is called
+  // or some other kind or event (?)
   // dont forget to get current entry pos to resume measurements...
 }
 
@@ -104,5 +107,5 @@ void ctStartInternal(/*int id*/) {
   // sleep(5); // test
 }
 
-void ctStopInternal(/*int id*/) {} // To do
-void ctSetInternal(/*...*/) {} // To do
+// void ctStopInternal(/*int id*/) {} // To do
+// void ctSetInternal(/*...*/) {} // To do
