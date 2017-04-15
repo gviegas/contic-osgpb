@@ -234,17 +234,12 @@ void unitTest() {
 
 void dcTest() {};
 
-void measureTest() {
-  ctMeasureData_t md;
-  ctMeasureNow(&md, NULL, 1);
-  printf("%d\n", md.value_high);
-  printf("%d\n", md.value_low);
-  printf("%d %d %d %d %d %d\n", 
-    md.timestamp.year, md.timestamp.month, md.timestamp.day, 
-    md.timestamp.hour, md.timestamp.minute, md.timestamp.second);
+void internalTest() {
+  ctStartInternal();
 }
 
 int main(int argc, char** argv) {
+  srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
   uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
   memcpy(t.sequence, seq, sizeof seq);
@@ -290,9 +285,22 @@ int main(int argc, char** argv) {
   // ctRead(CT__ET00, &et00, sizeof et00, 0);
   // printf("%x\n", et00.measure_devices_used);
 
-  // dcTest();
+  internalTest();
 
-  measureTest();
+  // printf("\n|ET01|\n");
+  // ctMeasureData_t entries[10];
+  // ctRead(CT__ET01, entries, sizeof entries, 0);
+  // int j;
+  // for(j = 0; j < sizeof entries / sizeof entries[0]; ++j) {
+  //   printf("value: %f\n", entries[j].value);
+  //   printf("timestamp: %d/%d/%d %d:%d:%d\n",
+  //     entries[j].timestamp.year, entries[j].timestamp.month, 
+  //     entries[j].timestamp.day, entries[j].timestamp.hour, 
+  //     entries[j].timestamp.minute, entries[j].timestamp.second
+  //   );
+  // }
+
+  // dcTest();
 
   return 0;
 }

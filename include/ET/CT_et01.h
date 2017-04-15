@@ -11,8 +11,7 @@
 // Measure Data type
 //
 typedef struct {
-  uint16_t value_high;
-  uint16_t value_low;
+  float value;
   ctLTimeDate_t timestamp;
 } ctMeasureData_t;
 

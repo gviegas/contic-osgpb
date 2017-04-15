@@ -111,7 +111,7 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
       rres.request = apdu->apdu;
       rres.req_count = c; // no digest
       p.r_response = &rres;
-      r = ctTableRead(&p, target); // to do
+      r = ctTableRead(&p, target);
       if(r == CT__FAILURE)
         fprintf(stderr, "\nTable operation failed\n");
       else
@@ -209,8 +209,6 @@ int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
     case RESPONSE_FULL_READ:
     case RESPONSE_PART_READ:
       buffer->read_count = a;
-      // LP: instead of returning raw bytes, create a function on CT_table_access 
-      // to format it (will require a new structured type per table...)
       memcpy(buffer->read_data, apdu->apdu+4, a);
     break;
     case RESPONSE_FULL_WRITE:

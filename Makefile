@@ -12,9 +12,10 @@ CC = gcc
 OPTS = -Wall
 FLAGS = -I$(INC_DIR)
 OUT = -o bin/alpha
+LIBS = -pthread
 
 all: $(OBJS)
-		$(CC) $(OPTS) $(OBJS) $(FLAGS) $(OUT)
+		$(CC) $(OPTS) $(OBJS) $(FLAGS) $(LIBS) $(OUT)
 
 clean: 
 		rm -f bin/*

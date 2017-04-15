@@ -64,7 +64,7 @@ int ctRead(uint16_t table_id, void* buffer, size_t count, size_t offset) {
 }
 
 int ctWrite(uint16_t table_id, void* buffer, size_t count, size_t offset) {
-  FILE* f = fopen(CT__DATAFILE, "a+b");
+  FILE* f = fopen(CT__DATAFILE, "r+b");
   if(!f) {
     fprintf(stderr, "\nERROR: Could not open data file\n");
     return 0;

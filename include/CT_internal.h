@@ -5,13 +5,19 @@
 #ifndef CT_INTERNAL_H
 #define CT_INTERNAL_H
 
-#include "CT_tables.h"
+#define CT__BEHAVIOR_E 1 // move this
+#define CT__BEHAVIOR_H 2 // ...and this too
 
-#define CT__BEHAVIOR_E 1
-#define CT__BEHAVIOR_H 2
-
-// Real Time Consumption (sim)
+// Start internal operation
 //
-int ctMeasureNow(ctMeasureData_t* buffer, ctMeasureInfo_t* info, int opt);
+void ctStartInternal(/*int id*/);
+
+// Stop internal operation
+//
+void ctStopInternal(/*int id*/);
+
+// Set internal operation state
+//
+void ctSetInternal(/*...*/);
 
 #endif // CT_INTERNAL_H
