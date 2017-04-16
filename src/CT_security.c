@@ -42,18 +42,15 @@ int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response,
   int i;
   for(i = 0; i < 8; ++i) {
     if(digest[i] != b[i]) return CT__FAILURE;
-    // printf("\ndig[%d]: %x ; buf[%d]: %x", i, digest[i], i, b[i]); // debug
   }
   return CT__SUCCESS;
 }
 
-// NOTE: needs fix
+// NOTE: the RC4 digest algorithm from OSGP spec is outdated
+// To do: fix this (not working as intended - its exiting sooner...)
 void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count, 
   ctTarget_t* target)
-{
-
-  printf("\ndigesting... "); int q; for(q = 0; q < data_count; ++q) printf("%x ", data[q]); printf("\n"); // test
-  
+{ 
   memset(buffer, 0, 8);
   int k, i = 0;
   uint8_t a = 0, b = 0, m = 0, n = 0;
@@ -80,6 +77,5 @@ void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count,
       a++;
     } while(a < 18);
     a = 0;
-    printf("\n:)"); // test
   } while(data_count > 0);
 }

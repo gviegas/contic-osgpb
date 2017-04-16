@@ -16,14 +16,19 @@
 #include "CT_unit.h"
 
 static const char* ct_g_port = "45300";
+static ctTarget_t ct_g_target; // target unit info
 
-void dgram_server(/*void* buffer, size_t length*/) {
+int processReq(ctApdu_t* res_apdu, ctApdu_t* apdu) {
+  return ctProcessRequest(res_apdu, apdu, &ct_g_target);
+}
+
+void dgramServer(/*void* buffer, size_t length*/) {
   struct addrinfo hints, *result, *rp;
   int sfd, s, i;
   size_t n;
   struct sockaddr_storage peer_addr;
   socklen_t peer_addr_len;
-  ctApdu_t apdu;
+  ctApdu_t apdu, res_apdu;
 
   memset(&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC; // IPv4/6
@@ -61,19 +66,33 @@ void dgram_server(/*void* buffer, size_t length*/) {
       host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICSERV);
 
     if(s == 0) {
-      printf("\nmessage:\n");
+      printf("\nrequest received (%d):\n", (int) n);
       for(i = 0; i < n; ++i) printf("%x ", apdu.apdu[i]);
-      printf("\nend of message\n");
-    } else fprintf(stderr, "\nERROR: getnameinfo failed\n");
+      printf("\n----end of request----\n");
 
-    if(sendto(sfd, "OK", 3, 0, (struct sockaddr*) &peer_addr,
-      peer_addr_len) != 3)
-      fprintf(stderr, "\nERROR: sendto failed\n");
+      n = processReq(&res_apdu, &apdu); // process request apdu
+      
+      // send response apdu
+      if(sendto(sfd, &res_apdu, n, 0, (struct sockaddr*) &peer_addr,
+        peer_addr_len) != n)
+        fprintf(stderr, "\nERROR: sendto failed\n");
+      
+    } else
+      fprintf(stderr, "\nERROR: getnameinfo failed\n");
+
+    // if(sendto(sfd, "OK", 3, 0, (struct sockaddr*) &peer_addr,
+    //   peer_addr_len) != 3)
+    //   fprintf(stderr, "\nERROR: sendto failed\n");
   }
 }
 
 int main(int argc, char** argv) {
-  dgram_server();
+  ct_g_target.subnet = 0xff;
+  ct_g_target.node = 0x1f;
+  memset(ct_g_target.sequence, 1, sizeof ct_g_target.sequence);
+  memset(ct_g_target.s_omak, 0xf0, sizeof ct_g_target.s_omak);
+
+  dgramServer();
 
   printf("unit test done.\n");
   return EXIT_SUCCESS;

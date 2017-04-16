@@ -18,7 +18,7 @@
 static const char* ct_g_host = "localhost";
 static const char* ct_g_port = "45300";
 
-void dgram_client(void* buffer, size_t length) {
+void dgramClient(void* buffer, size_t length) {
   struct addrinfo hints, *result, *rp;
   int sfd, s, i;
   size_t n;
@@ -60,8 +60,9 @@ void dgram_client(void* buffer, size_t length) {
     return;
   }
 
+  printf("\nresponse received (%d):\n", (int) n);
   for(i = 0; i < n; ++i) printf("%x ", apdu.apdu[i]);
-  printf("\ndgram succesfull\n");
+  printf("\n----end of response----\n");
 }
 
 int main(int argc, char** argv) {
@@ -87,7 +88,21 @@ int main(int argc, char** argv) {
   // for(i = 0; i < s; ++i) printf("%x ", apdu.apdu[i]);
   // printf("\n");
 
-  dgram_client(apdu.apdu, n);
+  dgramClient(apdu.apdu, n);
+
+  ctPRRequest_t prreq; // partial table read request
+  prreq.table_id = CT__ET01; // extended table 01
+  memset(prreq.offset, 0, sizeof prreq.offset);
+  prreq.offset[2] = 0x0c;
+  prreq.count = 0x0c;
+
+  param.service = REQUEST_PART_READ;
+  param.pr_request = &prreq;
+
+  memset(&apdu, 0, sizeof apdu);
+  n = ctCreateApdu(&apdu, &param, &target); // create partial read req apdu
+
+  dgramClient(apdu.apdu, n);
 
   printf("dc test done.\n");
   return EXIT_SUCCESS;
