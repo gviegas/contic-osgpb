@@ -17,6 +17,17 @@ typedef struct {
   uint32_t et01;
 } _ctTableOffset_t;
 
+static size_t _ctGetLen(uint16_t table_id) {
+  switch(table_id) {
+    case CT__BT00: return sizeof(ctBT00_t);
+    case CT__ET00: return sizeof(ctET00_t);
+    case CT__ET01: return sizeof(ctET01_t);
+    default:
+      fprintf(stderr, "\nERROR: Invalid table id\n");
+  }
+  return 0;
+}
+
 static size_t _ctGetOffset(uint16_t table_id, FILE* f) {
   _ctTableOffset_t to;
   size_t n = sizeof to;
@@ -58,7 +69,8 @@ int ctRead(uint16_t table_id, void* buffer, size_t count, size_t offset) {
   }
   size_t to = _ctGetOffset(table_id, f) + offset;
   fseek(f, to, SEEK_SET);
-  int c = fread(buffer, 1, count, f);
+  int c = count ? fread(buffer, 1, count, f) : 
+    fread(buffer, 1, _ctGetLen(table_id), f);
   fclose(f);
   return c;
 }
@@ -71,7 +83,8 @@ int ctWrite(uint16_t table_id, void* buffer, size_t count, size_t offset) {
   }
   size_t to = _ctGetOffset(table_id, f) + offset;
   fseek(f, to, SEEK_SET);
-  int c = fwrite(buffer, 1, count, f);
+  int c = count ? fwrite(buffer, 1, count, f) : 
+    fwrite(buffer, 1, _ctGetLen(table_id), f);
   fclose(f);
   return c;
 }

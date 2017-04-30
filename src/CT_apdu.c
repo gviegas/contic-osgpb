@@ -103,7 +103,6 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
     fprintf(stderr, "\nValidation failed\n");
     return r;
   }
-  // needs testing
   switch(p.service) {
     case RESPONSE_FULL_READ:
     case RESPONSE_PART_READ:;
@@ -203,7 +202,7 @@ int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
     fprintf(stderr, "\nValidation failed\n");
     return r;
   }
-  // needs testing
+  // To do: ctResponse_t needs testing
   buffer->response = apdu->apdu[1];
   switch(buffer->service) {
     case RESPONSE_FULL_READ:
