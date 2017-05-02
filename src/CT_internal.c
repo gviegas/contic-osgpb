@@ -27,7 +27,7 @@ static int _ctMeasureNow(ctMeasureData_t* buffer, ctMeasureInfo_t* info, int opt
   switch(opt) {
     case CT__BEHAVIOR_E:
       if(now->tm_wday == 0) // Sunday
-        value /= 3 + rand() % 5; 
+        value /= 3 + rand() % 5;
       else if(now->tm_hour > 8 && now->tm_hour < 18)
         value *= 2 + rand() % 5;
     break;
@@ -44,7 +44,7 @@ static int _ctMeasureNow(ctMeasureData_t* buffer, ctMeasureInfo_t* info, int opt
 
   buffer->value = value;
   ctGetLTimeDate(&buffer->timestamp);
-  
+
   return CT__SUCCESS;
 }
 
@@ -55,7 +55,7 @@ static void* _ctPerformInternalTask(void* args) {
   double delay = 60; // seconds
   //
   time_t st, et;
-  double diff; 
+  double diff;
   ctMeasureInfo_t mi;
   ctMeasureData_t md;
   for(;;) {
@@ -72,31 +72,31 @@ static void* _ctPerformInternalTask(void* args) {
     for(j = 0; j < sizeof entries / sizeof entries[0]; ++j) {
       printf("value: %f\n", entries[j].value);
       printf("timestamp: %d/%d/%d %d:%d:%d\n",
-        entries[j].timestamp.year, entries[j].timestamp.month, 
-        entries[j].timestamp.day, entries[j].timestamp.hour, 
+        entries[j].timestamp.year, entries[j].timestamp.month,
+        entries[j].timestamp.day, entries[j].timestamp.hour,
         entries[j].timestamp.minute, entries[j].timestamp.second
       );
     }
     //
     et = time(NULL);
     diff = difftime(et, st);
-    if(diff < delay) 
+    if(diff < delay)
       sleep(delay - diff);
   }
   return NULL;
 }
 
-// static pthread_t tid;
-// static int targ = 0;
+static pthread_t tid;
+static int targ = 0;
 static void _ctCreateInternalTask() {
-  pthread_t tid; // no join no go...
-  int targ = 0; // ^^^
+  // pthread_t tid; // no join no go...
+  // int targ = 0; // ^^^
   int err = pthread_create(&tid, NULL, _ctPerformInternalTask, &targ);
   if(err) {
     fprintf(stderr, "\nCreate Internal Task failed\n");
     return;
   }
-  pthread_join(tid, NULL);
+  // pthread_join(tid, NULL);
   // To do: should reach this point when ctStopInternal() is called
   // or some other kind or event (?)
   // dont forget to get current entry pos to resume measurements...
