@@ -45,7 +45,7 @@ void dgramServer(/*void* buffer, size_t length*/) {
     sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
     if(sfd == -1) continue;
     if(bind(sfd, rp->ai_addr, rp->ai_addrlen) == 0) break;
-    close(sfd); 
+    close(sfd);
   }
 
   if(rp == NULL) {
@@ -54,11 +54,12 @@ void dgramServer(/*void* buffer, size_t length*/) {
   }
 
   freeaddrinfo(result);
+  peer_addr_len = sizeof peer_addr;
 
   for(;;) {
     n = recvfrom(sfd, apdu.apdu, CT__LEN_MAXAPDU, 0,
       (struct sockaddr*) &peer_addr, &peer_addr_len);
-    
+
     if(n == -1) continue; // failed request - ignore...
 
     char host[NI_MAXHOST], service[NI_MAXSERV];
@@ -71,12 +72,12 @@ void dgramServer(/*void* buffer, size_t length*/) {
       printf("\n----end of request----\n");
 
       n = processReq(&res_apdu, &apdu); // process request apdu
-      
+
       // send response apdu
       if(sendto(sfd, &res_apdu, n, 0, (struct sockaddr*) &peer_addr,
         peer_addr_len) != n)
         fprintf(stderr, "\nERROR: sendto failed\n");
-      
+
     } else
       fprintf(stderr, "\nERROR: getnameinfo failed\n");
 

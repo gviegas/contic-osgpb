@@ -99,6 +99,7 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src) {
     return -1;
   }
 
+  addr_len = sizeof peer_addr;
   n = recvfrom(ct_g_sfd, buffer, len, 0,
     (struct sockaddr*) &peer_addr, &addr_len);
 

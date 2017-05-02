@@ -250,7 +250,7 @@ void netrecvTest() {
 
   ctBind(&addr);
   len = ctRecv(buffer, (sizeof buffer) - 1, &src);
-  buffer[9] = '\0';
+  buffer[len] = '\0';
 
   printf("\nnode=%s service=%s", src.node, src.service);
   printf("\nreceived: %s (%d)\n", buffer, len);
