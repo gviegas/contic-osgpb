@@ -29,7 +29,8 @@ int ctBind(ctAddr_t* addr) {
 
   s = getaddrinfo(addr->node, addr->service, &hints, &result);
   if(s) {
-    fprintf(stderr, "\nERROR: failed to resolve address\n");
+    fprintf(stderr, "\nERROR: ctBind - failed to resolve address (%s)\n",
+      gai_strerror(s));
     return CT__FAILURE;
   }
 
@@ -42,7 +43,7 @@ int ctBind(ctAddr_t* addr) {
   }
 
   if(rp == NULL) {
-    fprintf(stderr, "\nERROR: failed to bind\n");
+    fprintf(stderr, "\nERROR: ctBind - failed to bind\n");
     return CT__FAILURE;
   }
 
@@ -56,7 +57,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
     size_t n;
 
     if(ct_g_sfd == -1) {
-      fprintf(stderr, "\nERROR: unbound\n");
+      fprintf(stderr, "\nERROR: ctSend - unbound\n");
       return CT__FAILURE;
     }
 
@@ -66,7 +67,8 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
 
     s = getaddrinfo(dest->node, dest->service, &hints, &result);
     if(s) {
-      fprintf(stderr, "\nERROR: failed to resolve address\n");
+      fprintf(stderr, "\nERROR: ctSend - failed to resolve address (%s)\n",
+        gai_strerror(s));
       return CT__FAILURE;
     }
 
@@ -79,7 +81,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
     freeaddrinfo(result);
 
     if(n != len) {
-      fprintf(stderr, "\nERROR: send failed\n");
+      fprintf(stderr, "\nERROR: ctSend - send failed\n");
       return CT__FAILURE;
     }
 
@@ -93,7 +95,7 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src) {
   int s;
 
   if(ct_g_sfd == -1) {
-    fprintf(stderr, "\nERROR: unbound\n");
+    fprintf(stderr, "\nERROR: ctRecv unbound\n");
     return -1;
   }
 
@@ -104,7 +106,8 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src) {
     sizeof src->node, src->service, sizeof src->service, 0);
 
   if(s) {
-    fprintf(stderr, "\nERROR: failed to resolve address\n");
+    fprintf(stderr, "\nERROR: ctRecv - failed to resolve address (%s)\n",
+      gai_strerror(s));
     return -1;
   }
 
@@ -113,7 +116,7 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src) {
 
 int ctUnbind() {
   if(close(ct_g_sfd)) {
-    fprintf(stderr, "\nERROR: failed to unbound");
+    fprintf(stderr, "\nERROR: ctUnbind - failed to unbound");
     return CT__FAILURE;
   }
   ct_g_sfd = -1;

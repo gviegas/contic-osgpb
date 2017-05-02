@@ -13,6 +13,7 @@
 #include "CT_file.h"
 #include "CT_unit.h"
 #include "CT_internal.h"
+#include "CT_net.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -24,15 +25,15 @@ void servicesTest() {
 }
 
 void securityTest() {
-  uint8_t b[100] = {0}, req[50] = {0}, res[50] = {0}, o[3] = {0}, 
+  uint8_t b[100] = {0}, req[50] = {0}, res[50] = {0}, o[3] = {0},
     d[] = {0xd,0xc,0xb};
-  
+
   int s1 = ctPartialReadRequest(req+1, 0x0034, o, 0x0006);
   s1++;
   int s2 = ctReadResponse(res+1, CT__RES_ERR, 3, d);
   // int i, s = ctAuthenticate(b, req, res, s1, s2, &t);
   int i, s = ctAuthenticate(b, req, NULL, s1, s2, &t);
-  
+
   printf("\req: ");
   for(i = 0; i < s1; ++i) printf("%x ", req[i]);
   printf("\ndig: ");
@@ -48,7 +49,7 @@ void apduTest() {
   // frreq.table_id = CT__ET12;
   // param.service = REQUEST_FULL_READ;
   // param.fr_request = &frreq;
-  
+
   // ctPRRequest_t prreq;
   // prreq.table_id = CT__ET04;
   // prreq.offset[0] = 0;
@@ -84,7 +85,7 @@ void apduTest() {
   printf("\napdu req: ");
   for(i = 0; i < c; ++i) printf("%x ", apdu.apdu[i]);
   printf("\n");
-  
+
   //////////////////////////////
   // res
   // ctRResponse_t rres;
@@ -197,7 +198,7 @@ void etTest() {
   ctET00_t et00;
   printf("et00: %lu\n", sizeof et00);
   ctET01_t et01;
-  printf("et01: %lu\n", sizeof et01);  
+  printf("et01: %lu\n", sizeof et01);
   ctET04_t et04;
   printf("et04: %lu\n", sizeof et04);
   ctET11_t et11;
@@ -238,19 +239,48 @@ void internalTest() {
   ctStartInternal();
 }
 
+void netrecvTest() {
+  char buffer[20];
+  ctAddr_t addr, src;
+  int len;
+
+  strcpy(addr.node, "localhost");
+  strcpy(addr.service, "40100");
+  memset(&src, 0, sizeof src);
+
+  ctBind(&addr);
+  len = ctRecv(buffer, (sizeof buffer) - 1, &src);
+  buffer[9] = '\0';
+
+  printf("\nnode=%s service=%s", src.node, src.service);
+  printf("\nreceived: %s (%d)\n", buffer, len);
+}
+
+void netsendTest() {
+  char* data = "Tinny Dog";
+  ctAddr_t addr, dest;
+  strcpy(addr.node, "localhost");
+  strcpy(addr.service, "50100");
+  strcpy(dest.node, "localhost");
+  strcpy(dest.service, "40100");
+
+  ctBind(&addr);
+  ctSend(data, strlen(data), &dest);
+}
+
 int main(int argc, char** argv) {
   srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
   uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
   memcpy(t.sequence, seq, sizeof seq);
   memcpy(t.s_omak, key, sizeof key);
-  
+
   // apduTest();
   // btTest();
   // etTest();
   // readTest();
   // writeTest();
-  
+
   // createTest();
   // unitTest();
   // ctBT00_t bt00;
@@ -285,7 +315,7 @@ int main(int argc, char** argv) {
   // ctRead(CT__ET00, &et00, sizeof et00, 0);
   // printf("%x\n", et00.measure_devices_used);
 
-  internalTest();
+  // internalTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];
@@ -294,13 +324,16 @@ int main(int argc, char** argv) {
   // for(j = 0; j < sizeof entries / sizeof entries[0]; ++j) {
   //   printf("value: %f\n", entries[j].value);
   //   printf("timestamp: %d/%d/%d %d:%d:%d\n",
-  //     entries[j].timestamp.year, entries[j].timestamp.month, 
-  //     entries[j].timestamp.day, entries[j].timestamp.hour, 
+  //     entries[j].timestamp.year, entries[j].timestamp.month,
+  //     entries[j].timestamp.day, entries[j].timestamp.hour,
   //     entries[j].timestamp.minute, entries[j].timestamp.second
   //   );
   // }
 
   // dcTest();
+
+  netrecvTest();
+  // netsendTest();
 
   return 0;
 }
