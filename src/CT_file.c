@@ -4,59 +4,32 @@
 
 #include <string.h>
 #include <stdio.h>
-#include "CT_file.h"
 #include "CT_tables.h"
+#include "CT_file.h"
 
-// typedef struct {
-//   uint16_t table_id;
-//   long offset;
-// } _ctTableOffset_t;
-typedef struct {
-  uint32_t bt00;
-  uint32_t et00;
-  uint32_t et01;
-} _ctTableOffset_t;
-
-static size_t _ctGetLen(uint16_t table_id) {
-  switch(table_id) {
-    case CT__BT00: return sizeof(ctBT00_t);
-    case CT__ET00: return sizeof(ctET00_t);
-    case CT__ET01: return sizeof(ctET01_t);
-    default:
-      fprintf(stderr, "\nERROR: Invalid table id\n");
-  }
-  return 0;
-}
-
-static size_t _ctGetOffset(uint16_t table_id, FILE* f) {
-  _ctTableOffset_t to;
-  size_t n = sizeof to;
-  fseek(f, 0, SEEK_SET);
-  if(fread(&to, 1, n, f) != n)
-    fprintf(stderr, "\nERROR: Could not read index block\n");
-  else {
-    switch(table_id) {
-      case CT__BT00: return (sizeof to + 0);
-      case CT__ET00: return (sizeof to + to.bt00);
-      case CT__ET01: return (sizeof to + to.bt00 + to.et00);
-      default:
-        fprintf(stderr, "\nERROR: Invalid table id\n");
-    }
-  }
-  return 0;
-}
-
-int ctCreate(/*uint16_t block_size, uint32_t count*/) {
-  // Temporary (hastily done) solution
-  // To do: design a better system to manage the tables in memory
+int ctCreate() {
   FILE* f = fopen(CT__DATAFILE, "wb");
   if(!f) {
     fprintf(stderr, "\nERROR: Could not create data file\n");
     return CT__FAILURE;
   }
-  // Static size tables...
-  _ctTableOffset_t to = {sizeof(ctBT00_t), sizeof(ctET00_t), sizeof(ctET01_t)};
-  fwrite(&to, 1, sizeof to, f);
+  // Fixed size tables...
+  ctBlock_t block;
+  memset(&block, 0, sizeof block);
+
+  // BT00
+  block.indexes[0] = (ctBlockIndex_t) {CT__BT00, 0, 1};
+  block.entries[0] = (ctBlockEntry_t) {sizeof(ctBT00_t), 0, 0};
+  // ET00
+  block.indexes[1] = (ctBlockIndex_t) {CT__ET00, 1, 1};
+  block.entries[1] = (ctBlockEntry_t) {sizeof(ctET00_t),
+    block.entries[0].size + block.entries[0].offset, 0};
+  // ET01
+  block.indexes[2] = (ctBlockIndex_t) {CT__ET01, 2, 1};
+  block.entries[2] = (ctBlockEntry_t) {sizeof(ctET01_t),
+    block.entries[1].size + block.entries[1].offset, 0};
+
+  fwrite(&block, 1, sizeof block, f);
   fclose(f);
   return CT__SUCCESS;
 }
@@ -67,10 +40,10 @@ int ctRead(uint16_t table_id, void* buffer, size_t count, size_t offset) {
     fprintf(stderr, "\nERROR: Could not open data file\n");
     return 0;
   }
-  size_t to = _ctGetOffset(table_id, f) + offset;
-  fseek(f, to, SEEK_SET);
-  int c = count ? fread(buffer, 1, count, f) : 
-    fread(buffer, 1, _ctGetLen(table_id), f);
+  int c, sz;
+  sz = ctSeek(table_id, offset, f);
+  if(sz < 1) c = -1;
+  else c = count ? fread(buffer, 1, count, f) : fread(buffer, 1, sz, f);
   fclose(f);
   return c;
 }
@@ -81,10 +54,32 @@ int ctWrite(uint16_t table_id, void* buffer, size_t count, size_t offset) {
     fprintf(stderr, "\nERROR: Could not open data file\n");
     return 0;
   }
-  size_t to = _ctGetOffset(table_id, f) + offset;
-  fseek(f, to, SEEK_SET);
-  int c = count ? fwrite(buffer, 1, count, f) : 
-    fwrite(buffer, 1, _ctGetLen(table_id), f);
+  int c, sz;
+  sz = ctSeek(table_id, offset, f);
+  if(sz < 1) c = -1;
+  else c = count ? fwrite(buffer, 1, count, f) : fwrite(buffer, 1, sz, f);
   fclose(f);
   return c;
+}
+
+int ctSeek(uint16_t table_id, size_t offset, void* file) {
+  if(!file) {
+    fprintf(stderr, "\nERROR: Invalid file\n");
+    return 0;
+  }
+  int i, count;
+  ctBlockEntry_t entry;
+  ctBlockIndex_t index[CT__BLOCK_LEN];
+  memset(index, 0, sizeof index);
+  rewind(file);
+  count = fread(index, sizeof index[0], CT__BLOCK_LEN, file);
+  for(i = 0; i < count; ++i) {
+    if(index[i].used && index[i].table_id == table_id) {
+      count = fread(&entry, sizeof entry, 1, file);
+      if(count != 1) break;
+      fseek(file, sizeof(ctBlock_t) + entry.offset + offset, SEEK_SET);
+      return entry.size;
+    }
+  }
+  return -1;
 }

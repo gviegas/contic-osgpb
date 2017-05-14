@@ -337,8 +337,8 @@ int main(int argc, char** argv) {
   // readTest();
   // writeTest();
 
-  // createTest();
-  // unitTest();
+  createTest();
+  unitTest();
   // ctBT00_t bt00;
   // ctRead(CT__BT00, &bt00, sizeof bt00, 0);
   // printf("%x\n", bt00.char_format);
@@ -371,10 +371,10 @@ int main(int argc, char** argv) {
   // ctRead(CT__ET00, &et00, sizeof et00, 0);
   // printf("%x\n", et00.measure_devices_used);
 
-  // internalTest();
-  // sleep(900);
+  internalTest();
+  sleep(900);
 
-  eventTest();
+  // eventTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];
