@@ -15,6 +15,7 @@
 #include "CT_unit.h"
 #include "CT_internal.h"
 #include "CT_net.h"
+#include "CT_event_queue.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -269,6 +270,60 @@ void netsendTest() {
   ctSend(data, strlen(data), &dest);
 }
 
+void e1() { printf("\ne1!"); }
+void e2() { printf("\ne2!"); }
+void e3() { printf("\ne3!"); }
+void e4() { printf("\ne4!"); }
+void e5() { printf("\ne5!"); }
+void e6() { printf("\ne6!"); }
+void e7() { printf("\ne7!"); }
+void e8() { printf("\ne8!"); }
+void e9() { printf("\ne9!"); }
+void eventTest() {
+  ctEvent_t a = {EVENT_TIMEOUT, 10, e1};
+  ctEvent_t b = {EVENT_TIMEOUT, 5, e2};
+  ctEvent_t c = {EVENT_TIMEOUT, 20, e3};
+  ctEvent_t d = {EVENT_TIMEOUT, 60, e4};
+  ctEvent_t e = {EVENT_TIMEOUT, 30, e5};
+  ctEvent_t f = {EVENT_TIMEOUT, 40, e6};
+  ctEvent_t g = {EVENT_TIMEOUT, 90, e7};
+  ctEvent_t h = {EVENT_TIMEOUT, 1, e8};
+  ctEvent_t i = {EVENT_TIMEOUT, 3, e9};
+
+  ctQueue_t q;
+  ctEvent_t t, *u = NULL;
+
+  ctQueueCreate(&q);
+  ctQueuePut(&q, &a);
+  ctQueuePut(&q, &b);
+  ctQueuePut(&q, &c);
+  ctQueuePut(&q, &d);
+
+  ctQueueGet(&q, &t);
+  ctQueueGet(&q, &t);
+  ctQueueGet(&q, &t);
+
+  ctQueuePut(&q, &e);
+  ctQueuePut(&q, &f);
+  ctQueuePut(&q, &g);
+  ctQueuePut(&q, &h);
+  ctQueuePut(&q, &i);
+
+  ctQueueSort(&q);
+
+  printf("head: %d tail: %d", q.head, q.tail);
+  int idx;
+  for(idx = q.head;; idx = (idx + 1) % CT__QUEUE_LEN) {
+    printf("\n%ld", q.events[idx].delay);
+    q.events[idx].exec();
+    if(idx == q.tail) break;
+  }
+  ctQueuePeek(&q, &u);
+  printf("\n0_0 %ld", u->delay);
+  u->exec();
+  printf("\n");
+}
+
 int main(int argc, char** argv) {
   srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
@@ -282,8 +337,8 @@ int main(int argc, char** argv) {
   // readTest();
   // writeTest();
 
-  createTest();
-  unitTest();
+  // createTest();
+  // unitTest();
   // ctBT00_t bt00;
   // ctRead(CT__BT00, &bt00, sizeof bt00, 0);
   // printf("%x\n", bt00.char_format);
@@ -316,8 +371,10 @@ int main(int argc, char** argv) {
   // ctRead(CT__ET00, &et00, sizeof et00, 0);
   // printf("%x\n", et00.measure_devices_used);
 
-  internalTest();
-  sleep(900);
+  // internalTest();
+  // sleep(900);
+
+  eventTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];

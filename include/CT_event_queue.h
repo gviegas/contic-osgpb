@@ -36,11 +36,7 @@ int ctQueueGet(ctQueue_t* queue, ctEvent_t* event);
 
 // Get and does not remove the queue head
 //
-int ctQueuePeek(ctQueue_t* queue, ctEvent_t* event);
-
-// Swap contents
-//
-int ctQueueSwap(ctQueue_t* queue, ctEvent_t* a, ctEvent_t* b);
+int ctQueuePeek(ctQueue_t* queue, ctEvent_t** event);
 
 // Sort contents
 //

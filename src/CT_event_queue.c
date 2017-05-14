@@ -40,23 +40,30 @@ int ctQueueGet(ctQueue_t* queue, ctEvent_t* event) {
   return CT__FAILURE;
 }
 
-int ctQueuePeek(ctQueue_t* queue, ctEvent_t* event) {
+int ctQueuePeek(ctQueue_t* queue, ctEvent_t** event) {
   if(queue && (queue->size > 0)) {
-    event = &(queue->events[queue->head]);
+    *event = &(queue->events[queue->head]);
     return CT__SUCCESS;
   }
   return CT__FAILURE;
 }
 
-// to do
-int ctQueueSwap(ctQueue_t* queue, ctEvent_t* a, ctEvent_t* b) {
-  if(!queue) return CT__FAILURE;
-  return CT__SUCCESS;
-}
-
-// to do
+// good enough for ~20 entries
 int ctQueueSort(ctQueue_t* queue) {
   if(!queue) return CT__FAILURE;
+  int i, j;
+  ctEvent_t e;
+  for(i = queue->head; i != queue->tail; i = (i + 1) % CT__QUEUE_LEN) {
+    j = i;
+    do {
+      j = (j + 1) % CT__QUEUE_LEN;
+      if(queue->events[j].delay < queue->events[i].delay) {
+        e = queue->events[i];
+        queue->events[i] = queue->events[j];
+        queue->events[j] = e;
+      }
+    } while(j != queue->tail);
+  }
   return CT__SUCCESS;
 }
 
