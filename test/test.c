@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "CT_table_services.h"
 #include "CT_security.h"
 #include "CT_apdu.h"
@@ -16,6 +17,7 @@
 #include "CT_internal.h"
 #include "CT_net.h"
 #include "CT_event_queue.h"
+#include "CT_thread.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -324,6 +326,34 @@ void eventTest() {
   printf("\n");
 }
 
+ctMutex_t m;
+void* t1(void* args) {
+  for(;;) {
+    ctLock(&m);
+    printf("\nt1-> %ld", pthread_self());
+    ctUnlock(&m);
+    ctSleep(1);
+  }
+  return NULL;
+}
+void threadTest() {
+  ctThread_t t;
+  int f = ctMutexCreate(&m);
+  int e = ctThreadCreate(&t, t1);
+  printf("\nnew thread: %d", e);
+  printf("\nnew mutex: %d", f);
+  ctSleep(5);
+  ctLock(&m);
+  printf("\nLOCKED!");
+  fflush(stdout);
+  ctSleep(5);
+  printf("\nUnlocking...");
+  ctUnlock(&m);
+  ctSleep(3);
+  printf("\ntid: %ld", (long unsigned int) t);
+  printf("\ntme: %ld", pthread_self());
+}
+
 int main(int argc, char** argv) {
   srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
@@ -337,8 +367,8 @@ int main(int argc, char** argv) {
   // readTest();
   // writeTest();
 
-  createTest();
-  unitTest();
+  // createTest();
+  // unitTest();
   // ctBT00_t bt00;
   // ctRead(CT__BT00, &bt00, sizeof bt00, 0);
   // printf("%x\n", bt00.char_format);
@@ -371,10 +401,12 @@ int main(int argc, char** argv) {
   // ctRead(CT__ET00, &et00, sizeof et00, 0);
   // printf("%x\n", et00.measure_devices_used);
 
-  internalTest();
-  sleep(900);
+  // internalTest();
+  // sleep(900);
 
   // eventTest();
+
+  threadTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];
