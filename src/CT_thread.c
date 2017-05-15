@@ -3,8 +3,9 @@
 //
 
 #include <unistd.h>
-#include <pthread.h>
+// #include <pthread.h>
 #include <stdio.h>
+#include <errno.h>
 #include "CT_defs.h"
 #include "CT_thread.h"
 
@@ -17,15 +18,6 @@ int ctThreadCreate(ctThread_t* thread, void* (*exec)(void*)) {
   return CT__SUCCESS;
 }
 
-// to do
-int ctSignal(ctThread_t* thread, int signum) {
-  return CT__SUCCESS;
-}
-
-int ctSleep(unsigned int seconds) {
-  return sleep(seconds);
-}
-
 int ctMutexCreate(ctMutex_t* mutex) {
   return pthread_mutex_init((pthread_mutex_t*) mutex, NULL);
 }
@@ -36,4 +28,27 @@ int ctLock(ctMutex_t* mutex) {
 
 int ctUnlock(ctMutex_t* mutex) {
   return pthread_mutex_unlock((pthread_mutex_t*) mutex);
+}
+
+int ctCondCreate(ctCond_t* cond) {
+  return pthread_cond_init((pthread_cond_t*) cond, NULL);
+}
+
+int ctWait(ctCond_t* cond, ctMutex_t* mutex, void* time) {
+  int r;
+  if(!time)
+    r = pthread_cond_wait((pthread_cond_t*) cond, (pthread_mutex_t*) mutex);
+  else
+    r = pthread_cond_timedwait((pthread_cond_t*) cond,
+      (pthread_mutex_t*) mutex, time);
+  if(r == ETIMEDOUT) return CT__TIMEDOUT;
+  return r;
+}
+
+int ctSignal(ctCond_t* cond) {
+  return pthread_cond_signal/*broadcast*/((pthread_cond_t*) cond);
+}
+
+int ctSleep(unsigned int seconds) {
+  return sleep(seconds);
 }

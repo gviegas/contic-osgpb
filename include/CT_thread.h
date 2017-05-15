@@ -5,25 +5,25 @@
 #ifndef CT_THREAD_H
 #define CT_THREAD_H
 
+#include <pthread.h>
+
+#define CT__TIMEDOUT -1
+
 // Thread type
 //
-typedef void* ctThread_t;
+typedef unsigned long int ctThread_t;
 
 // Mutex type
 //
-typedef void* ctMutex_t;
+typedef pthread_mutex_t ctMutex_t; // NOTE: not generic enough
+
+// Cond type
+//
+typedef pthread_cond_t ctCond_t; // NOTE: not generic enough
 
 // Create a new thread
 //
 int ctThreadCreate(ctThread_t* thread, void* (*exec)(void*));
-
-// Send a signal to a thread
-//
-int ctSignal(ctThread_t* thread, int signum);
-
-// Put the calling thread to sleep
-//
-int ctSleep(unsigned int seconds);
 
 // Create a new mutex
 //
@@ -36,5 +36,21 @@ int ctLock(ctMutex_t* mutex);
 // Unlock mutex
 //
 int ctUnlock(ctMutex_t* mutex);
+
+// Create a new condition
+//
+int ctCondCreate(ctCond_t* cond);
+
+// Wait on condition or timeout
+//
+int ctWait(ctCond_t* cond, ctMutex_t* mutex, void* time);
+
+// Wake up the thread waiting on condition
+//
+int ctSignal(ctCond_t* cond);
+
+// Put the calling thread to sleep
+//
+int ctSleep(unsigned int seconds);
 
 #endif // CT_THREAD_H

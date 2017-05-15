@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 #include <unistd.h>
 #include <pthread.h>
 #include "CT_table_services.h"
@@ -354,6 +355,45 @@ void threadTest() {
   printf("\ntme: %ld", pthread_self());
 }
 
+ctCond_t c;
+int x;
+void* t2(void* args) {
+  int e;
+  struct timespec timeout;
+  for(;;) {
+    ctLock(&m);
+    clock_gettime(CLOCK_REALTIME, &timeout);
+    timeout.tv_sec += 5;
+    e = 0;
+    x = 1;
+    while (x > 0 && e != CT__TIMEDOUT)
+      e = ctWait(&c, &m, /*NULL*/ &timeout);
+    if(e == CT__TIMEDOUT) {
+      printf("\ntimeout");
+    } else {
+      printf("\nsignaled - x = %d", x);
+    }
+    fflush(stdout);
+    ctUnlock(&m);
+    ctSleep(1);
+  }
+}
+void condTest() {
+  ctThread_t t;
+  printf("\nmutex: %d", ctMutexCreate(&m));
+  printf("\ncond: %d", ctCondCreate(&c));
+  printf("\nthread: %d",ctThreadCreate(&t, t2));
+  ctSleep(10);
+  printf("\nwaking you up...");
+  fflush(stdout);
+  ctLock(&m);
+  x = 0;
+  printf("\nsignal: %d", ctSignal(&c));
+  fflush(stdout);
+  ctUnlock(&m);
+  ctSleep(10);
+}
+
 int main(int argc, char** argv) {
   srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
@@ -406,7 +446,8 @@ int main(int argc, char** argv) {
 
   // eventTest();
 
-  threadTest();
+  // threadTest();
+  condTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];
