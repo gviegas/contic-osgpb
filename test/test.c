@@ -19,6 +19,7 @@
 #include "CT_net.h"
 #include "CT_event_queue.h"
 #include "CT_thread.h"
+#include "CT_event_manager.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -394,6 +395,11 @@ void condTest() {
   ctSleep(10);
 }
 
+void mgrTest() {
+  ctManagerStart();
+  ctSleep(1);
+}
+
 int main(int argc, char** argv) {
   srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
@@ -447,7 +453,8 @@ int main(int argc, char** argv) {
   // eventTest();
 
   // threadTest();
-  condTest();
+  // condTest();
+  mgrTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];
