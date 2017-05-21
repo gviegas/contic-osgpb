@@ -5,7 +5,8 @@
 #ifndef CT_THREAD_H
 #define CT_THREAD_H
 
-#include <pthread.h>
+#include <pthread.h> // ugh...
+#include "CT_date.h"
 
 #define CT__TIMEDOUT -1
 
@@ -43,7 +44,7 @@ int ctCondCreate(ctCond_t* cond);
 
 // Wait on condition or timeout
 //
-int ctWait(ctCond_t* cond, ctMutex_t* mutex, void* time);
+int ctWait(ctCond_t* cond, ctMutex_t* mutex, ctTimeSpec_t* time);
 
 // Wake up the thread waiting on condition
 //

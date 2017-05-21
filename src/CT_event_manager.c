@@ -13,29 +13,33 @@ static ctMutex_t _ct_mutex;
 static ctCond_t _ct_cond;
 static int _ct_wake;
 
-// to do
+// to test more...
 static void* _ctManagerRun(void* args) {
-  ctEvent_t event, *p_event;
+  ctEvent_t event, *p_event = NULL;
+  ctTimeSpec_t timeout, *p_timeout = NULL;
   int w;
+  ctGetTimeSpec(&timeout); // subtle...
   while(1) {
     ctLock(&_ct_mutex);
     _ct_wake = w = 0;
     while(!_ct_wake && w != CT__TIMEDOUT)
-      w = ctWait(&_ct_cond, &_ct_mutex, NULL); // should use time
+      w = ctWait(&_ct_cond, &_ct_mutex, p_timeout);
     if(w == CT__TIMEDOUT) {
       if(ctQueueGet(&_ct_queue, &event) == CT__SUCCESS) {
         event.exec();
         if(event.timer == EVENT_INTERVAL) {
-          // calc new time & put on queue & sort
+          ctGetTimeSpec(&timeout);
+          event.calendar = timeout.sec + event.delay;
+          ctQueuePut(&_ct_queue, &event); // NOTE: this cannot fail
+          ctQueueSort(&_ct_queue);
         }
       }
-    } else
-      ctQueueSort(&_ct_queue);
+    } // else signaled
     if(ctQueuePeek(&_ct_queue, &p_event) == CT__SUCCESS) {
-      // set time to event.delay
-    } else {
-      // set time to ... now? 1s?
-    }
+      timeout.sec = p_event->calendar;
+      p_timeout = &timeout;
+    } else
+      p_timeout = NULL;
     ctUnlock(&_ct_mutex);
   }
   return NULL;
@@ -61,7 +65,6 @@ int ctManagerStart() {
   return CT__SUCCESS;
 }
 
-// to test
 int ctNewEvent(ctEvent_t* event) {
   if(!event) {
     fprintf(stderr, "ERROR: Invalid new event\n");
@@ -70,9 +73,10 @@ int ctNewEvent(ctEvent_t* event) {
   ctLock(&_ct_mutex);
   if(ctQueuePut(&_ct_queue, event) == CT__FAILURE) {
     ctUnlock(&_ct_mutex);
-    fprintf(stderr, "ERROR: Failed to insert the new event\n");
+    fprintf(stderr, "ERROR: Failed to insert a new event\n");
     return CT__FAILURE;
   }
+  ctQueueSort(&_ct_queue);
   _ct_wake = 1;
   ctSignal(&_ct_cond);
   ctUnlock(&_ct_mutex);

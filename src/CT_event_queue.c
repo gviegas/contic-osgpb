@@ -57,7 +57,7 @@ int ctQueueSort(ctQueue_t* queue) {
     j = i;
     do {
       j = (j + 1) % CT__QUEUE_LEN;
-      if(queue->events[j].delay < queue->events[i].delay) {
+      if(queue->events[j].calendar < queue->events[i].calendar) {
         e = queue->events[i];
         queue->events[i] = queue->events[j];
         queue->events[j] = e;

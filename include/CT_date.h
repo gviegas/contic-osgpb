@@ -8,9 +8,12 @@
 #include <stdint.h>
 #include <time.h>
 
-// Date type
+// Posix like structure for a time value
 //
-typedef struct {} ctDate_t; // to do
+typedef struct {
+  time_t sec;
+  long nsec;
+} ctTimeSpec_t;
 
 // Time type
 //
@@ -28,7 +31,7 @@ typedef struct {
   uint8_t day;
   uint8_t hour;
   uint8_t minute;
-  uint8_t second;  
+  uint8_t second;
 } ctLTimeDate_t;
 
 // STime_Date type
@@ -45,12 +48,20 @@ typedef struct {
 //
 typedef struct {} ctRDate_t; // to do
 
-// Get Current LTimeDate
+// Date type
+//
+typedef struct {} ctDate_t; // to do
+
+// Get current time as TimeSpec
+//
+void ctGetTimeSpec(ctTimeSpec_t* buffer);
+
+// Get current date and time as LTimeDate
 //
 void ctGetLTimeDate(ctLTimeDate_t* buffer);
 
 // POSIX time to ctLTimeDate
 //
-void ctPosixToLTimeDate(ctLTimeDate_t* buffer, time_t* ptime);
+void ctCalendarToLTimeDate(ctLTimeDate_t* buffer, time_t* ptime);
 
 #endif // CT_DATE_C

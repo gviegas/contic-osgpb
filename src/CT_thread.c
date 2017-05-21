@@ -34,19 +34,20 @@ int ctCondCreate(ctCond_t* cond) {
   return pthread_cond_init((pthread_cond_t*) cond, NULL);
 }
 
-int ctWait(ctCond_t* cond, ctMutex_t* mutex, void* time) {
+int ctWait(ctCond_t* cond, ctMutex_t* mutex, ctTimeSpec_t* time) {
   int r;
   if(!time)
     r = pthread_cond_wait((pthread_cond_t*) cond, (pthread_mutex_t*) mutex);
   else
     r = pthread_cond_timedwait((pthread_cond_t*) cond,
-      (pthread_mutex_t*) mutex, time);
+      (pthread_mutex_t*) mutex, (struct timespec*) time);
   if(r == ETIMEDOUT) return CT__TIMEDOUT;
   return r;
 }
 
 int ctSignal(ctCond_t* cond) {
-  return pthread_cond_signal/*broadcast*/((pthread_cond_t*) cond);
+  // return pthread_cond_broadcast((pthread_cond_t*) cond);
+  return pthread_cond_signal((pthread_cond_t*) cond);
 }
 
 int ctSleep(unsigned int seconds) {

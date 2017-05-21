@@ -13,6 +13,7 @@ typedef enum { EVENT_IMMEDIATE, EVENT_INTERVAL, EVENT_TIMEOUT } ctEventTimer_e;
 //
 typedef struct {
   ctEventTimer_e timer;
+  long int calendar;
   long int delay;
   void (*exec)();
 } ctEvent_t;
