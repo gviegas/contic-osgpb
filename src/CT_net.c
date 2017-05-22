@@ -117,7 +117,7 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src) {
 
 int ctUnbind() {
   if(close(ct_g_sfd)) {
-    fprintf(stderr, "\nERROR: ctUnbind - failed to unbound");
+    fprintf(stderr, "\nERROR: ctUnbind - failed to unbind");
     return CT__FAILURE;
   }
   ct_g_sfd = -1;

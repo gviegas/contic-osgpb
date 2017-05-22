@@ -1,15 +1,22 @@
 //
-// Cretaed by Gustavo Viegas on 2017/04
+// Created by Gustavo Viegas on 2017/04
 //
 
 #include "CT_date.h"
 
-void ctGetLTimeDate(ctLTimeDate_t* buffer) {
-  time_t t = time(NULL);
-  ctPosixToLTimeDate(buffer, &t);
+void ctGetTimeSpec(ctTimeSpec_t* buffer) {
+  struct timespec now;
+  clock_gettime(CLOCK_REALTIME, &now);
+  buffer->sec = now.tv_sec;
+  buffer->nsec = now.tv_nsec;
 }
 
-void ctPosixToLTimeDate(ctLTimeDate_t* buffer, time_t* ptime) {
+void ctGetLTimeDate(ctLTimeDate_t* buffer) {
+  time_t t = time(NULL);
+  ctCalendarToLTimeDate(buffer, &t);
+}
+
+void ctCalendarToLTimeDate(ctLTimeDate_t* buffer, time_t* ptime) {
   struct tm* cal = gmtime(ptime);
   buffer->year = cal->tm_year % 100;
   buffer->month = cal->tm_mon + 1;

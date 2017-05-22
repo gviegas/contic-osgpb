@@ -10,14 +10,6 @@
 
 // Start internal operation
 //
-void ctStartInternal(/*int id*/);
-
-// Stop internal operation
-//
-// void ctStopInternal(/*int id*/);
-
-// Set internal operation state
-//
-// void ctSetInternal(/*...*/);
+void ctStartInternal();
 
 #endif // CT_INTERNAL_H

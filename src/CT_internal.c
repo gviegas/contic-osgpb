@@ -51,8 +51,8 @@ static int _ctMeasureNow(ctMeasureData_t* buffer, ctMeasureInfo_t* info, int opt
 static void* _ctPerformInternalTask(void* args) {
   // To do: read this info from et00
   int i = 0; // start entry
-  int n = 10; // size of circular mem block
-  double delay = 60; // seconds
+  int n = 5; // size of circular mem block
+  double delay = 10; // seconds
   //
   time_t st, et;
   double diff;
@@ -64,9 +64,9 @@ static void* _ctPerformInternalTask(void* args) {
     ctWrite(CT__ET01, &md, sizeof md, sizeof md * i);
     i = (i + 1) % n;
     // debug
-    printf("\nET01 (10 entries)\n");
+    printf("\nET01 (showing %d entries)\n", n);
     printf("next entry: %d\n", i);
-    ctMeasureData_t entries[10];
+    ctMeasureData_t entries[n];
     ctRead(CT__ET01, entries, sizeof entries, 0);
     int j;
     for(j = 0; j < sizeof entries / sizeof entries[0]; ++j) {
@@ -89,23 +89,13 @@ static void* _ctPerformInternalTask(void* args) {
 static pthread_t tid;
 static int targ = 0;
 static void _ctCreateInternalTask() {
-  // pthread_t tid; // no join no go...
-  // int targ = 0; // ^^^
   int err = pthread_create(&tid, NULL, _ctPerformInternalTask, &targ);
   if(err) {
     fprintf(stderr, "\nCreate Internal Task failed\n");
     return;
   }
-  // pthread_join(tid, NULL);
-  // To do: should reach this point when ctStopInternal() is called
-  // or some other kind or event (?)
-  // dont forget to get current entry pos to resume measurements...
 }
 
-void ctStartInternal(/*int id*/) {
+void ctStartInternal() {
   _ctCreateInternalTask();
-  // sleep(5); // test
 }
-
-// void ctStopInternal(/*int id*/) {} // To do
-// void ctSetInternal(/*...*/) {} // To do

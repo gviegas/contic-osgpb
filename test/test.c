@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
+#include <unistd.h>
+#include <pthread.h>
 #include "CT_table_services.h"
 #include "CT_security.h"
 #include "CT_apdu.h"
@@ -14,6 +17,9 @@
 #include "CT_unit.h"
 #include "CT_internal.h"
 #include "CT_net.h"
+#include "CT_event_queue.h"
+#include "CT_thread.h"
+#include "CT_event_manager.h"
 
 ctTarget_t t = {0x02, 0x03};
 
@@ -268,6 +274,161 @@ void netsendTest() {
   ctSend(data, strlen(data), &dest);
 }
 
+void e1() { printf("\ne1!"); fflush(stdout); }
+void e2() { printf("\ne2!"); fflush(stdout); }
+void e3() { printf("\ne3!"); fflush(stdout); }
+void e4() { printf("\ne4!"); fflush(stdout); }
+void e5() { printf("\ne5!"); fflush(stdout); }
+void e6() { printf("\ne6!"); fflush(stdout); }
+void e7() { printf("\ne7!"); fflush(stdout); }
+void e8() { printf("\ne8!"); fflush(stdout); }
+void e9() { printf("\ne9!"); fflush(stdout); }
+void eventTest() {
+  ctEvent_t a = {EVENT_TIMEOUT, 10, 1, e1};
+  ctEvent_t b = {EVENT_TIMEOUT, 5, 1, e2};
+  ctEvent_t c = {EVENT_TIMEOUT, 20, 1, e3};
+  ctEvent_t d = {EVENT_TIMEOUT, 60, 1, e4};
+  ctEvent_t e = {EVENT_TIMEOUT, 30, 1, e5};
+  ctEvent_t f = {EVENT_TIMEOUT, 40, 1, e6};
+  ctEvent_t g = {EVENT_TIMEOUT, 90, 1, e7};
+  ctEvent_t h = {EVENT_TIMEOUT, 1, 1, e8};
+  ctEvent_t i = {EVENT_TIMEOUT, 3, 1, e9};
+
+  ctQueue_t q;
+  ctEvent_t t, *u = NULL;
+
+  ctQueueCreate(&q);
+  ctQueuePut(&q, &a);
+  ctQueuePut(&q, &b);
+  ctQueuePut(&q, &c);
+  ctQueuePut(&q, &d);
+
+  ctQueueGet(&q, &t);
+  ctQueueGet(&q, &t);
+  ctQueueGet(&q, &t);
+
+  ctQueuePut(&q, &e);
+  ctQueuePut(&q, &f);
+  ctQueuePut(&q, &g);
+  ctQueuePut(&q, &h);
+  ctQueuePut(&q, &i);
+
+  ctQueueSort(&q);
+
+  printf("head: %d tail: %d", q.head, q.tail);
+  int idx;
+  for(idx = q.head;; idx = (idx + 1) % CT__QUEUE_LEN) {
+    printf("\n%ld", q.events[idx].delay);
+    q.events[idx].exec();
+    if(idx == q.tail) break;
+  }
+  ctQueuePeek(&q, &u);
+  printf("\n0_0 %ld", u->delay);
+  u->exec();
+  printf("\n");
+}
+
+ctMutex_t m;
+void* t1(void* args) {
+  for(;;) {
+    ctLock(&m);
+    printf("\nt1-> %ld", pthread_self());
+    ctUnlock(&m);
+    ctSleep(1);
+  }
+  return NULL;
+}
+void threadTest() {
+  ctThread_t t;
+  int f = ctMutexCreate(&m);
+  int e = ctThreadCreate(&t, t1);
+  printf("\nnew thread: %d", e);
+  printf("\nnew mutex: %d", f);
+  ctSleep(5);
+  ctLock(&m);
+  printf("\nLOCKED!");
+  fflush(stdout);
+  ctSleep(5);
+  printf("\nUnlocking...");
+  ctUnlock(&m);
+  ctSleep(3);
+  printf("\ntid: %ld", (long unsigned int) t);
+  printf("\ntme: %ld", pthread_self());
+}
+
+ctCond_t c;
+int x;
+void* t2(void* args) {
+  int e;
+  ctTimeSpec_t timeout;
+  for(;;) {
+    ctLock(&m);
+    ctGetTimeSpec(&timeout);
+    timeout.sec += 2;
+    e = 0;
+    x = 1;
+    while (x > 0 && e != CT__TIMEDOUT)
+      e = ctWait(&c, &m, /*NULL*/ &timeout);
+    if(e == CT__TIMEDOUT) {
+      printf("\ntimeout");
+    } else {
+      printf("\nsignaled - x = %d", x);
+    }
+    fflush(stdout);
+    ctUnlock(&m);
+    ctSleep(1);
+  }
+}
+void condTest() {
+  ctThread_t t;
+  printf("\nmutex: %d", ctMutexCreate(&m));
+  printf("\ncond: %d", ctCondCreate(&c));
+  printf("\nthread: %d",ctThreadCreate(&t, t2));
+  ctSleep(10);
+  printf("\nwaking you up...");
+  fflush(stdout);
+  ctLock(&m);
+  x = 0;
+  printf("\nsignal: %d", ctSignal(&c));
+  fflush(stdout);
+  ctUnlock(&m);
+  ctSleep(10);
+}
+
+void mgrTest() {
+  ctManagerStart();
+  ctEvent_t event1 = {EVENT_INTERVAL, time(NULL) + 5, 5, e1};
+  ctEvent_t event2 = {EVENT_TIMEOUT, time(NULL) + 10, 0, e2};
+  ctEvent_t event3 = {EVENT_TIMEOUT, time(NULL) + 30, 0, e3};
+  ctEvent_t event4 = {EVENT_INTERVAL, time(NULL) + 30, 30, e4};
+  ctEvent_t event5 = {EVENT_TIMEOUT, time(NULL) + 45, 0, e5};
+  ctEvent_t event6 = {EVENT_TIMEOUT, time(NULL) + 1, 0, e6};
+  ctEvent_t event7 = {EVENT_INTERVAL, time(NULL) + 41, 3, e7};
+  ctEvent_t event8 = {EVENT_TIMEOUT, time(NULL) + 42, 8, e8};
+  ctNewEvent(&event3);
+  ctNewEvent(&event2);
+  ctNewEvent(&event1);
+  ctNewEvent(&event4);
+  ctNewEvent(&event5);
+  ctNewEvent(&event6);
+  ctSleep(40);
+  ctNewEvent(&event8);
+  ctNewEvent(&event7);
+  ctSleep(40);
+}
+
+void mgrnapTest() {
+  ctManagerStart();
+  ctEvent_t event1 = {EVENT_TIMEOUT, time(NULL) + 30, 30, e1};
+  ctEvent_t event2 = {EVENT_TIMEOUT, time(NULL) + 10, 0, e2};
+  ctNewEvent(&event1);
+  ctSleep(3);
+  ctNewEvent(&event2);
+  ctSleep(5);
+  ctNewEvent(&event2);
+  ctSleep(60);
+}
+
 int main(int argc, char** argv) {
   srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
@@ -316,6 +477,14 @@ int main(int argc, char** argv) {
   // printf("%x\n", et00.measure_devices_used);
 
   // internalTest();
+  // sleep(900);
+
+  // eventTest();
+
+  // threadTest();
+  // condTest();
+  // mgrTest();
+  mgrnapTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];
@@ -332,7 +501,7 @@ int main(int argc, char** argv) {
 
   // dcTest();
 
-  netrecvTest();
+  // netrecvTest();
   // netsendTest();
 
   return 0;
