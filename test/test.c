@@ -21,6 +21,8 @@
 #include "CT_dc.h"
 #include "CT_unit.h"
 
+#include <CT_internal.h>
+
 static ctTarget_t t = {0x02, 0x03};
 
 void servicesTest() {
@@ -239,7 +241,7 @@ void unitTest() {
   ctAddr_t addr;
   strcpy(addr.node, "localhost");
   strcpy(addr.service, "50000");
-  ctUnitDefaultCommission();
+  // ctUnitDefaultCommission();
   ctUnitStart(&t, &addr);
 }
 
@@ -277,7 +279,7 @@ void dcTest() {
   strcpy(dest[2].node, "localhost");
   strcpy(dest[2].service, "50000");
 
-  ctDcDefaultCommission();
+  // ctDcDefaultCommission();
   ctDcStart(&t, &addr, dest, param, sizeof dest / sizeof dest[0]);
 }
 
@@ -534,6 +536,8 @@ int main(int argc, char** argv) {
 
   // netrecvTest();
   // netsendTest();
+
+  // ctStartInternal();
 
   // unitTest();
   dcTest();
