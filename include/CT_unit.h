@@ -5,10 +5,17 @@
 #ifndef CT_UNIT_H
 #define CT_UNIT_H
 
-// Default Unit Commission configuration
+#include "CT_defs.h"
+#include "CT_net.h"
+
+// Unit default commission configuration
 //
-// NOTE: For OSGP Units only (no DC)
+// NOTE: For Units only (no DCs)
 //
-int ctDefaultUnitCommission();
+int ctUnitDefaultCommission();
+
+// Start the Unit
+//
+int ctUnitStart(ctTarget_t* target, ctAddr_t* addr);
 
 #endif // CT_UNIT_H

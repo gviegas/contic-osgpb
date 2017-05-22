@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
   memset(ct_g_target.s_omak, 0xf0, sizeof ct_g_target.s_omak);
 
   ctCreate(); // create data block
-  ctDefaultUnitCommission(); // create unit with default configuration
+  ctUnitDefaultCommission(); // create unit with default configuration
   ctStartInternal(); // start internal operation (new thread)
 
   ctAddr_t addr;

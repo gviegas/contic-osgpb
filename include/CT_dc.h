@@ -5,10 +5,18 @@
 #ifndef CT_DC_H
 #define CT_DC_H
 
-// Default DC Commission Configuration
+#include "CT_defs.h"
+#include "CT_net.h"
+
+// DC default commission configuration
 //
-// NOTE: For OSGP DCs only (no Units)
+// NOTE: For DCs only (no Units)
 //
-int ctDefaultDcCommission();
+int ctDcDefaultCommission();
+
+// Start the DC
+//
+int ctDcStart(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
+  ctParam_t* messages, size_t count);
 
 #endif // CT_DC_H
