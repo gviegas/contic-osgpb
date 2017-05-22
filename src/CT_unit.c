@@ -2,13 +2,15 @@
 // Created by Gustavo Viegas on 2017/04
 //
 
+#include <stdio.h>
 #include <string.h>
-#include "CT_unit.h"
-#include "CT_defs.h"
 #include "CT_tables.h"
 #include "CT_file.h"
+#include "CT_event_manager.h"
+#include "CT_apdu.h"
+#include "CT_unit.h"
 
-int ctDefaultUnitCommission() {
+int ctUnitDefaultCommission() {
   ctBT00_t bt00;
   memset(&bt00, 0, sizeof bt00);
   bt00.char_format = 1;
@@ -47,5 +49,40 @@ int ctDefaultUnitCommission() {
   ctWrite(CT__ET00, &et00, sizeof et00, 0);
   ctWrite(CT__ET01, &et01, sizeof et01, 0);
 
+  return CT__SUCCESS;
+}
+
+// to test
+int ctUnitStart(ctTarget_t* target, ctAddr_t* addr) {
+  ctApdu_t apdu, res_apdu;
+  ctAddr_t src;
+  int n;
+  if(ctManagerStart() != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: Failed to start the event manager\n");
+    return CT__FAILURE;
+  }
+  if(ctBind(addr) != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: Failed to bind\n");
+    return CT__FAILURE;
+  }
+  while(1) {
+    n = ctRecv(apdu.apdu, sizeof apdu.apdu, &src);
+    if(n < 1) continue;
+
+    // debug
+    int i;
+    printf("received:\n");
+    for(i = 0; i < n; ++i) printf("%x ", apdu.apdu[i]);
+    printf("from: node=%s service=%s\n", src.node, src.service);
+    printf("end of message\n");
+    //
+
+    n = ctProcessRequest(&res_apdu, &apdu, target);
+    if(n < 1) continue;
+    if(ctSend(res_apdu.apdu, n, &src) != CT__SUCCESS) {
+      fprintf(stderr, "ERROR: Failed to send response\n");
+      return CT__FAILURE;
+    }
+  }
   return CT__SUCCESS;
 }

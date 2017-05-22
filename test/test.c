@@ -14,14 +14,14 @@
 #include "CT_table_access.h"
 #include "CT_tables.h"
 #include "CT_file.h"
-#include "CT_unit.h"
-#include "CT_internal.h"
 #include "CT_net.h"
 #include "CT_event_queue.h"
 #include "CT_thread.h"
 #include "CT_event_manager.h"
+#include "CT_dc.h"
+#include "CT_unit.h"
 
-ctTarget_t t = {0x02, 0x03};
+static ctTarget_t t = {0x02, 0x03};
 
 void servicesTest() {
   uint8_t b[1024];
@@ -236,13 +236,49 @@ void createTest() {
 }
 
 void unitTest() {
-  ctDefaultUnitCommission();
+  ctAddr_t addr;
+  strcpy(addr.node, "localhost");
+  strcpy(addr.service, "50000");
+  ctUnitDefaultCommission();
+  ctUnitStart(&t, &addr);
 }
 
-void dcTest() {};
+void dcTest() {
+  ctAddr_t addr, dest[3];
+  ctParam_t param[3];
 
-void internalTest() {
-  ctStartInternal();
+  ctFRRequest_t frreq1; // full table read request
+  frreq1.table_id = CT__BT00; // basic table 00
+  param[0].service = REQUEST_FULL_READ;
+  param[0].fr_request = &frreq1;
+
+  ctPRRequest_t prreq1; // partial table read request
+  prreq1.table_id = CT__ET01; // extended table 01
+  memset(prreq1.offset, 0, sizeof prreq1.offset);
+  prreq1.offset[2] = 0x0c;
+  prreq1.count = 0x0c;
+  param[1].service = REQUEST_PART_READ;
+  param[1].pr_request = &prreq1;
+
+  ctPRRequest_t prreq2; // partial table read request
+  prreq2.table_id = CT__ET01; // extended table 01
+  memset(prreq2.offset, 0, sizeof prreq2.offset);
+  // prreq12.offset[2] = 0x0c;
+  prreq2.count = 0x0c;
+  param[2].service = REQUEST_PART_READ;
+  param[2].pr_request = &prreq2;
+
+  strcpy(addr.node, "localhost");
+  strcpy(addr.service, "60000");
+  strcpy(dest[0].node, "localhost");
+  strcpy(dest[0].service, "50000");
+  strcpy(dest[1].node, "localhost");
+  strcpy(dest[1].service, "50000");
+  strcpy(dest[2].node, "localhost");
+  strcpy(dest[2].service, "50000");
+
+  ctDcDefaultCommission();
+  ctDcStart(&t, &addr, dest, param, sizeof dest / sizeof dest[0]);
 }
 
 void netrecvTest() {
@@ -476,15 +512,12 @@ int main(int argc, char** argv) {
   // ctRead(CT__ET00, &et00, sizeof et00, 0);
   // printf("%x\n", et00.measure_devices_used);
 
-  // internalTest();
-  // sleep(900);
-
   // eventTest();
 
   // threadTest();
   // condTest();
   // mgrTest();
-  mgrnapTest();
+  // mgrnapTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];
@@ -499,10 +532,11 @@ int main(int argc, char** argv) {
   //   );
   // }
 
-  // dcTest();
-
   // netrecvTest();
   // netsendTest();
+
+  // unitTest();
+  dcTest();
 
   return 0;
 }
