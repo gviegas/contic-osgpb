@@ -52,7 +52,6 @@ int ctUnitDefaultCommission() {
   return CT__SUCCESS;
 }
 
-// to test
 int ctUnitStart(ctTarget_t* target, ctAddr_t* addr) {
   ctApdu_t apdu, res_apdu;
   ctAddr_t src;
@@ -68,15 +67,6 @@ int ctUnitStart(ctTarget_t* target, ctAddr_t* addr) {
   while(1) {
     n = ctRecv(apdu.apdu, sizeof apdu.apdu, &src);
     if(n < 1) continue;
-
-    // debug
-    int i;
-    printf("received:\n");
-    for(i = 0; i < n; ++i) printf("%x ", apdu.apdu[i]);
-    printf("from: node=%s service=%s\n", src.node, src.service);
-    printf("end of message\n");
-    //
-
     n = ctProcessRequest(&res_apdu, &apdu, target);
     if(n < 1) continue;
     if(ctSend(res_apdu.apdu, n, &src) != CT__SUCCESS) {

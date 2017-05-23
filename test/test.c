@@ -246,8 +246,10 @@ void unitTest() {
 }
 
 void dcTest() {
+  int i, j;
   ctAddr_t addr, dest[3];
   ctParam_t param[3];
+  ctResponse_t responses[3];
 
   ctFRRequest_t frreq1; // full table read request
   frreq1.table_id = CT__BT00; // basic table 00
@@ -257,7 +259,7 @@ void dcTest() {
   ctPRRequest_t prreq1; // partial table read request
   prreq1.table_id = CT__ET01; // extended table 01
   memset(prreq1.offset, 0, sizeof prreq1.offset);
-  prreq1.offset[2] = 0x0c;
+  prreq1.offset[2] = 0x24;
   prreq1.count = 0x0c;
   param[1].service = REQUEST_PART_READ;
   param[1].pr_request = &prreq1;
@@ -280,7 +282,17 @@ void dcTest() {
   strcpy(dest[2].service, "50000");
 
   // ctDcDefaultCommission();
-  ctDcStart(&t, &addr, dest, param, sizeof dest / sizeof dest[0]);
+  ctDcStart(&t, &addr, dest, param, responses, sizeof dest / sizeof dest[0]);
+
+  for(i = 0; i < sizeof responses / sizeof responses[0]; ++i) {
+    printf("response %d:\n", i + 1);
+    printf("service=%d ", responses[i].service);
+    printf("response=%d ", responses[i].response);
+    printf("read_count=%d \n", responses[i].read_count);
+    for(j = 0; j < responses[i].read_count; ++j)
+      printf("%x ", responses[i].read_data[j]);
+    printf("\n--------\n");
+  }
 }
 
 void netrecvTest() {
@@ -538,7 +550,7 @@ int main(int argc, char** argv) {
   // netsendTest();
 
   // ctStartInternal();
-
+  // ctSleep(60);
   // unitTest();
   dcTest();
 

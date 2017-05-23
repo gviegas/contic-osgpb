@@ -17,6 +17,6 @@ int ctDcDefaultCommission();
 // Start the DC
 //
 int ctDcStart(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
-  ctParam_t* messages, size_t count);
+  ctParam_t* messages, ctResponse_t* responses, size_t count);
 
 #endif // CT_DC_H

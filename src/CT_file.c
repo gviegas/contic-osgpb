@@ -75,11 +75,14 @@ int ctSeek(uint16_t table_id, size_t offset, void* file) {
   count = fread(index, sizeof index[0], CT__BLOCK_LEN, file);
   for(i = 0; i < count; ++i) {
     if(index[i].used && index[i].table_id == table_id) {
+      fseek(file, sizeof index[0] * CT__BLOCK_LEN +
+        sizeof entry * index[i].index, SEEK_SET);
       count = fread(&entry, sizeof entry, 1, file);
       if(count != 1) break;
       fseek(file, sizeof(ctBlock_t) + entry.offset + offset, SEEK_SET);
       return entry.size;
     }
   }
+  fprintf(stderr, "ERROR: Failed to set file position for table %d", table_id);
   return -1;
 }
