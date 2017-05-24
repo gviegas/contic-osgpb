@@ -7,6 +7,7 @@
 
 #include "CT_defs.h"
 #include "CT_net.h"
+#include "CT_apdu.h"
 
 // DC default commission configuration
 //

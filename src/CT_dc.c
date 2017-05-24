@@ -4,10 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "CT_apdu.h"
 #include "CT_dc.h"
-
-#include "CT_tables.h"
 
 // to do
 int ctDcDefaultCommission() {

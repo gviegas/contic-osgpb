@@ -552,7 +552,12 @@ int main(int argc, char** argv) {
   // ctStartInternal();
   // ctSleep(60);
   // unitTest();
-  dcTest();
+  // dcTest();
+
+  printf("BLOCK: %lu bytes\n", sizeof(ctBlock_t));
+  printf("BT00: %lu bytes\n", sizeof(ctBT00_t));
+  printf("ET00: %lu bytes\n", sizeof(ctET00_t));
+  printf("ET01 %lu bytes\n", sizeof(ctET01_t));
 
   return 0;
 }
