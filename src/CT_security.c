@@ -67,7 +67,7 @@ void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count,
           // else return;
         }
         n = ~(buffer[7 - b] + 7 - b);
-        if(target->s_omak[a % 12] & (1 << b))
+        if(target->key[a % 12] & (1 << b))
           buffer[7 - b] = buffer[k] + m + ((n << 1) + (n >> 7));
         else
           buffer[7 - b] = buffer[k] + m - ((n >> 1) + (n << 7));

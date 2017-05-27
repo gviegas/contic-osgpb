@@ -20,7 +20,7 @@ int ctCreateApdu(ctApdu_t* apdu, ctParam_t* param, ctTarget_t* target) {
       c += ctAuthenticate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target);
     break;
     case REQUEST_PART_READ:
-      c += ctPartialReadRequest(apdu->apdu+c, param->pr_request->table_id, 
+      c += ctPartialReadRequest(apdu->apdu+c, param->pr_request->table_id,
         param->pr_request->offset, param->pr_request->count);
       memcpy(apdu->apdu+c, target->sequence, CT__LEN_SEQN);
       c += CT__LEN_SEQN;
@@ -35,7 +35,7 @@ int ctCreateApdu(ctApdu_t* apdu, ctParam_t* param, ctTarget_t* target) {
     break;
     case REQUEST_PART_WRITE:
       c += ctPartialWriteRequest(apdu->apdu+c, param->pw_request->table_id,
-        param->pw_request->offset, param->pw_request->count, 
+        param->pw_request->offset, param->pw_request->count,
         param->pw_request->data);
       memcpy(apdu->apdu+c, target->sequence, CT__LEN_SEQN);
       c += CT__LEN_SEQN;
@@ -77,13 +77,13 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
           p.service = RESPONSE_PART_READ;
         break;
         case CT__CMD_FULLWRITE:
-          a = ((uint16_t)apdu->apdu[4] << 8) | 
+          a = ((uint16_t)apdu->apdu[4] << 8) |
             ((uint16_t)apdu->apdu[5] & 0x00ff);
           c = 1 + 1 + 2 + 2 + a + CT__LEN_SEQN;
           p.service = RESPONSE_FULL_WRITE;
         break;
         case CT__CMD_PARTWRITE:
-          a = ((uint16_t)apdu->apdu[7] << 8) | 
+          a = ((uint16_t)apdu->apdu[7] << 8) |
             ((uint16_t)apdu->apdu[8] & 0x00ff);
           c = 1 + 1 + 2 + 3 + 2 + a + CT__LEN_SEQN;
           p.service = RESPONSE_PART_WRITE;
@@ -97,7 +97,7 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
       fprintf(stderr, "\nInvalid apdu type code %x\n", apdu->apdu[0]);
       return CT__FAILURE;
   }
-  
+
   r = ctValidate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target);
   if(r != CT__SUCCESS) {
     fprintf(stderr, "\nValidation failed\n");
@@ -155,27 +155,27 @@ int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
           switch(req_apdu->apdu[1]) {
             case CT__CMD_FULLREAD:
               req_c = 1 + 1 + 2 + CT__LEN_SEQN;
-              a = ((uint16_t)apdu->apdu[2] << 8) | 
+              a = ((uint16_t)apdu->apdu[2] << 8) |
                 ((uint16_t)apdu->apdu[3] & 0x00ff);
               res_c = 1 + 1 + 2 + a;
               buffer->service = RESPONSE_FULL_READ;
             break;
             case CT__CMD_PARTREAD:
               req_c = 1 + 1 + 2 + 3 + 2 + CT__LEN_SEQN;
-              a = ((uint16_t)apdu->apdu[2] << 8) | 
+              a = ((uint16_t)apdu->apdu[2] << 8) |
                 ((uint16_t)apdu->apdu[3] & 0x00ff);
               res_c = 1 + 1 + 2 + a;
               buffer->service = RESPONSE_PART_READ;
             break;
             case CT__CMD_FULLWRITE:
-              a = ((uint16_t)req_apdu->apdu[4] << 8) | 
+              a = ((uint16_t)req_apdu->apdu[4] << 8) |
                 ((uint16_t)req_apdu->apdu[5] & 0x00ff);
               req_c = 1 + 1 + 2 + 2 + a + CT__LEN_SEQN;
               res_c = 1 + 1;
               buffer->service = RESPONSE_FULL_WRITE;
             break;
             case CT__CMD_PARTWRITE:
-              a = ((uint16_t)req_apdu->apdu[7] << 8) | 
+              a = ((uint16_t)req_apdu->apdu[7] << 8) |
                 ((uint16_t)req_apdu->apdu[8] & 0x00ff);
               req_c = 1 + 1 + 2 + 3 + 2 + a + CT__LEN_SEQN;
               res_c = 1 + 1;
@@ -196,13 +196,12 @@ int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
       return CT__FAILURE;
   }
 
-  r = ctValidate(apdu->apdu+res_c, req_apdu->apdu, apdu->apdu, req_c, res_c, 
+  r = ctValidate(apdu->apdu+res_c, req_apdu->apdu, apdu->apdu, req_c, res_c,
     target);
   if(r == CT__FAILURE) {
     fprintf(stderr, "\nValidation failed\n");
     return r;
   }
-  // To do: ctResponse_t needs testing
   buffer->response = apdu->apdu[1];
   switch(buffer->service) {
     case RESPONSE_FULL_READ:

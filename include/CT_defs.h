@@ -91,7 +91,7 @@ typedef struct {
   uint8_t subnet;
   uint8_t node;
   uint8_t sequence[CT__LEN_SEQN];
-  uint8_t s_omak[CT__LEN_OMAK];
+  uint8_t key[CT__LEN_OMAK];
 } ctTarget_t;
 
 #endif // CT_DEFS_H

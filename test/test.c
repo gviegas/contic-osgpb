@@ -484,7 +484,7 @@ int main(int argc, char** argv) {
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
   uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
   memcpy(t.sequence, seq, sizeof seq);
-  memcpy(t.s_omak, key, sizeof key);
+  memcpy(t.key, key, sizeof key);
 
   // apduTest();
   // btTest();

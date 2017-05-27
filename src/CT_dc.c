@@ -25,19 +25,19 @@ int ctDcStart(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
     n = ctCreateApdu(&apdu, &messages[i], target);
     if(n < 1) continue;
     if(ctSend(apdu.apdu, n, &destinations[i]) != CT__SUCCESS) {
-      fprintf(stderr, "ERROR: Failed to send message %d\n", i);
+      fprintf(stderr, "WARNING: Failed to send message %d\n", i);
       continue;
     }
     n = ctRecv(res_apdu.apdu, sizeof res_apdu.apdu, &src);
     if(n < 1) {
-      fprintf(stderr, "ERROR: Received invalid response for message %d\n", i);
+      fprintf(stderr, "WARNING: Received invalid response for message %d\n", i);
       memset(&responses[i], -1, sizeof responses[0]);
       continue;
     }
     if(ctProcessResponse(&responses[i], &res_apdu, &apdu, target)
       != CT__SUCCESS)
     {
-      fprintf(stderr, "ERROR: Failed to process response %d\n", i);
+      fprintf(stderr, "WARNING: Failed to process response %d\n", i);
       memset(&responses[i], -1, sizeof responses[0]);
       continue;
     }

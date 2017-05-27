@@ -69,10 +69,8 @@ int ctUnitStart(ctTarget_t* target, ctAddr_t* addr) {
     if(n < 1) continue;
     n = ctProcessRequest(&res_apdu, &apdu, target);
     if(n < 1) continue;
-    if(ctSend(res_apdu.apdu, n, &src) != CT__SUCCESS) {
-      fprintf(stderr, "ERROR: Failed to send response\n");
-      return CT__FAILURE;
-    }
+    if(ctSend(res_apdu.apdu, n, &src) != CT__SUCCESS)
+      fprintf(stderr, "WARNING: Failed to send response\n");
   }
   return CT__SUCCESS;
 }

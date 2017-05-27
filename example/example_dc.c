@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
   ct_g_target.subnet = 0xff;
   ct_g_target.node = 0x1f;
   memset(ct_g_target.sequence, 1, sizeof ct_g_target.sequence);
-  memset(ct_g_target.s_omak, 0xf0, sizeof ct_g_target.s_omak);
+  memset(ct_g_target.key, 0xf0, sizeof ct_g_target.key);
 
   ctAddr_t addr;
   strcpy(addr.node, "localhost");
