@@ -6,12 +6,15 @@
 #include <stdio.h>
 #include <string.h>
 #include "CT_defs.h"
+#include "CT_file.h"
 #include "CT_unit.h"
 
 #define CT__UNIT_ARGC 7
 #define CT__UNIT_ARGV_KEY "--key"
 #define CT__UNIT_ARGV_NODE "--node"
 #define CT__UNIT_ARGV_SERV "--service"
+#define CT__UNIT_ARGV_OPT "--option"
+#define CT__UNIT_ARGV_CLEAR "--clear"
 
 int main(int argc, char** argv) {
   ctTarget_t target;
@@ -22,7 +25,9 @@ int main(int argc, char** argv) {
     printf("Usage: ");
     printf("%s <KEY> ", CT__UNIT_ARGV_KEY);
     printf("%s <NODE> ", CT__UNIT_ARGV_NODE);
-    printf("%s <SERVICE>\n", CT__UNIT_ARGV_SERV);
+    printf("%s <SERVICE> ", CT__UNIT_ARGV_SERV);
+    printf("[%s <OPTION>] ", CT__UNIT_ARGV_OPT);
+    printf("[%s]\n", CT__UNIT_ARGV_CLEAR);
     return CT__FAILURE;
   }
   for(i = 1; i < argc; ++i) {
@@ -51,6 +56,13 @@ int main(int argc, char** argv) {
         return CT__FAILURE;
       }
       strcpy(addr.service, argv[i]);
+    } else if(!strcmp(argv[i], CT__UNIT_ARGV_OPT)) {
+      // to do
+    } else if(!strcmp(argv[i], CT__UNIT_ARGV_CLEAR)) {
+      if(ctCreate() != CT__SUCCESS) {
+        fprintf(stderr, "ERROR: Unable to create new data file\n");
+        return CT__FAILURE;
+      }
     } else {
       fprintf(stderr, "ERROR: Invalid argument %s\n", argv[i]);
       return CT__FAILURE;

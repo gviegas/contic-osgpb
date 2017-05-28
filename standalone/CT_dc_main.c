@@ -85,11 +85,11 @@ int main(int argc, char** argv) {
   param[2].pr_request = &prreq2;
 
   strcpy(dest[0].node, "localhost");
-  strcpy(dest[0].service, "21000");
+  strcpy(dest[0].service, "49122");
   strcpy(dest[1].node, "localhost");
-  strcpy(dest[1].service, "22000");
+  strcpy(dest[1].service, "49122");
   strcpy(dest[2].node, "localhost");
-  strcpy(dest[2].service, "21000");
+  strcpy(dest[2].service, "49122");
 
   // ctDcDefaultCommission();
   ctDcStart(&target, &addr, dest, param, responses,

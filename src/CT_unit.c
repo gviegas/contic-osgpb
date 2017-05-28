@@ -7,6 +7,7 @@
 #include "CT_tables.h"
 #include "CT_file.h"
 #include "CT_event_manager.h"
+#include "CT_state.h"
 #include "CT_apdu.h"
 #include "CT_unit.h"
 
@@ -48,6 +49,9 @@ int ctUnitDefaultCommission() {
   ctWrite(CT__BT00, &bt00, sizeof bt00, 0);
   ctWrite(CT__ET00, &et00, sizeof et00, 0);
   ctWrite(CT__ET01, &et01, sizeof et01, 0);
+  ctStateHasChanged(CT__BT00);
+  ctStateHasChanged(CT__ET00);
+  ctStateHasChanged(CT__ET01);
 
   return CT__SUCCESS;
 }
@@ -58,6 +62,10 @@ int ctUnitStart(ctTarget_t* target, ctAddr_t* addr) {
   int n;
   if(ctManagerStart() != CT__SUCCESS) {
     fprintf(stderr, "ERROR: Failed to start the event manager\n");
+    return CT__FAILURE;
+  }
+  if(ctUnitDefaultCommission() != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: Unit default commissioning failed\n");
     return CT__FAILURE;
   }
   if(ctBind(addr) != CT__SUCCESS) {

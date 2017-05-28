@@ -35,9 +35,11 @@ typedef struct {
 
 // Create Data file
 //
-// NOTE: Call this once - It will destroy any data block previously created
-//
 int ctCreate();
+
+// Get block entry
+//
+int ctGetBlockEntry(uint16_t table_id, ctBlockEntry_t* entry);
 
 // File read
 //

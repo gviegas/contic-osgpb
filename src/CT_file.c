@@ -34,6 +34,33 @@ int ctCreate() {
   return CT__SUCCESS;
 }
 
+int ctGetBlockEntry(uint16_t table_id, ctBlockEntry_t* entry) {
+  FILE* f = fopen(CT__DATAFILE, "rb");
+  if(!f)
+    fprintf(stderr, "ERROR: Could not open data file\n");
+
+  int i, count;
+  ctBlockIndex_t index[CT__BLOCK_LEN];
+  memset(index, 0, sizeof index);
+  count = fread(index, sizeof index[0], CT__BLOCK_LEN, f);
+  if(count != CT__BLOCK_LEN)
+    fprintf(stderr, "ERROR: Could not read index block\n");
+  else {
+    for(i = 0; i < count; ++i) {
+      if(index[i].used && index[i].table_id == table_id) {
+        fseek(f, sizeof index + sizeof *entry * index[i].index, SEEK_SET);
+        count = fread(entry, sizeof *entry, 1, f);
+        if(count != 1) {
+          fprintf(stderr, "ERROR: Could not read block entry\n");
+          break;
+        }
+        return CT__SUCCESS;
+      }
+    }
+  }
+  return CT__FAILURE;
+}
+
 int ctRead(uint16_t table_id, void* buffer, size_t count, size_t offset) {
   FILE* f = fopen(CT__DATAFILE, "rb");
   if(!f) {
@@ -75,14 +102,13 @@ int ctSeek(uint16_t table_id, size_t offset, void* file) {
   count = fread(index, sizeof index[0], CT__BLOCK_LEN, file);
   for(i = 0; i < count; ++i) {
     if(index[i].used && index[i].table_id == table_id) {
-      fseek(file, sizeof index[0] * CT__BLOCK_LEN +
-        sizeof entry * index[i].index, SEEK_SET);
+      fseek(file, sizeof index + sizeof entry * index[i].index, SEEK_SET);
       count = fread(&entry, sizeof entry, 1, file);
       if(count != 1) break;
       fseek(file, sizeof(ctBlock_t) + entry.offset + offset, SEEK_SET);
       return entry.size;
     }
   }
-  fprintf(stderr, "ERROR: Failed to set file position for table %d", table_id);
+  fprintf(stderr, "ERROR: Failed to seek position for table %d\n", table_id);
   return -1;
 }

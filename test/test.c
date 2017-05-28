@@ -20,8 +20,10 @@
 #include "CT_event_manager.h"
 #include "CT_dc.h"
 #include "CT_unit.h"
+#include "CT_custom_events.h"
+#include "CT_state.h"
 
-#include <CT_internal.h>
+#include "CT_internal.h"
 
 static ctTarget_t t = {0x02, 0x03};
 
@@ -554,10 +556,15 @@ int main(int argc, char** argv) {
   // unitTest();
   // dcTest();
 
-  printf("BLOCK: %lu bytes\n", sizeof(ctBlock_t));
-  printf("BT00: %lu bytes\n", sizeof(ctBT00_t));
-  printf("ET00: %lu bytes\n", sizeof(ctET00_t));
-  printf("ET01 %lu bytes\n", sizeof(ctET01_t));
+  ctStateHasChanged(CT__BT00);
+  ctStateHasChanged(CT__ET00);
+  ctStateHasChanged(CT__ET01);
+  ctStateHasChanged(CT__BT06);
+
+  // printf("BLOCK: %lu bytes\n", sizeof(ctBlock_t));
+  // printf("BT00: %lu bytes\n", sizeof(ctBT00_t));
+  // printf("ET00: %lu bytes\n", sizeof(ctET00_t));
+  // printf("ET01 %lu bytes\n", sizeof(ctET01_t));
 
   return 0;
 }

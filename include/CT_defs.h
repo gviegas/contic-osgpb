@@ -11,15 +11,18 @@
 //
 #define CT__SUCCESS 0
 #define CT__FAILURE 1
+
 // EN14908-1 type code
 //
 #define CT__TYPE_CODE 0
+
 // Request command codes
 //
 #define CT__CMD_FULLREAD  0x30
 #define CT__CMD_PARTREAD  0x3F
 #define CT__CMD_FULLWRITE 0x40
 #define CT__CMD_PARTWRITE 0x4F
+
 // Response codes
 //
 #define CT__RES_OK  0
@@ -34,7 +37,8 @@
 #define CT__RES_SEQ 0x0C
 #define CT__RES_INC 0x1E
 #define CT__RES_ICA 0x1F
-// Buffer size
+
+// Buffer sizes
 //
 #define CT__LEN_MAXAPDU   114
 #define CT__LEN_PARTREAD  84
@@ -42,6 +46,7 @@
 #define CT__LEN_SEQN      4
 #define CT__LEN_DIGEST    8
 #define CT__LEN_OMAK      12
+
 // Basic table IDs
 //
 #define CT__BT00 0
@@ -64,6 +69,7 @@
 #define CT__BT62 62
 #define CT__BT63 63
 #define CT__BT64 64
+
 // Extended table IDs
 //
 #define CT__ETOFFSET 2048
@@ -74,9 +80,11 @@
 #define CT__ET12 CT__ETOFFSET + 12
 #define CT__ET21 CT__ETOFFSET + 21
 #define CT__ET42 CT__ETOFFSET + 42
+
 // Basic procedure IDs
 //
 #define CT__BP10 10
+
 // Extended procedure IDs
 //
 #define CT__EPOFFSET CT__ETOFFSET
@@ -84,6 +92,13 @@
 #define CT__EP11 CT__EPOFFSET + 11
 #define CT__EP12 CT__EPOFFSET + 12
 #define CT__EP16 CT__EPOFFSET + 16
+
+// Table types
+//
+#define CT__TTYPE_RDONLY 0
+#define CT__TTYPE_WRONLY 1
+#define CT__TTYPE_RDWR   2
+#define CT__TTYPE_EVENT  3
 
 // OSGP target/device/slave info
 //
