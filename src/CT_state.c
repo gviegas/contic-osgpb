@@ -16,7 +16,10 @@ void ctStateHasChanged(uint16_t table_id/*, size_t count, size_t offset*/) {
   memset(&entry, 0, sizeof entry);
   memset(&event, 0, sizeof event);
 
-  if(entry.type == CT__TTYPE_EVENT) {
+  if(ctGetBlockEntry(table_id, &entry) != CT__SUCCESS)
+    fprintf(stderr, "ERROR: Failed to read block entry for table %d\n",
+      table_id);
+  else if(entry.type == CT__TTYPE_EVENT) {
     if(ctCustomEvent(table_id, &event) != CT__SUCCESS)
       fprintf(stderr, "WARNING: Requested event for table %d not implemented\n",
         table_id);

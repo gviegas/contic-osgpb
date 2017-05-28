@@ -1,5 +1,5 @@
 //
-// Creted by Gustavo Viegas on 2017/05
+// Created by Gustavo Viegas on 2017/05
 //
 
 #ifndef CT_TIMED_EVENT_H

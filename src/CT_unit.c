@@ -38,7 +38,6 @@ int ctUnitDefaultCommission() {
 
   ctET00_t et00;
   memset(&et00, 0, sizeof et00);
-  et00.measure_devices_used = 0b1000;
   ctTime_t minfo_time = {0, 0, 60};
   ctMeasureInfo_t minfo = {1, 0, minfo_time, 10};
   et00.measure_info[0] = minfo;

@@ -19,15 +19,15 @@ int ctCreate() {
 
   // BT00
   block.indexes[0] = (ctBlockIndex_t) {CT__BT00, 0, 1};
-  block.entries[0] = (ctBlockEntry_t) {sizeof(ctBT00_t), 0, 0};
+  block.entries[0] = (ctBlockEntry_t) {sizeof(ctBT00_t), 0, CT__TTYPE_RDONLY};
   // ET00
   block.indexes[1] = (ctBlockIndex_t) {CT__ET00, 1, 1};
   block.entries[1] = (ctBlockEntry_t) {sizeof(ctET00_t),
-    block.entries[0].size + block.entries[0].offset, 0};
+    block.entries[0].size + block.entries[0].offset, CT__TTYPE_EVENT /*test type*/};
   // ET01
   block.indexes[2] = (ctBlockIndex_t) {CT__ET01, 2, 1};
   block.entries[2] = (ctBlockEntry_t) {sizeof(ctET01_t),
-    block.entries[1].size + block.entries[1].offset, 0};
+    block.entries[1].size + block.entries[1].offset, CT__TTYPE_RDWR};
 
   fwrite(&block, 1, sizeof block, f);
   fclose(f);

@@ -18,7 +18,7 @@ typedef struct {
 // ET01 - Simplified Measurement Data [Manufacturer Specific]
 //
 typedef struct {
-  ctMeasureData_t measure_data[10+10+10+10]; // should be ET00.measure_info[i...n].number_entries
+  ctMeasureData_t measure_data[10+10+10+10];
 } ctET01_t;
 
 #endif
