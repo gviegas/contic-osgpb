@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
   ctResponse_t responses[1];
 
   ctFWRequest_t fwreq;
-  fwreq.table_id = CT__ET00;
+  fwreq.table_id = CT__UT01;
   memset(fwreq.data, 0xaf, 10);
   fwreq.count = 10;
   param[0].service = REQUEST_FULL_WRITE;
@@ -74,29 +74,9 @@ int main(int argc, char** argv) {
   // frreq1.table_id = CT__BT00; // basic table 00
   // param[0].service = REQUEST_FULL_READ;
   // param[0].fr_request = &frreq1;
-  //
-  // ctPRRequest_t prreq1; // partial table read request
-  // prreq1.table_id = CT__ET01; // extended table 01
-  // memset(prreq1.offset, 0, sizeof prreq1.offset);
-  // prreq1.offset[2] = 0x24;
-  // prreq1.count = 0x0c;
-  // param[1].service = REQUEST_PART_READ;
-  // param[1].pr_request = &prreq1;
-  //
-  // ctPRRequest_t prreq2; // partial table read request
-  // prreq2.table_id = CT__ET01; // extended table 01
-  // memset(prreq2.offset, 0, sizeof prreq2.offset);
-  // // prreq12.offset[2] = 0x0c;
-  // prreq2.count = 0x0c;
-  // param[2].service = REQUEST_PART_READ;
-  // param[2].pr_request = &prreq2;
 
   strcpy(dest[0].node, "localhost");
   strcpy(dest[0].service, "50111");
-  // strcpy(dest[1].node, "localhost");
-  // strcpy(dest[1].service, "49122");
-  // strcpy(dest[2].node, "localhost");
-  // strcpy(dest[2].service, "49122");
 
   // ctDcDefaultCommission();
   ctDcStart(&target, &addr, dest, param, responses,

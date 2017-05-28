@@ -52,35 +52,35 @@ int main(int argc, char** argv) {
   printf("\nfrom: node=%s service=%s", src.node, src.service);
   printf("\nend of message\n");
 
-  ctPRRequest_t prreq; // partial table read request
-  prreq.table_id = CT__ET01; // extended table 01
-  memset(prreq.offset, 0, sizeof prreq.offset);
-  prreq.offset[2] = 0x0c;
-  prreq.count = 0x0c;
-
-  param.service = REQUEST_PART_READ;
-  param.pr_request = &prreq;
-
-  memset(&apdu, 0, sizeof apdu);
-  n = ctCreateApdu(&apdu, &param, &ct_g_target); // create partial read req apdu
-
-  ctSend(apdu.apdu, n, &dest); // send partial read req apdu
-
-  n = ctRecv(res.apdu, sizeof res.apdu, &src); // wait for response
-
-  printf("\nreceived: ");
-  for(i = 0; i < n; ++i) printf("%x ", res.apdu[i]);
-  printf("\nfrom: node=%s service=%s", src.node, src.service);
-  ctMeasureData_t entry;
-  memcpy(&entry, res.apdu+4, sizeof entry);
-  printf("\ndata...");
-  printf("\nvalue: %f", entry.value);
-  printf("\ntimestamp: %d/%d/%d %d:%d:%d",
-    entry.timestamp.year, entry.timestamp.month,
-    entry.timestamp.day, entry.timestamp.hour,
-    entry.timestamp.minute, entry.timestamp.second
-  );
-  printf("\nend of message\n");
+  // ctPRRequest_t prreq; // partial table read request
+  // prreq.table_id = CT__ET01; // extended table 01
+  // memset(prreq.offset, 0, sizeof prreq.offset);
+  // prreq.offset[2] = 0x0c;
+  // prreq.count = 0x0c;
+  //
+  // param.service = REQUEST_PART_READ;
+  // param.pr_request = &prreq;
+  //
+  // memset(&apdu, 0, sizeof apdu);
+  // n = ctCreateApdu(&apdu, &param, &ct_g_target); // create partial read req apdu
+  //
+  // ctSend(apdu.apdu, n, &dest); // send partial read req apdu
+  //
+  // n = ctRecv(res.apdu, sizeof res.apdu, &src); // wait for response
+  //
+  // printf("\nreceived: ");
+  // for(i = 0; i < n; ++i) printf("%x ", res.apdu[i]);
+  // printf("\nfrom: node=%s service=%s", src.node, src.service);
+  // // ctMeasureData_t entry;
+  // memcpy(&entry, res.apdu+4, sizeof entry);
+  // printf("\ndata...");
+  // printf("\nvalue: %f", entry.value);
+  // printf("\ntimestamp: %d/%d/%d %d:%d:%d",
+  //   entry.timestamp.year, entry.timestamp.month,
+  //   entry.timestamp.day, entry.timestamp.hour,
+  //   entry.timestamp.minute, entry.timestamp.second
+  // );
+  // printf("\nend of message\n");
 
   printf("dc completed.\n");
   return EXIT_SUCCESS;

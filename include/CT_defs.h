@@ -73,25 +73,18 @@
 // Extended table IDs
 //
 #define CT__ETOFFSET 2048
-#define CT__ET00 CT__ETOFFSET
-#define CT__ET01 CT__ETOFFSET + 1
 #define CT__ET04 CT__ETOFFSET + 4
 #define CT__ET11 CT__ETOFFSET + 11
 #define CT__ET12 CT__ETOFFSET + 12
 #define CT__ET21 CT__ETOFFSET + 21
 #define CT__ET42 CT__ETOFFSET + 42
 
-// Basic procedure IDs
+// Unified table IDs
 //
-#define CT__BP10 10
-
-// Extended procedure IDs
-//
-#define CT__EPOFFSET CT__ETOFFSET
-#define CT__EP06 CT__EPOFFSET + 6
-#define CT__EP11 CT__EPOFFSET + 11
-#define CT__EP12 CT__EPOFFSET + 12
-#define CT__EP16 CT__EPOFFSET + 16
+#define CT__UTOFFSET 16384
+#define CT__UT00 CT__UTOFFSET
+#define CT__UT01 CT__UTOFFSET + 1
+#define CT__UT02 CT__UTOFFSET + 2
 
 // Table types
 //
@@ -100,7 +93,7 @@
 #define CT__TTYPE_RDWR   2
 #define CT__TTYPE_EVENT  3
 
-// OSGP target/device/slave info
+// Target/Device/Slave info
 //
 typedef struct {
   uint8_t subnet;

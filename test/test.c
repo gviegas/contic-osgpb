@@ -53,7 +53,7 @@ void securityTest() {
 
 void apduTest() {
   // req
-  ctParam_t param;
+  // ctParam_t param;
 
   // ctFRRequest_t frreq;
   // frreq.table_id = CT__ET12;
@@ -77,24 +77,24 @@ void apduTest() {
   // param.service = REQUEST_FULL_WRITE;
   // param.fw_request = &fwreq;
 
-  ctPWRequest_t pwreq;
-  pwreq.table_id = CT__ET11;
-  pwreq.offset[0] = 0;
-  pwreq.offset[1] = 0;
-  pwreq.offset[2] = 28;
-  uint8_t d[] = {10,9,8,7,6,5,4,3,2,1};
-  memcpy(pwreq.data, d, sizeof d);
-  pwreq.count = sizeof d;
-  param.service = REQUEST_PART_WRITE;
-  param.pw_request = &pwreq;
-
-  ctApdu_t apdu;
-  int c = ctCreateApdu(&apdu, &param, &t);
-
-  int i;
-  printf("\napdu req: ");
-  for(i = 0; i < c; ++i) printf("%x ", apdu.apdu[i]);
-  printf("\n");
+  // ctPWRequest_t pwreq;
+  // pwreq.table_id = CT__ET11;
+  // pwreq.offset[0] = 0;
+  // pwreq.offset[1] = 0;
+  // pwreq.offset[2] = 28;
+  // uint8_t d[] = {10,9,8,7,6,5,4,3,2,1};
+  // memcpy(pwreq.data, d, sizeof d);
+  // pwreq.count = sizeof d;
+  // param.service = REQUEST_PART_WRITE;
+  // param.pw_request = &pwreq;
+  //
+  // ctApdu_t apdu;
+  // int c = ctCreateApdu(&apdu, &param, &t);
+  //
+  // int i;
+  // printf("\napdu req: ");
+  // for(i = 0; i < c; ++i) printf("%x ", apdu.apdu[i]);
+  // printf("\n");
 
   //////////////////////////////
   // res
@@ -120,16 +120,16 @@ void apduTest() {
 
   //////////////////////////////
   // validate req
-  ctApdu_t apdu2;
-
-  // apdu.apdu[3] = 0xdd;
-  int c2 = ctProcessRequest(&apdu2, &apdu, &t);
-
-  if(c2 != CT__FAILURE) {
-    printf("\nprocess req: %d\n", c2);
-    for(i = 0; i < c2; ++i) printf("%x ", apdu2.apdu[i]);
-    printf("\n");
-  } else printf("\nrequest failed\n");
+  // ctApdu_t apdu2;
+  //
+  // // apdu.apdu[3] = 0xdd;
+  // int c2 = ctProcessRequest(&apdu2, &apdu, &t);
+  //
+  // if(c2 != CT__FAILURE) {
+  //   printf("\nprocess req: %d\n", c2);
+  //   for(i = 0; i < c2; ++i) printf("%x ", apdu2.apdu[i]);
+  //   printf("\n");
+  // } else printf("\nrequest failed\n");
 
   //////////////////////////////
   // validate res
@@ -205,10 +205,6 @@ void btTest() {
 }
 
 void etTest() {
-  ctET00_t et00;
-  printf("et00: %lu\n", sizeof et00);
-  ctET01_t et01;
-  printf("et01: %lu\n", sizeof et01);
   ctET04_t et04;
   printf("et04: %lu\n", sizeof et04);
   ctET11_t et11;
@@ -248,53 +244,53 @@ void unitTest() {
 }
 
 void dcTest() {
-  int i, j;
-  ctAddr_t addr, dest[3];
-  ctParam_t param[3];
-  ctResponse_t responses[3];
-
-  ctFRRequest_t frreq1; // full table read request
-  frreq1.table_id = CT__BT00; // basic table 00
-  param[0].service = REQUEST_FULL_READ;
-  param[0].fr_request = &frreq1;
-
-  ctPRRequest_t prreq1; // partial table read request
-  prreq1.table_id = CT__ET01; // extended table 01
-  memset(prreq1.offset, 0, sizeof prreq1.offset);
-  prreq1.offset[2] = 0x24;
-  prreq1.count = 0x0c;
-  param[1].service = REQUEST_PART_READ;
-  param[1].pr_request = &prreq1;
-
-  ctPRRequest_t prreq2; // partial table read request
-  prreq2.table_id = CT__ET01; // extended table 01
-  memset(prreq2.offset, 0, sizeof prreq2.offset);
-  // prreq12.offset[2] = 0x0c;
-  prreq2.count = 0x0c;
-  param[2].service = REQUEST_PART_READ;
-  param[2].pr_request = &prreq2;
-
-  strcpy(addr.node, "localhost");
-  strcpy(addr.service, "60000");
-  strcpy(dest[0].node, "localhost");
-  strcpy(dest[0].service, "50000");
-  strcpy(dest[1].node, "localhost");
-  strcpy(dest[1].service, "50000");
-  strcpy(dest[2].node, "localhost");
-  strcpy(dest[2].service, "50000");
-
-  // ctDcDefaultCommission();
-  ctDcStart(&t, &addr, dest, param, responses, sizeof dest / sizeof dest[0]);
-
-  for(i = 0; i < sizeof responses / sizeof responses[0]; ++i) {
-    printf("response %d:\n", i + 1);
-    printf("service=%d ", responses[i].service);
-    printf("response=%d ", responses[i].response);
-    printf("read_count=%d \n", responses[i].read_count);
-    for(j = 0; j < responses[i].read_count; ++j)
-      printf("%x ", responses[i].read_data[j]);
-    printf("\n--------\n");
-  }
+  // int i, j;
+  // ctAddr_t addr, dest[3];
+  // ctParam_t param[3];
+  // ctResponse_t responses[3];
+  //
+  // ctFRRequest_t frreq1; // full table read request
+  // frreq1.table_id = CT__BT00; // basic table 00
+  // param[0].service = REQUEST_FULL_READ;
+  // param[0].fr_request = &frreq1;
+  //
+  // ctPRRequest_t prreq1; // partial table read request
+  // prreq1.table_id = CT__ET01; // extended table 01
+  // memset(prreq1.offset, 0, sizeof prreq1.offset);
+  // prreq1.offset[2] = 0x24;
+  // prreq1.count = 0x0c;
+  // param[1].service = REQUEST_PART_READ;
+  // param[1].pr_request = &prreq1;
+  //
+  // ctPRRequest_t prreq2; // partial table read request
+  // prreq2.table_id = CT__ET01; // extended table 01
+  // memset(prreq2.offset, 0, sizeof prreq2.offset);
+  // // prreq12.offset[2] = 0x0c;
+  // prreq2.count = 0x0c;
+  // param[2].service = REQUEST_PART_READ;
+  // param[2].pr_request = &prreq2;
+  //
+  // strcpy(addr.node, "localhost");
+  // strcpy(addr.service, "60000");
+  // strcpy(dest[0].node, "localhost");
+  // strcpy(dest[0].service, "50000");
+  // strcpy(dest[1].node, "localhost");
+  // strcpy(dest[1].service, "50000");
+  // strcpy(dest[2].node, "localhost");
+  // strcpy(dest[2].service, "50000");
+  //
+  // // ctDcDefaultCommission();
+  // ctDcStart(&t, &addr, dest, param, responses, sizeof dest / sizeof dest[0]);
+  //
+  // for(i = 0; i < sizeof responses / sizeof responses[0]; ++i) {
+  //   printf("response %d:\n", i + 1);
+  //   printf("service=%d ", responses[i].service);
+  //   printf("response=%d ", responses[i].response);
+  //   printf("read_count=%d \n", responses[i].read_count);
+  //   for(j = 0; j < responses[i].read_count; ++j)
+  //     printf("%x ", responses[i].read_data[j]);
+  //   printf("\n--------\n");
+  // }
 }
 
 void netrecvTest() {
@@ -557,8 +553,6 @@ int main(int argc, char** argv) {
   // dcTest();
 
   ctStateHasChanged(CT__BT00);
-  ctStateHasChanged(CT__ET00);
-  ctStateHasChanged(CT__ET01);
   ctStateHasChanged(CT__BT06);
 
   // printf("BLOCK: %lu bytes\n", sizeof(ctBlock_t));

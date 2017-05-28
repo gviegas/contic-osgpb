@@ -12,6 +12,7 @@
 #include "CT_unit.h"
 
 int ctUnitDefaultCommission() {
+  // BT00
   ctBT00_t bt00;
   memset(&bt00, 0, sizeof bt00);
   bt00.char_format = 1;
@@ -31,26 +32,23 @@ int ctUnitDefaultCommission() {
   bt00.manufacturer_status_length = 4;
   bt00.number_pending_tables = 2;
   bt00.bt00_used = 1;
-  bt00.et00_used = 1;
-  bt00.et01_used = 1;
-  bt00.et00_write = 1;
-  bt00.et01_write = 1;
-
-  ctET00_t et00;
-  memset(&et00, 0, sizeof et00);
-  ctTime_t minfo_time = {0, 0, 60};
-  ctMeasureInfo_t minfo = {1, 0, minfo_time, 10};
-  et00.measure_info[0] = minfo;
-
-  ctET01_t et01;
-  memset(&et01, 0, sizeof et01);
+  // UT01
+  ctUT01_t ut01;
+  memset(&ut01, 0, sizeof ut01);
+  ut01.id = 1;
+  ut01.type = 1;
+  ut01.delay_s = 60;
+  ut01.num_entries = CT__UT01_NENT;
+  // UT02
+  ctUT02_t ut02;
+  memset(&ut02, 0, sizeof ut02);
 
   ctWrite(CT__BT00, &bt00, sizeof bt00, 0);
-  ctWrite(CT__ET00, &et00, sizeof et00, 0);
-  ctWrite(CT__ET01, &et01, sizeof et01, 0);
+  ctWrite(CT__UT01, &ut01, sizeof ut01, 0);
+  ctWrite(CT__UT02, &ut02, sizeof ut02, 0);
   ctStateHasChanged(CT__BT00);
-  ctStateHasChanged(CT__ET00);
-  ctStateHasChanged(CT__ET01);
+  ctStateHasChanged(CT__UT01);
+  ctStateHasChanged(CT__UT02);
 
   return CT__SUCCESS;
 }

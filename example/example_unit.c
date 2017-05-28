@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 
   ctCreate(); // create data block
   ctUnitDefaultCommission(); // create unit with default configuration
-  ctStartInternal(); // start internal operation (new thread)
+  // ctStartInternal(); // start internal operation (new thread)
 
   ctAddr_t addr;
   strcpy(addr.node, "localhost");
