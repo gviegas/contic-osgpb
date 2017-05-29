@@ -15,6 +15,7 @@ static float _ctBaseValue() {
   return ((rand() % 10000) + 1000) * 0.000001;
 }
 
+// NOTE: Need to call srand() somewhere
 static void _ctCustomConsumption() {
   ctUT02Data_t data;
   float value = _ctBaseValue();

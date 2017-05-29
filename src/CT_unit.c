@@ -11,7 +11,7 @@
 #include "CT_apdu.h"
 #include "CT_unit.h"
 
-int ctUnitDefaultCommission() {
+int ctUnitCommissioning() {
   // BT00
   ctBT00_t bt00;
   memset(&bt00, 0, sizeof bt00);
@@ -43,9 +43,10 @@ int ctUnitDefaultCommission() {
   ctUT02_t ut02;
   memset(&ut02, 0, sizeof ut02);
 
-  ctWrite(CT__BT00, &bt00, sizeof bt00, 0);
-  ctWrite(CT__UT01, &ut01, sizeof ut01, 0);
-  ctWrite(CT__UT02, &ut02, sizeof ut02, 0);
+  if(ctWrite(CT__BT00, &bt00, sizeof bt00, 0) < sizeof bt00) return CT__FAILURE;
+  if(ctWrite(CT__UT01, &ut01, sizeof ut01, 0) < sizeof ut01) return CT__FAILURE;
+  if(ctWrite(CT__UT02, &ut02, sizeof ut02, 0) < sizeof ut02) return CT__FAILURE;
+
   ctStateHasChanged(CT__BT00);
   ctStateHasChanged(CT__UT01);
   ctStateHasChanged(CT__UT02);
@@ -61,8 +62,8 @@ int ctUnitStart(ctTarget_t* target, ctAddr_t* addr) {
     fprintf(stderr, "ERROR: Failed to start the event manager\n");
     return CT__FAILURE;
   }
-  if(ctUnitDefaultCommission() != CT__SUCCESS) {
-    fprintf(stderr, "ERROR: Unit default commissioning failed\n");
+  if(ctUnitCommissioning() != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: Unit commissioning failed\n");
     return CT__FAILURE;
   }
   if(ctBind(addr) != CT__SUCCESS) {

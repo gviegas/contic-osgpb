@@ -237,7 +237,7 @@ void unitTest() {
   ctAddr_t addr;
   strcpy(addr.node, "localhost");
   strcpy(addr.service, "50000");
-  // ctUnitDefaultCommission();
+  // ctUnitCommissioning();
   ctUnitStart(&t, &addr);
 }
 
@@ -277,7 +277,6 @@ void dcTest() {
   // strcpy(dest[2].node, "localhost");
   // strcpy(dest[2].service, "50000");
   //
-  // // ctDcDefaultCommission();
   // ctDcStart(&t, &addr, dest, param, responses, sizeof dest / sizeof dest[0]);
   //
   // for(i = 0; i < sizeof responses / sizeof responses[0]; ++i) {

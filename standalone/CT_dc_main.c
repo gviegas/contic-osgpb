@@ -87,7 +87,6 @@ int main(int argc, char** argv) {
   strcpy(dest[0].node, "localhost");
   strcpy(dest[0].service, "50111");
 
-  // ctDcDefaultCommission();
   ctDcStart(&target, &addr, dest, param, responses,
     sizeof dest / sizeof dest[0]);
 

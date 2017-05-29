@@ -6,11 +6,6 @@
 #include <string.h>
 #include "CT_dc.h"
 
-// to do
-int ctDcDefaultCommission() {
-  return CT__SUCCESS;
-}
-
 int ctDcStart(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
   ctParam_t* messages, ctResponse_t* responses, size_t count)
 {

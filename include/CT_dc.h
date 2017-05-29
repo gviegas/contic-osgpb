@@ -9,12 +9,6 @@
 #include "CT_net.h"
 #include "CT_apdu.h"
 
-// DC default commission configuration
-//
-// NOTE: For DCs only (no Units)
-//
-int ctDcDefaultCommission();
-
 // Start the DC
 //
 int ctDcStart(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
