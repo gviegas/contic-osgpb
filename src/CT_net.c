@@ -12,13 +12,13 @@
 #include "CT_defs.h"
 #include "CT_net.h"
 
-static int ct_g_sfd = -1;
+static int _ct_sfd = -1;
 
 int ctBind(ctAddr_t* addr) {
   struct addrinfo hints, *result, *rp;
   int s;
 
-  if(ct_g_sfd != -1) {
+  if(_ct_sfd != -1) {
     fprintf(stderr, "\nERROR: already bound");
     return CT__FAILURE;
   }
@@ -36,10 +36,10 @@ int ctBind(ctAddr_t* addr) {
 
   // for each address structure, try to bind()
   for(rp = result; rp != NULL; rp = rp->ai_next) {
-    ct_g_sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-    if(ct_g_sfd == -1) continue;
-    if(bind(ct_g_sfd, rp->ai_addr, rp->ai_addrlen) == 0) break;
-    close(ct_g_sfd);
+    _ct_sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+    if(_ct_sfd == -1) continue;
+    if(bind(_ct_sfd, rp->ai_addr, rp->ai_addrlen) == 0) break;
+    close(_ct_sfd);
   }
 
   if(rp == NULL) {
@@ -56,7 +56,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
     int s;
     size_t n;
 
-    if(ct_g_sfd == -1) {
+    if(_ct_sfd == -1) {
       fprintf(stderr, "\nERROR: ctSend - unbound\n");
       return CT__FAILURE;
     }
@@ -74,7 +74,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
 
     // for each address structure, try sendto()
     for(rp = result; rp != NULL; rp = rp->ai_next) {
-      n = sendto(ct_g_sfd, data, len, 0, rp->ai_addr, rp->ai_addrlen);
+      n = sendto(_ct_sfd, data, len, 0, rp->ai_addr, rp->ai_addrlen);
       if(n != -1) break;
     }
 
@@ -94,13 +94,13 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src) {
   socklen_t addr_len;
   int s;
 
-  if(ct_g_sfd == -1) {
+  if(_ct_sfd == -1) {
     fprintf(stderr, "\nERROR: ctRecv unbound\n");
     return -1;
   }
 
   addr_len = sizeof peer_addr;
-  n = recvfrom(ct_g_sfd, buffer, len, 0,
+  n = recvfrom(_ct_sfd, buffer, len, 0,
     (struct sockaddr*) &peer_addr, &addr_len);
 
   s = getnameinfo((struct sockaddr*) &peer_addr, addr_len, src->node,
@@ -116,10 +116,10 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src) {
 }
 
 int ctUnbind() {
-  if(close(ct_g_sfd)) {
+  if(close(_ct_sfd)) {
     fprintf(stderr, "\nERROR: ctUnbind - failed to unbind");
     return CT__FAILURE;
   }
-  ct_g_sfd = -1;
+  _ct_sfd = -1;
   return CT__SUCCESS;
 }

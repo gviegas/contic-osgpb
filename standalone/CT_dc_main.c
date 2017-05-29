@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "CT_defs.h"
+#include "CT_tables.h"
 #include "CT_dc.h"
 
 #define CT__DC_ARGC 7
@@ -63,17 +64,25 @@ int main(int argc, char** argv) {
   ctParam_t param[1];
   ctResponse_t responses[1];
 
-  ctFWRequest_t fwreq;
-  fwreq.table_id = CT__UT01;
-  memset(fwreq.data, 0xaf, 10);
-  fwreq.count = 10;
-  param[0].service = REQUEST_FULL_WRITE;
-  param[0].fw_request = &fwreq;
+  // ctUT01_t ut01 = {0xd, 0xe, 5, 10};
+  // ctFWRequest_t fwreq;
+  // fwreq.table_id = CT__UT01;
+  // fwreq.count = sizeof ut01;
+  // memcpy(fwreq.data, &ut01, sizeof ut01);
+  // param[0].service = REQUEST_FULL_WRITE;
+  // param[0].fw_request = &fwreq;
 
-  // ctFRRequest_t frreq1; // full table read request
-  // frreq1.table_id = CT__BT00; // basic table 00
-  // param[0].service = REQUEST_FULL_READ;
-  // param[0].fr_request = &frreq1;
+  ctPRRequest_t prreq;
+  ctUT02Data_t data;
+  // uint32_t szdata = sizeof data;
+  prreq.table_id = CT__UT02;
+  memset(prreq.offset, 0, sizeof prreq.offset);
+  // prreq.offset[0] = (szdata >> 16) & 0xff;
+  // prreq.offset[1] = (szdata >> 8) & 0xff;
+  // prreq.offset[2] = szdata & 0xff;
+  prreq.count = sizeof data;
+  param[0].service = REQUEST_PART_READ;
+  param[0].pr_request = &prreq;
 
   strcpy(dest[0].node, "localhost");
   strcpy(dest[0].service, "50111");
@@ -91,6 +100,14 @@ int main(int argc, char** argv) {
       printf("%x ", responses[i].read_data[j]);
     printf("\n--------\n");
   }
+
+  memcpy(&data, responses[0].read_data, sizeof data);
+  printf("value: %f\n", data.value);
+  printf("timestamp: %d/%d/%d %d:%d:%d\n",
+    data.timestamp.year, data.timestamp.month,
+    data.timestamp.day, data.timestamp.hour,
+    data.timestamp.minute, data.timestamp.second
+  );
   //
 
   return CT__SUCCESS;

@@ -23,8 +23,6 @@
 #include "CT_custom_events.h"
 #include "CT_state.h"
 
-#include "CT_internal.h"
-
 static ctTarget_t t = {0x02, 0x03};
 
 void servicesTest() {
