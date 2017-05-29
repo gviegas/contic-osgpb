@@ -8,13 +8,14 @@ BIN_DIR = bin
 STAND_DIR = standalone
 EXAMPLE_DIR = example
 TEST_DIR = test
+CTM_DIR = $(SRC_DIR)/custom
 
 CC = gcc
 OPTS = -Wall
 FLAGS = -I$(INC_DIR)
 LIBS = -pthread
 
-OBJS = $(SRC_DIR)/*
+OBJS = $(SRC_DIR)/*.c $(CTM_DIR)/*.c
 
 UNIT = $(STAND_DIR)/CT_unit_main.c
 UNIT_OUT = -o $(BIN_DIR)/unit

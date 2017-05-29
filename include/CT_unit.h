@@ -16,6 +16,6 @@ int ctUnitCommissioning();
 
 // Start the Unit
 //
-int ctUnitStart(ctTarget_t* target, ctAddr_t* addr);
+int ctUnitStart(ctTarget_t* target, ctAddr_t* addr, int clear);
 
 #endif // CT_UNIT_H

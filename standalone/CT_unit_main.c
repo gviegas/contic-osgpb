@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "CT_defs.h"
+#include "CT_config.h"
 #include "CT_file.h"
 #include "CT_unit.h"
 
@@ -20,7 +21,7 @@ int main(int argc, char** argv) {
   ctTarget_t target;
   ctAddr_t addr;
   char buf[3];
-  int i, j;
+  int i, j, clear = 0;
   if(argc < CT__UNIT_ARGC) {
     printf("Usage: ");
     printf("%s <KEY> ", CT__UNIT_ARGV_KEY);
@@ -57,17 +58,24 @@ int main(int argc, char** argv) {
       }
       strcpy(addr.service, argv[i]);
     } else if(!strcmp(argv[i], CT__UNIT_ARGV_OPT)) {
-      // to do
+      char *end;
+      long opt = strtol(argv[++i], &end, 0);
+      if(end == argv[i]) {
+        fprintf(stderr, "ERROR: Option must be an integer\n");
+        return CT__FAILURE;
+      }
+      ctConfig(&opt);
     } else if(!strcmp(argv[i], CT__UNIT_ARGV_CLEAR)) {
       if(ctCreate() != CT__SUCCESS) {
         fprintf(stderr, "ERROR: Unable to create new data file\n");
         return CT__FAILURE;
       }
+      clear = 1;
     } else {
       fprintf(stderr, "ERROR: Invalid argument %s\n", argv[i]);
       return CT__FAILURE;
     }
   }
-  ctUnitStart(&target, &addr);
+  ctUnitStart(&target, &addr, clear);
   return CT__SUCCESS;
 }

@@ -238,7 +238,7 @@ void unitTest() {
   strcpy(addr.node, "localhost");
   strcpy(addr.service, "50000");
   // ctUnitCommissioning();
-  ctUnitStart(&t, &addr);
+  ctUnitStart(&t, &addr, 0);
 }
 
 void dcTest() {

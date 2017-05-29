@@ -54,7 +54,7 @@ int ctUnitCommissioning() {
   return CT__SUCCESS;
 }
 
-int ctUnitStart(ctTarget_t* target, ctAddr_t* addr) {
+int ctUnitStart(ctTarget_t* target, ctAddr_t* addr, int clear) {
   ctApdu_t apdu, res_apdu;
   ctAddr_t src;
   int n;
@@ -62,7 +62,7 @@ int ctUnitStart(ctTarget_t* target, ctAddr_t* addr) {
     fprintf(stderr, "ERROR: Failed to start the event manager\n");
     return CT__FAILURE;
   }
-  if(ctUnitCommissioning() != CT__SUCCESS) {
+  if(clear && ctUnitCommissioning() != CT__SUCCESS) {
     fprintf(stderr, "ERROR: Unit commissioning failed\n");
     return CT__FAILURE;
   }

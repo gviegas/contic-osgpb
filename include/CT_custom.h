@@ -5,8 +5,9 @@
 #ifndef CT_CUSTOM_H
 #define CT_CUSTOM_H
 
-// Store consumption on UT02 as specified on UT01
+// Custom includes
 //
-void ctGetConsumption();
+
+#include "custom/CT_ctm.h"
 
 #endif // CT_CUSTOM_H
