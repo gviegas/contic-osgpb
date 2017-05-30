@@ -22,6 +22,7 @@
 #include "CT_unit.h"
 #include "CT_custom_events.h"
 #include "CT_state.h"
+#include "CT_cmd.h"
 
 static ctTarget_t t = {0x02, 0x03};
 
@@ -475,7 +476,6 @@ void mgrnapTest() {
 }
 
 int main(int argc, char** argv) {
-  srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
   uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
   memcpy(t.sequence, seq, sizeof seq);
@@ -549,8 +549,10 @@ int main(int argc, char** argv) {
   // unitTest();
   // dcTest();
 
-  ctStateHasChanged(CT__BT00);
-  ctStateHasChanged(CT__BT06);
+  // ctStateHasChanged(CT__BT00);
+  // ctStateHasChanged(CT__BT06);
+
+  ctCmdStart(&t);
 
   // printf("BLOCK: %lu bytes\n", sizeof(ctBlock_t));
   // printf("BT00: %lu bytes\n", sizeof(ctBT00_t));
