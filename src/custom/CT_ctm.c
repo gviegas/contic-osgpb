@@ -10,6 +10,8 @@
 #include "custom/CT_ctm.h"
 
 extern int ct_opt_g;
+static uint8_t _ct_ctm_n = 1;
+static uint8_t _ct_ctm_i = 0;
 
 static float _ctCustomBaseValue() {
   return ((rand() % 10000) + 1000) * 0.000001;
@@ -39,7 +41,12 @@ static void _ctCustomConsumption() {
   }
   data.value = value;
   ctGetLTimeDate(&data.timestamp);
-  ctWrite(CT__UT02, &data, sizeof data, 0);
+  ctWrite(CT__UT02, &data, sizeof data, sizeof data * _ct_ctm_i);
+  _ct_ctm_i = (_ct_ctm_i + 1) % _ct_ctm_n;
 }
 
 void ctGetConsumption() { _ctCustomConsumption(); }
+
+void ctSetNumEntries(uint8_t n) {
+  _ct_ctm_n = n > CT__UT01_NENT ? CT__UT01_NENT : n;
+}

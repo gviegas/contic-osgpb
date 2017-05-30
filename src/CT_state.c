@@ -9,7 +9,6 @@
 #include "CT_event_manager.h"
 #include "CT_state.h"
 
-// to test
 void ctStateHasChanged(uint16_t table_id/*, size_t count, size_t offset*/) {
   ctBlockEntry_t entry;
   ctEvent_t event;

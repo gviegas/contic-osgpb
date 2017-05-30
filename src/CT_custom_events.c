@@ -10,10 +10,6 @@
 #include "CT_custom.h"
 #include "CT_custom_events.h"
 
-// static void _ctCustomConsumption() {
-//   printf("~Custom Consumption~\n");
-// }
-
 int ctCustomEvent(uint16_t table_id, ctEvent_t* event) {
   switch(table_id) {
     case CT__UT01: {
@@ -22,10 +18,10 @@ int ctCustomEvent(uint16_t table_id, ctEvent_t* event) {
         fprintf(stderr, "ERROR: Failed to read from ut01\n");
         return CT__FAILURE;
       }
+      ctSetNumEntries(ut01.num_entries);
       event->timer = EVENT_INTERVAL;
       event->calendar = time(NULL);
       event->delay = ut01.delay_s;
-      // event->exec = _ctCustomConsumption;
       event->exec = ctGetConsumption;
     }
     break;
