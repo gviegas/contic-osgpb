@@ -8,14 +8,15 @@ BIN_DIR = bin
 STAND_DIR = standalone
 EXAMPLE_DIR = example
 TEST_DIR = test
-CTM_DIR = $(SRC_DIR)/custom
+CMDS_DIR = $(SRC_DIR)/commands
+EVENTS_DIR = $(SRC_DIR)/events
 
 CC = gcc
 OPTS = -Wall
 FLAGS = -I$(INC_DIR)
 LIBS = -pthread
 
-OBJS = $(SRC_DIR)/*.c $(CTM_DIR)/*.c
+OBJS = $(SRC_DIR)/*.c $(CMDS_DIR)/*.c $(EVENTS_DIR)/*.c
 
 UNIT = $(STAND_DIR)/CT_unit_main.c
 UNIT_OUT = -o $(BIN_DIR)/unit

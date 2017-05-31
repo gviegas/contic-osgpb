@@ -6,7 +6,7 @@
 #include "CT_table_services.h"
 
 int ctFullReadRequest(uint8_t* buffer, uint16_t table_id) {
-  buffer[0] = CT__CMD_FULLREAD;
+  buffer[0] = CT__MSG_FULLREAD;
   buffer[1] = table_id >> 8;
   buffer[2] = table_id & 0x00ff;
   return 3;
@@ -15,7 +15,7 @@ int ctFullReadRequest(uint8_t* buffer, uint16_t table_id) {
 int ctFullWriteRequest(uint8_t* buffer, uint16_t table_id, uint16_t count, 
   uint8_t* data)
 {
-  buffer[0] = CT__CMD_FULLWRITE;
+  buffer[0] = CT__MSG_FULLWRITE;
   buffer[1] = table_id >> 8;
   buffer[2] = table_id & 0x00ff;
   buffer[3] = count >> 8;
@@ -27,7 +27,7 @@ int ctFullWriteRequest(uint8_t* buffer, uint16_t table_id, uint16_t count,
 int ctPartialReadRequest(uint8_t* buffer, uint16_t table_id, uint8_t offset[3], 
   uint16_t count)
 {
-  buffer[0] = CT__CMD_PARTREAD;
+  buffer[0] = CT__MSG_PARTREAD;
   buffer[1] = table_id >> 8;
   buffer[2] = table_id & 0x00ff;
   memcpy(buffer+3, offset, 3);
@@ -39,7 +39,7 @@ int ctPartialReadRequest(uint8_t* buffer, uint16_t table_id, uint8_t offset[3],
 int ctPartialWriteRequest(uint8_t* buffer, uint16_t table_id, 
   uint8_t offset[3], uint16_t count, uint8_t* data) 
 {
-  buffer[0] = CT__CMD_PARTWRITE;
+  buffer[0] = CT__MSG_PARTWRITE;
   buffer[1] = table_id >> 8;
   buffer[2] = table_id & 0x00ff;
   memcpy(buffer+3, offset, 3);

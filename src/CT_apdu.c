@@ -68,21 +68,21 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
   switch(apdu->apdu[0]) {
     case CT__TYPE_CODE:
       switch(apdu->apdu[1]) {
-        case CT__CMD_FULLREAD:
+        case CT__MSG_FULLREAD:
           c = 1 + 1 + 2 + CT__LEN_SEQN;
           p.service = RESPONSE_FULL_READ;
         break;
-        case CT__CMD_PARTREAD:
+        case CT__MSG_PARTREAD:
           c = 1 + 1 + 2 + 3 + 2 + CT__LEN_SEQN;
           p.service = RESPONSE_PART_READ;
         break;
-        case CT__CMD_FULLWRITE:
+        case CT__MSG_FULLWRITE:
           a = ((uint16_t)apdu->apdu[4] << 8) |
             ((uint16_t)apdu->apdu[5] & 0x00ff);
           c = 1 + 1 + 2 + 2 + a + CT__LEN_SEQN;
           p.service = RESPONSE_FULL_WRITE;
         break;
-        case CT__CMD_PARTWRITE:
+        case CT__MSG_PARTWRITE:
           a = ((uint16_t)apdu->apdu[7] << 8) |
             ((uint16_t)apdu->apdu[8] & 0x00ff);
           c = 1 + 1 + 2 + 3 + 2 + a + CT__LEN_SEQN;
@@ -153,28 +153,28 @@ int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
         case CT__RES_SEQ:
         case CT__RES_SNS:
           switch(req_apdu->apdu[1]) {
-            case CT__CMD_FULLREAD:
+            case CT__MSG_FULLREAD:
               req_c = 1 + 1 + 2 + CT__LEN_SEQN;
               a = ((uint16_t)apdu->apdu[2] << 8) |
                 ((uint16_t)apdu->apdu[3] & 0x00ff);
               res_c = 1 + 1 + 2 + a;
               buffer->service = RESPONSE_FULL_READ;
             break;
-            case CT__CMD_PARTREAD:
+            case CT__MSG_PARTREAD:
               req_c = 1 + 1 + 2 + 3 + 2 + CT__LEN_SEQN;
               a = ((uint16_t)apdu->apdu[2] << 8) |
                 ((uint16_t)apdu->apdu[3] & 0x00ff);
               res_c = 1 + 1 + 2 + a;
               buffer->service = RESPONSE_PART_READ;
             break;
-            case CT__CMD_FULLWRITE:
+            case CT__MSG_FULLWRITE:
               a = ((uint16_t)req_apdu->apdu[4] << 8) |
                 ((uint16_t)req_apdu->apdu[5] & 0x00ff);
               req_c = 1 + 1 + 2 + 2 + a + CT__LEN_SEQN;
               res_c = 1 + 1;
               buffer->service = RESPONSE_FULL_WRITE;
             break;
-            case CT__CMD_PARTWRITE:
+            case CT__MSG_PARTWRITE:
               a = ((uint16_t)req_apdu->apdu[7] << 8) |
                 ((uint16_t)req_apdu->apdu[8] & 0x00ff);
               req_c = 1 + 1 + 2 + 3 + 2 + a + CT__LEN_SEQN;

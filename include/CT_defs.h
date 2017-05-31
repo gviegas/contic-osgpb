@@ -12,16 +12,20 @@
 #define CT__SUCCESS 0
 #define CT__FAILURE 1
 
+// Str definitions
+#define CT__DELIM " "
+#define CT__ENDL "\n" // '\n'
+
 // EN14908-1 type code
 //
 #define CT__TYPE_CODE 0
 
-// Request command codes
+// Request messages codes
 //
-#define CT__CMD_FULLREAD  0x30
-#define CT__CMD_PARTREAD  0x3F
-#define CT__CMD_FULLWRITE 0x40
-#define CT__CMD_PARTWRITE 0x4F
+#define CT__MSG_FULLREAD  0x30
+#define CT__MSG_PARTREAD  0x3F
+#define CT__MSG_FULLWRITE 0x40
+#define CT__MSG_PARTWRITE 0x4F
 
 // Response codes
 //
@@ -38,7 +42,7 @@
 #define CT__RES_INC 0x1E
 #define CT__RES_ICA 0x1F
 
-// Buffer sizes
+// Protocol buffer sizes
 //
 #define CT__LEN_MAXAPDU   114
 #define CT__LEN_PARTREAD  84
