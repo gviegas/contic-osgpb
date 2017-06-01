@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "CT_net.h"
 #include "CT_commands.h"
 #include "CT_cmd.h"
 
@@ -21,46 +22,12 @@ call fr|fw|fullread|fullwrite <TABLE> [param=p1,p2,...,pn] <DEVICE>
 
 call pr|pw|partialread|partialwrite| <TABLE> [param=...,...] offset=<VALUE> <DEVICE>
 
-def dev|device <NAME> node=<NODE> serv|service=<SERV>
-
 undef <DEVICE>
-
-ls dev|device|... [NAME]
 -------------------------------------------------------------------------------------------------*/
 
-// temp
-static int _ctCall() {
-  printf("On call\n"); // debug
-  char *b, *p;
-  while((p = strtok(NULL, CT__DELIM))) {
-    b = strchr(p, '\n');
-    if(b) p[strlen(p) - 1] = '\0';
-    printf("token: %s\n", p); // debug
-  }
-  return CT__SUCCESS;
-}
-// temp
-static int _ctDef() {
-  printf("On def\n"); // debug
-  char *b, *p;
-  while((p = strtok(NULL, CT__DELIM))) {
-    b = strchr(p, '\n');
-    if(b) p[strlen(p) - 1] = '\0';
-    printf("token: %s\n", p); // debug
-  }
-  return CT__SUCCESS;
-}
-// temp
-static int _ctUndef() {
-  printf("On undef\n"); // debug
-  char *b, *p;
-  while((p = strtok(NULL, CT__DELIM))) {
-    b = strchr(p, '\n');
-    if(b) p[strlen(p) - 1] = '\0';
-    printf("token: %s\n", p); // debug
-  }
-  return CT__SUCCESS;
-}
+static char _ct_names[CT__NAMELEN * 20]; // temp
+static ctAddr_t _ct_addresses[20]; // temp
+static int _i = 0; // temp
 
 static int _ctParse(char* buf) {
   char *b, *p = strtok(buf, CT__DELIM);
@@ -69,10 +36,16 @@ static int _ctParse(char* buf) {
   do {
     b = strchr(p, '\n');
     if(b) p[strlen(p) - 1] = '\0';
-    if(!strcmp(p, _CT__LS)) ctCmdLs();
-    else if(!strcmp(p, _CT__CALL)) _ctCall();
-    else if(!strcmp(p, _CT__DEF)) _ctDef();
-    else if(!strcmp(p, _CT__UNDEF)) _ctUndef();
+    if(!strcmp(p, _CT__LS))
+      // testing
+      ctCmdLs(_ct_names, _ct_addresses, _i); // testing
+    else if(!strcmp(p, _CT__CALL))
+      ctCmdCall();
+    else if(!strcmp(p, _CT__DEF))
+      // testing
+      ctCmdDef(_ct_names+_i*CT__NAMELEN, &_ct_addresses[_i++]); // testing
+    else if(!strcmp(p, _CT__UNDEF))
+      ctCmdUndef();
     // else {
     //   printf("Invalid option\n");
     //   break;

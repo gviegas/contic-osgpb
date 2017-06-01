@@ -9,7 +9,7 @@
 int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response, 
   uint8_t req_count, uint8_t res_count, ctTarget_t* target)
 {
-  uint8_t cur = 0, d[CT__LEN_MAXAPDU];
+  uint8_t cur = 0, d[CT__LEN_APDU];
   d[cur++] = target->subnet;
   d[cur++] = target->node;
   memcpy(d+cur, request, req_count);
@@ -28,7 +28,7 @@ int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response,
 int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response, 
   uint8_t req_count, uint8_t res_count, ctTarget_t* target)
 {
-  uint8_t cur = 0, d[CT__LEN_MAXAPDU], b[8];
+  uint8_t cur = 0, d[CT__LEN_APDU], b[8];
   d[cur++] = target->subnet;
   d[cur++] = target->node;
   memcpy(d+cur, request, req_count);

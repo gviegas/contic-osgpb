@@ -9,8 +9,8 @@
 //
 
 #include "commands/CT_cmd_ls.h"
-// #include "commands/CT_cmd_call.h"
-// #include "commands/CT_cmd_def.h"
-// #include "commands/CT_cmd_undef.h"
+#include "commands/CT_cmd_call.h"
+#include "commands/CT_cmd_def.h"
+#include "commands/CT_cmd_undef.h"
 
 #endif // CT_COMMANDS_H

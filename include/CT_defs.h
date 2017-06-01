@@ -15,6 +15,7 @@
 // Str definitions
 #define CT__DELIM " "
 #define CT__ENDL "\n" // '\n'
+#define CT__NAMELEN 16
 
 // EN14908-1 type code
 //
@@ -44,7 +45,7 @@
 
 // Protocol buffer sizes
 //
-#define CT__LEN_MAXAPDU   114
+#define CT__LEN_APDU   114
 #define CT__LEN_PARTREAD  84
 #define CT__LEN_PARTWRITE 75
 #define CT__LEN_SEQN      4
