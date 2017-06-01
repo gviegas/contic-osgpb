@@ -11,6 +11,8 @@
 #define _CT__NODE "node"
 #define _CT__SERV "serv"
 
+// TODO: do not allow duplicated names
+
 int ctCmdDef(char* name, ctAddr_t* addr) {
   char *b, *p;
   int v[3] = {0};

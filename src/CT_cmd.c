@@ -9,25 +9,18 @@
 #include "CT_cmd.h"
 
 #define _CT__BUFLEN 0x100
+#define _CT__DEFLEN 0x14 // temp
 #define _CT__TK "@"
 #define _CT__LS "ls"
 #define _CT__CALL "call"
 #define _CT__DEF "def"
 #define _CT__UNDEF "undef"
 
-/*-------------------------------------------------------------------------------------------------
-commands:
-
-call fr|fw|fullread|fullwrite <TABLE> [param=p1,p2,...,pn] <DEVICE>
-
-call pr|pw|partialread|partialwrite| <TABLE> [param=...,...] offset=<VALUE> <DEVICE>
-
-undef <DEVICE>
--------------------------------------------------------------------------------------------------*/
-
-static char _ct_names[CT__NAMELEN * 20]; // temp
-static ctAddr_t _ct_addresses[20]; // temp
-static int _i = 0; // temp
+// test
+static char _ct_names[_CT__DEFLEN][CT__NAMELEN]; // temp
+static ctAddr_t _ct_addresses[_CT__DEFLEN]; // temp
+static int _ct_iname = 0; // temp
+//
 
 static int _ctParse(char* buf) {
   char *b, *p = strtok(buf, CT__DELIM);
@@ -36,14 +29,15 @@ static int _ctParse(char* buf) {
   do {
     b = strchr(p, '\n');
     if(b) p[strlen(p) - 1] = '\0';
+
     if(!strcmp(p, _CT__LS))
-      // testing
-      ctCmdLs(_ct_names, _ct_addresses, _i); // testing
+      ctCmdLs(_ct_names, _ct_addresses, _ct_iname);
     else if(!strcmp(p, _CT__CALL))
       ctCmdCall();
-    else if(!strcmp(p, _CT__DEF))
-      // testing
-      ctCmdDef(_ct_names+_i*CT__NAMELEN, &_ct_addresses[_i++]); // testing
+    else if(!strcmp(p, _CT__DEF)) {
+      r = ctCmdDef(_ct_names[_ct_iname], &_ct_addresses[_ct_iname]);
+      if(r != CT__FAILURE) ++_ct_iname;
+    }
     else if(!strcmp(p, _CT__UNDEF))
       ctCmdUndef();
     // else {

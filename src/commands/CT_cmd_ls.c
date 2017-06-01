@@ -4,27 +4,25 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "CT_defs.h"
 #include "commands/CT_cmd_ls.h"
 
-int ctCmdLs(char* names, ctAddr_t* addresses, size_t len) {
+int ctCmdLs(char names[][CT__NAMELEN], ctAddr_t* addresses, size_t len) {
   char *b, *p;
-  int i, f = 0;
+  int i, f;
   if(!(p = strtok(NULL, CT__DELIM))) {
     for(i = 0; i < len; ++i) {
-      printf("%s %s %s\n", names+i*CT__NAMELEN,
-        &addresses[i].node, &addresses[i].service);
+      printf("%s %s %s\n", names[i],
+        addresses[i].node, addresses[i].service);
     }
   } else {
     do {
       b = strchr(p, '\n');
       if(b) p[strlen(p) - 1] = '\0';
-      for(i = 0; i < len; ++i) {
-        if(!strcmp(&names[i], p)) {
-          printf("%s %s %s\n", names+i*CT__NAMELEN,
-            &addresses[i].node, &addresses[i].service);
+      for(i = 0, f = 0; i < len && !f; ++i) {
+        if(!strcmp(names[i], p)) {
+          printf("%s %s %s\n", names[i],
+            addresses[i].node, addresses[i].service);
           f = 1;
-          break;
         }
       }
       if(!f) printf("%s not defined\n", p);
