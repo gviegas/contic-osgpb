@@ -7,7 +7,7 @@
 #include "CT_defs.h"
 #include "commands/CT_cmd_undef.h"
 
-int ctCmdUndef() {
+int ctCmdUndef(ctList_t* list) {
   printf("On undef\n"); // debug
   char *b, *p;
   while((p = strtok(NULL, CT__DELIM))) {

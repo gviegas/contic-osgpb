@@ -15,7 +15,6 @@
 // Str definitions
 #define CT__DELIM " "
 #define CT__ENDL "\n" // '\n'
-#define CT__NAMELEN 16
 
 // EN14908-1 type code
 //

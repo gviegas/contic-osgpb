@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "CT_defs.h"
-#include "CT_net.h"
 #include "commands/CT_cmd_def.h"
 
 #define _CT__NODE "node"
@@ -13,8 +12,9 @@
 
 // TODO: do not allow duplicated names
 
-int ctCmdDef(char* name, ctAddr_t* addr) {
-  char *b, *p;
+int ctCmdDef(ctList_t* list) {
+  char *b, *p, name[CT__LIST_NAMELEN];
+  ctAddr_t addr;
   int v[3] = {0};
   while((p = strtok(NULL, CT__DELIM))) {
     b = strchr(p, '\n');
@@ -24,10 +24,10 @@ int ctCmdDef(char* name, ctAddr_t* addr) {
       *b = '\0';
       ++b;
       if(!v[1] && !strcmp(p, _CT__NODE)) {
-        strcpy(addr->node, b);
+        strcpy(addr.node, b);
         v[1] = 1;
       } else if(!v[2] && !strcmp(p, _CT__SERV)) {
-        strcpy(addr->service, b);
+        strcpy(addr.service, b);
         v[2] = 1;
       }
       else {
@@ -44,6 +44,9 @@ int ctCmdDef(char* name, ctAddr_t* addr) {
   }
   if(!v[0] || !v[1] || !v[2]) {
     printf("Missing parameters\n");
+    return CT__FAILURE;
+  } else if(ctListInsert(list, name, &addr) != CT__SUCCESS) {
+    printf("Could not define new entry\n");
     return CT__FAILURE;
   }
   return CT__SUCCESS;

@@ -21,7 +21,7 @@ int ctListSize(ctList_t* list) {
 }
 
 int ctListInsert(ctList_t* list, char* name, ctAddr_t* addr) {
-  if(!list || !name || strlen(name) >= CT__NAMELEN) return CT__FAILURE;
+  if(!list || !name || strlen(name) >= CT__LIST_NAMELEN) return CT__FAILURE;
   ctNode_t* node = malloc(sizeof(ctNode_t));
   if(!node) return CT__FAILURE;
   strcpy(node->name, name);

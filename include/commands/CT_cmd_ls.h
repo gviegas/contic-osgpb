@@ -5,11 +5,10 @@
 #ifndef CT_CMD_LS_H
 #define CT_CMD_LS_H
 
-#include "CT_defs.h"
-#include "CT_net.h"
+#include "CT_name_list.h"
 
 // List command
 //
-int ctCmdLs(char names[][CT__NAMELEN], ctAddr_t* addresses, size_t len);
+int ctCmdLs(ctList_t* list);
 
 #endif // CT_CMD_LS_H

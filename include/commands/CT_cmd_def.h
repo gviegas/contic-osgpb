@@ -5,8 +5,10 @@
 #ifndef CT_CMD_DEF_H
 #define CT_CMD_DEF_H
 
+#include "CT_name_list.h"
+
 // Define command
 //
-int ctCmdDef(char* name, ctAddr_t* addr);
+int ctCmdDef(ctList_t* list);
 
 #endif // CT_CMD_DEF_H

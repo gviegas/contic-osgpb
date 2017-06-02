@@ -4,10 +4,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "CT_defs.h"
 #include "commands/CT_cmd_call.h"
 
-int ctCmdCall() {
+int ctCmdCall(ctList_t* list, ctTarget_t* target) {
   printf("On call\n"); // debug
   char *b, *p;
   while((p = strtok(NULL, CT__DELIM))) {

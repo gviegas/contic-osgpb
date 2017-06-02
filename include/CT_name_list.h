@@ -7,10 +7,12 @@
 
 #include "CT_net.h"
 
+#define CT__LIST_NAMELEN 16
+
 // Node type
 //
 typedef struct _ctNode_t {
-  char name[CT__NAMELEN];
+  char name[CT__LIST_NAMELEN];
   ctAddr_t addr;
   struct _ctNode_t* next;
 } ctNode_t;
