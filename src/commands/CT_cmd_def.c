@@ -10,8 +10,6 @@
 #define _CT__NODE "node"
 #define _CT__SERV "serv"
 
-// TODO: do not allow duplicated names
-
 int ctCmdDef(ctList_t* list) {
   char *b, *p, name[CT__LIST_NAMELEN];
   ctAddr_t addr;
@@ -44,6 +42,9 @@ int ctCmdDef(ctList_t* list) {
   }
   if(!v[0] || !v[1] || !v[2]) {
     printf("Missing parameters\n");
+    return CT__FAILURE;
+  } else if(ctListFind(list, name)) {
+    printf("Duplicate name \"%s\"\n", name);
     return CT__FAILURE;
   } else if(ctListInsert(list, name, &addr) != CT__SUCCESS) {
     printf("Could not define new entry\n");

@@ -11,7 +11,11 @@ int ctCmdLs(ctList_t* list) {
   char *b, *p;
   ctNode_t* node;
   if(!(p = strtok(NULL, CT__DELIM))) {
-    // for each entry in list: print info
+    node = ctListFirst(list);
+    while(node) {
+      printf("%s %s %s\n", node->name, node->addr.node, node->addr.service);
+      node = ctListNext(list, node);
+    }
   } else {
     do {
       b = strchr(p, '\n');
@@ -19,7 +23,7 @@ int ctCmdLs(ctList_t* list) {
         if((node = ctListFind(list, p)))
           printf("%s %s %s\n", node->name, node->addr.node, node->addr.service);
         else
-          printf("%s not defined\n", p);
+          printf("\"%s\" not defined\n", p);
     } while((p = strtok(NULL, CT__DELIM)));
   }
   return CT__SUCCESS;

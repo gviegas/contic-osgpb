@@ -73,6 +73,16 @@ ctNode_t* ctListFind(ctList_t* list, char* name) {
   return NULL;
 }
 
+ctNode_t* ctListFirst(ctList_t* list) {
+  if(!list) return NULL;
+  return list->head;
+}
+
+ctNode_t* ctListNext(ctList_t* list, ctNode_t* node) {
+  if(!list || !node) return NULL;
+  return node->next; // wont bother to check if node really is part of this list
+}
+
 void ctListClear(ctList_t* list) {
   if(list && list->size) {
     ctNode_t *node, *prev;

@@ -29,7 +29,7 @@ typedef struct {
 //
 int ctListCreate(ctList_t* list);
 
-// Get list size
+// Get the list size
 //
 int ctListSize(ctList_t* list);
 
@@ -44,6 +44,14 @@ int ctListRemove(ctList_t* list, char* name);
 // Find a node
 //
 ctNode_t* ctListFind(ctList_t* list, char* name);
+
+// Get the first node
+//
+ctNode_t* ctListFirst(ctList_t* list);
+
+// Get the next node
+//
+ctNode_t* ctListNext(ctList_t* list, ctNode_t* node);
 
 // Clear the list
 //

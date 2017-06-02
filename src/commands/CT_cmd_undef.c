@@ -8,12 +8,12 @@
 #include "commands/CT_cmd_undef.h"
 
 int ctCmdUndef(ctList_t* list) {
-  printf("On undef\n"); // debug
   char *b, *p;
   while((p = strtok(NULL, CT__DELIM))) {
     b = strchr(p, '\n');
     if(b) p[strlen(p) - 1] = '\0';
-    printf("token: %s\n", p); // debug
+    if(ctListRemove(list, p) != CT__SUCCESS)
+      printf("Name \"%s\" not defined\n", p);
   }
-  return CT__SUCCESS;
+  return CT__SUCCESS; // always returns success...
 }
