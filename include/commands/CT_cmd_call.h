@@ -7,6 +7,6 @@
 
 // Call command
 //
-int ctCmdCall();
+int ctCmdCall(/*ctTarget_t* target,...*/);
 
 #endif // CT_CMD_CALL_H

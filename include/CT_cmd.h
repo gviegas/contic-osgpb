@@ -7,6 +7,11 @@
 
 #include "CT_defs.h"
 
+// typedef struct {
+//   char name[CT__NAMELEN];
+//   ctAddr_t addr;
+// } ctDef_t;
+
 // Start an interactice command shell
 //
 int ctCmdStart(ctTarget_t* target);
