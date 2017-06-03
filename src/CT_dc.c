@@ -13,8 +13,8 @@ int ctDcStart(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
   ctAddr_t src;
   int n, i;
   if(ctBind(addr) != CT__SUCCESS) {
-    fprintf(stderr, "ERROR: Failed to bind\n");
-    return CT__FAILURE;
+    // fprintf(stderr, "ERROR: Failed to bind\n");
+    // return CT__FAILURE;
   }
   for(i = 0; i < count; ++i) {
     n = ctCreateApdu(&apdu, &messages[i], target);

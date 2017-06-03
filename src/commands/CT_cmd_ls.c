@@ -20,10 +20,10 @@ int ctCmdLs(ctList_t* list) {
     do {
       b = strchr(p, '\n');
       if(b) p[strlen(p) - 1] = '\0';
-        if((node = ctListFind(list, p)))
-          printf("%s %s %s\n", node->name, node->addr.node, node->addr.service);
-        else
-          printf("\"%s\" not defined\n", p);
+      if((node = ctListFind(list, p)))
+        printf("%s %s %s\n", node->name, node->addr.node, node->addr.service);
+      else
+        printf("\"%s\" not defined\n", p);
     } while((p = strtok(NULL, CT__DELIM)));
   }
   return CT__SUCCESS;

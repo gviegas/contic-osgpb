@@ -10,7 +10,7 @@
 int ctCreate() {
   FILE* f = fopen(CT__DATAFILE, "wb");
   if(!f) {
-    fprintf(stderr, "\nERROR: Could not create data file\n");
+    fprintf(stderr, "ERROR: Could not create data file\n");
     return CT__FAILURE;
   }
 
@@ -63,7 +63,7 @@ int ctGetBlockEntry(uint16_t table_id, ctBlockEntry_t* entry) {
 int ctRead(uint16_t table_id, void* buffer, size_t count, size_t offset) {
   FILE* f = fopen(CT__DATAFILE, "rb");
   if(!f) {
-    fprintf(stderr, "\nERROR: Could not open data file\n");
+    fprintf(stderr, "ERROR: Could not open data file\n");
     return 0;
   }
   int c, sz;
@@ -77,7 +77,7 @@ int ctRead(uint16_t table_id, void* buffer, size_t count, size_t offset) {
 int ctWrite(uint16_t table_id, void* buffer, size_t count, size_t offset) {
   FILE* f = fopen(CT__DATAFILE, "r+b");
   if(!f) {
-    fprintf(stderr, "\nERROR: Could not open data file\n");
+    fprintf(stderr, "ERROR: Could not open data file\n");
     return 0;
   }
   int c, sz;
@@ -90,7 +90,7 @@ int ctWrite(uint16_t table_id, void* buffer, size_t count, size_t offset) {
 
 int ctSeek(uint16_t table_id, size_t offset, void* file) {
   if(!file) {
-    fprintf(stderr, "\nERROR: Invalid file\n");
+    fprintf(stderr, "ERROR: Invalid file\n");
     return 0;
   }
   int i, count;
