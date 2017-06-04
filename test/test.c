@@ -278,7 +278,7 @@ void dcTest() {
   // strcpy(dest[2].node, "localhost");
   // strcpy(dest[2].service, "50000");
   //
-  // ctDcStart(&t, &addr, dest, param, responses, sizeof dest / sizeof dest[0]);
+  // ctDcExec(&t, &addr, dest, param, responses, sizeof dest / sizeof dest[0]);
   //
   // for(i = 0; i < sizeof responses / sizeof responses[0]; ++i) {
   //   printf("response %d:\n", i + 1);
@@ -552,7 +552,7 @@ int main(int argc, char** argv) {
   // ctStateHasChanged(CT__BT00);
   // ctStateHasChanged(CT__BT06);
 
-  ctCmdStart(&t);
+  // ctCmdStart(&t);
 
   // printf("BLOCK: %lu bytes\n", sizeof(ctBlock_t));
   // printf("BT00: %lu bytes\n", sizeof(ctBT00_t));

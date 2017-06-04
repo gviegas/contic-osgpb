@@ -15,8 +15,6 @@ int ctCmdDef(ctList_t* list) {
   ctAddr_t addr;
   int v[3] = {0};
   while((p = strtok(NULL, CT__DELIM))) {
-    b = strchr(p, '\n');
-    if(b) p[strlen(p) - 1] = '\0';
     b = strchr(p, '=');
     if(b) {
       *b = '\0';

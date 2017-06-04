@@ -10,6 +10,6 @@
 
 // Call command
 //
-int ctCmdCall(ctList_t* list, ctTarget_t* target);
+int ctCmdCall(ctList_t* list, ctTarget_t* target, ctAddr_t* addr);
 
 #endif // CT_CMD_CALL_H

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "CT_security.h"
 
-int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response, 
+int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response,
   uint8_t req_count, uint8_t res_count, ctTarget_t* target)
 {
   uint8_t cur = 0, d[CT__LEN_APDU];
@@ -25,7 +25,7 @@ int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response,
   return CT__LEN_DIGEST;
 }
 
-int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response, 
+int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response,
   uint8_t req_count, uint8_t res_count, ctTarget_t* target)
 {
   uint8_t cur = 0, d[CT__LEN_APDU], b[8];
@@ -48,9 +48,9 @@ int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response,
 
 // NOTE: the RC4 digest algorithm from OSGP spec is outdated
 // To do: fix this (not working as intended - its exiting sooner...)
-void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count, 
+void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count,
   ctTarget_t* target)
-{ 
+{
   memset(buffer, 0, 8);
   int k, i = 0;
   uint8_t a = 0, b = 0, m = 0, n = 0;

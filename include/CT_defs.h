@@ -13,7 +13,7 @@
 #define CT__FAILURE 1
 
 // Str definitions
-#define CT__DELIM " "
+#define CT__DELIM " \n"
 #define CT__ENDL "\n" // '\n'
 
 // EN14908-1 type code

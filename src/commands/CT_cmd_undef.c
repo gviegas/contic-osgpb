@@ -8,10 +8,8 @@
 #include "commands/CT_cmd_undef.h"
 
 int ctCmdUndef(ctList_t* list) {
-  char *b, *p;
+  char *p;
   while((p = strtok(NULL, CT__DELIM))) {
-    b = strchr(p, '\n');
-    if(b) p[strlen(p) - 1] = '\0';
     if(ctListRemove(list, p) != CT__SUCCESS)
       printf("Name \"%s\" not defined\n", p);
   }

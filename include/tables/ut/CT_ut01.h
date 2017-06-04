@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include "CT_date.h"
 
-#define CT__UT01_NENT 20
+#define CT__UT01_NENT 5
 
 // Unified Table 01 - Consumption info
 //

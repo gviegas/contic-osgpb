@@ -4,18 +4,15 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "CT_cmd.h"
 #include "CT_dc.h"
 
-int ctDcStart(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
+int ctDcExec(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
   ctParam_t* messages, ctResponse_t* responses, size_t count)
 {
   ctApdu_t apdu, res_apdu;
   ctAddr_t src;
   int n, i;
-  if(ctBind(addr) != CT__SUCCESS) {
-    // fprintf(stderr, "ERROR: Failed to bind\n");
-    // return CT__FAILURE;
-  }
   for(i = 0; i < count; ++i) {
     n = ctCreateApdu(&apdu, &messages[i], target);
     if(n < 1) continue;
@@ -37,5 +34,14 @@ int ctDcStart(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
       continue;
     }
   }
+  return CT__SUCCESS;
+}
+
+int ctDcStart(ctTarget_t* target, ctAddr_t* addr) {
+  if(ctBind(addr) != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: Failed to bind\n");
+    return CT__FAILURE;
+  }
+  ctCmdStart(target, addr);
   return CT__SUCCESS;
 }

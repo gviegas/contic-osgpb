@@ -25,7 +25,8 @@ int ctListInsert(ctList_t* list, char* name, ctAddr_t* addr) {
   ctNode_t* node = malloc(sizeof(ctNode_t));
   if(!node) return CT__FAILURE;
   strcpy(node->name, name);
-  memcpy(&node->addr, addr, sizeof(ctAddr_t));
+  node->addr = *addr;
+  // memcpy(&node->addr, addr, sizeof(ctAddr_t));
   if(!list->head)
     list->head = list->tail = node;
   else {
