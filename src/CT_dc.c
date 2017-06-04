@@ -20,7 +20,14 @@ int ctDcExec(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
       fprintf(stderr, "WARNING: Failed to send message %d\n", i);
       continue;
     }
-    n = ctRecv(res_apdu.apdu, sizeof res_apdu.apdu, &src);
+
+    // test
+    ctTimeSpec_t t;
+    t.sec = 0;
+    t.nsec = 9000000;
+    //
+
+    n = ctRecv(res_apdu.apdu, sizeof res_apdu.apdu, &src, &t /*NULL*/);
     if(n < 1) {
       fprintf(stderr, "WARNING: Received invalid response for message %d\n", i);
       memset(&responses[i], -1, sizeof responses[0]);

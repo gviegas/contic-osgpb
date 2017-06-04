@@ -8,6 +8,8 @@
 #define CT__NET_MAXNODE 20
 #define CT__NET_MAXSERV 12
 
+#include "CT_date.h"
+
 // CtAddr type
 //
 typedef struct {
@@ -25,7 +27,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest);
 
 // Receive message
 //
-int ctRecv(void* buffer, size_t len, ctAddr_t* src);
+int ctRecv(void* buffer, size_t len, ctAddr_t* src, ctTimeSpec_t* timeout);
 
 // Unbind from current address
 //

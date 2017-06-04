@@ -301,7 +301,7 @@ void netrecvTest() {
   memset(&src, 0, sizeof src);
 
   ctBind(&addr);
-  len = ctRecv(buffer, (sizeof buffer) - 1, &src);
+  len = ctRecv(buffer, (sizeof buffer) - 1, &src, NULL);
   buffer[len] = '\0';
 
   printf("\nnode=%s service=%s", src.node, src.service);

@@ -88,15 +88,32 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
     return CT__SUCCESS;
 }
 
-int ctRecv(void* buffer, size_t len, ctAddr_t* src) {
+int ctRecv(void* buffer, size_t len, ctAddr_t* src, ctTimeSpec_t* timeout) {
   size_t n;
   struct sockaddr_storage peer_addr;
   socklen_t addr_len;
+  struct timeval t;
   int s;
 
   if(_ct_sfd == -1) {
     fprintf(stderr, "ERROR: ctRecv unbound\n");
     return -1;
+  }
+
+  if(timeout) {
+    t.tv_sec = timeout->sec;
+    t.tv_usec = timeout->nsec / 1000;
+    if(setsockopt(_ct_sfd, SOL_SOCKET, SO_RCVTIMEO, &t, sizeof t)) {
+      fprintf(stderr, "ERROR: ctRecv failed to set timeout\n");
+      return -1;
+    }
+  } else {
+    t.tv_sec = 0;
+    t.tv_usec = 0;
+    if(setsockopt(_ct_sfd, SOL_SOCKET, SO_RCVTIMEO, &t, sizeof t)) {
+      fprintf(stderr, "ERROR: ctRecv failed to set NO timeout\n");
+      return -1;
+    }
   }
 
   addr_len = sizeof peer_addr;

@@ -71,7 +71,7 @@ int ctUnitStart(ctTarget_t* target, ctAddr_t* addr, int clear) {
     return CT__FAILURE;
   }
   while(1) {
-    n = ctRecv(apdu.apdu, sizeof apdu.apdu, &src);
+    n = ctRecv(apdu.apdu, sizeof apdu.apdu, &src, NULL);
     if(n < 1) continue;
     n = ctProcessRequest(&res_apdu, &apdu, target);
     if(n < 1) continue;
