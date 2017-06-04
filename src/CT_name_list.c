@@ -26,10 +26,10 @@ int ctListInsert(ctList_t* list, char* name, ctAddr_t* addr) {
   if(!node) return CT__FAILURE;
   strcpy(node->name, name);
   node->addr = *addr;
-  // memcpy(&node->addr, addr, sizeof(ctAddr_t));
-  if(!list->head)
+  if(!list->head) {
+    node->next = NULL;
     list->head = list->tail = node;
-  else {
+  } else {
     node->next = list->head;
     list->head = node;
   }

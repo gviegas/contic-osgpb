@@ -12,7 +12,7 @@ CMDS_DIR = $(SRC_DIR)/commands
 EVENTS_DIR = $(SRC_DIR)/events
 
 CC = gcc
-OPTS = -Wall
+OPTS = -Wall -g
 FLAGS = -I$(INC_DIR)
 LIBS = -pthread
 

@@ -28,7 +28,6 @@ int _ctGetDest(ctList_t* list, ctAddr_t* addr) {
     return CT__FAILURE;
   }
   *addr = node->addr;
-  // memcpy(addr, &node->addr, sizeof(ctAddr_t));
   return CT__SUCCESS;
 }
 
