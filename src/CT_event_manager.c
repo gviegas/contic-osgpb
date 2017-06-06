@@ -14,7 +14,7 @@ static ctCond_t _ct_cond;
 static int _ct_wake;
 
 // to test more...
-static void* _ctManagerRun(void* args) {
+static void* _ctManagerRun(void* arg) {
   ctEvent_t event, *p_event = NULL;
   ctTimeSpec_t timeout, *p_timeout = NULL;
   int w;
@@ -58,7 +58,7 @@ int ctManagerStart() {
     fprintf(stderr, "ERROR: Manager failed to create cond\n");
     return CT__FAILURE;
   }
-  if(ctThreadCreate(&_ct_thread, _ctManagerRun) != CT__SUCCESS) {
+  if(ctThreadCreate(&_ct_thread, _ctManagerRun, NULL) != CT__SUCCESS) {
     fprintf(stderr, "ERROR: Manager failed to create thread\n");
     return CT__FAILURE;
   }

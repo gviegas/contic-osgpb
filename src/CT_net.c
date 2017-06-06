@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -119,6 +120,9 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src, ctTimeSpec_t* timeout) {
   addr_len = sizeof peer_addr;
   n = recvfrom(_ct_sfd, buffer, len, 0,
     (struct sockaddr*) &peer_addr, &addr_len);
+
+  if(n == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
+    return CT__WOULDBLOCK;
 
   s = getnameinfo((struct sockaddr*) &peer_addr, addr_len, src->node,
     sizeof src->node, src->service, sizeof src->service, 0);

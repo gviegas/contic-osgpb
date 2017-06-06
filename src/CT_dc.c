@@ -4,51 +4,61 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "CT_thread.h"
 #include "CT_cmd.h"
 #include "CT_dc.h"
 
-int ctDcExec(ctTarget_t* target, ctAddr_t* addr, ctAddr_t* destinations,
-  ctParam_t* messages, ctResponse_t* responses, size_t count)
-{
-  ctApdu_t apdu, res_apdu;
+static ctTarget_t _ct_target;
+static ctAddr_t _ct_addr;
+
+static void* _ctDcRun(void* arg) {
+  ctApdu_t apdu;
   ctAddr_t src;
+  int n;
+  while(1) {
+    n = ctRecv(apdu.apdu, sizeof apdu.apdu, &src, NULL);
+    if(n < 1) fprintf(stderr, "WARNING: Received invalid response\n");
+    // put response in a container to be processed...
+    else printf("\nOK: APDU received is %d bytes long\n", n); // test
+  }
+  return NULL;
+}
+
+int ctDcExec(ctDcExecInfo_t* info) {
+  ctApdu_t apdu;
   int n, i;
-  for(i = 0; i < count; ++i) {
-    n = ctCreateApdu(&apdu, &messages[i], target);
+  for(i = 0; i < info->count; ++i) {
+    n = ctCreateApdu(&apdu, &info->messages[i], &_ct_target);
     if(n < 1) continue;
-    if(ctSend(apdu.apdu, n, &destinations[i]) != CT__SUCCESS) {
+    if(ctSend(apdu.apdu, n, &info->destinations[i]) != CT__SUCCESS) {
       fprintf(stderr, "WARNING: Failed to send message %d\n", i);
-      continue;
+      // continue;
     }
 
-    // test
-    ctTimeSpec_t t;
-    t.sec = 0;
-    t.nsec = 9000000;
-    //
+    // if(ctProcessResponse(&responses[i], &res_apdu, &apdu, target)
+    //   != CT__SUCCESS)
+    // {
+    //   fprintf(stderr, "WARNING: Failed to process response %d\n", i);
+    //   memset(&responses[i], -1, sizeof responses[0]);
+    //   continue;
+    // }
 
-    n = ctRecv(res_apdu.apdu, sizeof res_apdu.apdu, &src, &t /*NULL*/);
-    if(n < 1) {
-      fprintf(stderr, "WARNING: Received invalid response for message %d\n", i);
-      memset(&responses[i], -1, sizeof responses[0]);
-      continue;
-    }
-    if(ctProcessResponse(&responses[i], &res_apdu, &apdu, target)
-      != CT__SUCCESS)
-    {
-      fprintf(stderr, "WARNING: Failed to process response %d\n", i);
-      memset(&responses[i], -1, sizeof responses[0]);
-      continue;
-    }
   }
   return CT__SUCCESS;
 }
 
 int ctDcStart(ctTarget_t* target, ctAddr_t* addr) {
+  ctThread_t thr;
+  _ct_target = *target;
+  _ct_addr = *addr;
   if(ctBind(addr) != CT__SUCCESS) {
     fprintf(stderr, "ERROR: Failed to bind\n");
     return CT__FAILURE;
   }
-  ctCmdStart(target, addr);
+  if(ctThreadCreate(&thr, _ctDcRun, NULL) != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: DC failed to create thread\n");
+    return CT__FAILURE;
+  }
+  ctCmdStart();
   return CT__SUCCESS;
 }

@@ -9,8 +9,8 @@
 #include "CT_defs.h"
 #include "CT_thread.h"
 
-int ctThreadCreate(ctThread_t* thread, void* (*exec)(void*)) {
-  int e = pthread_create((pthread_t*) thread, NULL, exec, NULL);
+int ctThreadCreate(ctThread_t* thread, void* (*exec)(void*), void* arg) {
+  int e = pthread_create((pthread_t*) thread, NULL, exec, arg);
   if(e) {
     fprintf(stderr, "\nERROR: Failed to create a new thread");
     return CT__FAILURE;

@@ -387,7 +387,7 @@ void* t1(void* args) {
 void threadTest() {
   ctThread_t t;
   int f = ctMutexCreate(&m);
-  int e = ctThreadCreate(&t, t1);
+  int e = ctThreadCreate(&t, t1. NULL);
   printf("\nnew thread: %d", e);
   printf("\nnew mutex: %d", f);
   ctSleep(5);
@@ -429,7 +429,7 @@ void condTest() {
   ctThread_t t;
   printf("\nmutex: %d", ctMutexCreate(&m));
   printf("\ncond: %d", ctCondCreate(&c));
-  printf("\nthread: %d",ctThreadCreate(&t, t2));
+  printf("\nthread: %d",ctThreadCreate(&t, t2, NULL));
   ctSleep(10);
   printf("\nwaking you up...");
   fflush(stdout);

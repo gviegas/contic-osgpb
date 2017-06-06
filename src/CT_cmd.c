@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "CT_defs.h"
 #include "CT_name_list.h"
 #include "CT_commands.h"
 #include "CT_cmd.h"
@@ -15,16 +16,14 @@
 #define _CT__DEF "def"
 #define _CT__UNDEF "undef"
 
-static int _ctParse(char* buf, ctList_t* list, ctTarget_t* target,
-  ctAddr_t* addr)
-{
+static int _ctParse(char* buf, ctList_t* list) {
   char *p = strtok(buf, CT__DELIM);
   if(!p) return CT__FAILURE;
   do {
     if(!strcmp(p, _CT__DEF)) ctCmdDef(list);
     else if(!strcmp(p, _CT__UNDEF)) ctCmdUndef(list);
     else if(!strcmp(p, _CT__LS)) ctCmdLs(list);
-    else if(!strcmp(p, _CT__CALL)) ctCmdCall(list, target, addr);
+    else if(!strcmp(p, _CT__CALL)) ctCmdCall(list);
     // else {
     //   printf("Invalid option\n");
     //   break;
@@ -49,7 +48,7 @@ static int _ctInput(char* buf) {
   return CT__SUCCESS;
 }
 
-int ctCmdStart(ctTarget_t* target, ctAddr_t* addr) {
+int ctCmdStart() {
   char buf[_CT__BUFLEN] = {0};
   ctList_t list;
   if(ctListCreate(&list) != CT__SUCCESS) {
@@ -60,7 +59,7 @@ int ctCmdStart(ctTarget_t* target, ctAddr_t* addr) {
   while(1) {
     printf("%s DC: ", _CT__TK);
     _ctInput(buf); // err check
-    _ctParse(buf, &list, target, addr); // err check
+    _ctParse(buf, &list); // err check
   }
   return CT__SUCCESS;
 }

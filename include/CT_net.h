@@ -7,6 +7,7 @@
 
 #define CT__NET_MAXNODE 20
 #define CT__NET_MAXSERV 12
+#define CT__WOULDBLOCK -2
 
 #include "CT_date.h"
 

@@ -31,13 +31,14 @@ int _ctGetDest(ctList_t* list, ctAddr_t* addr) {
   return CT__SUCCESS;
 }
 
-int _ctFR(ctList_t* list, ctTarget_t* target, ctAddr_t* addr) {
+int _ctFR(ctList_t* list) {
   char *p;
   int i;
   ctParam_t param;
   ctFRRequest_t fr;
   ctResponse_t res;
   ctAddr_t dest;
+  ctDcExecInfo_t info;
   param.service = REQUEST_FULL_READ;
   param.fr_request = &fr;
 
@@ -49,38 +50,41 @@ int _ctFR(ctList_t* list, ctTarget_t* target, ctAddr_t* addr) {
   if(!strcmp(_CT__UT01, p)) {
     fr.table_id = CT__UT01;
     if(_ctGetDest(list, &dest) != CT__SUCCESS) return CT__FAILURE;
-    ctDcExec(target, addr, &dest, &param, &res, 1);
-    // debug
-    printf("service=%d ", res.service);
-    printf("response=%d ", res.response);
-    printf("read_count=%d \n", res.read_count);
-    for(i = 0; i < res.read_count; ++i)
-      printf("%x ", res.read_data[i]);
-    printf("end\n");
+    info = (ctDcExecInfo_t) {&dest, &param, &res, 1};
+    ctDcExec(&info);
+    // // debug
+    // printf("service=%d ", res.service);
+    // printf("response=%d ", res.response);
+    // printf("read_count=%d \n", res.read_count);
+    // for(i = 0; i < res.read_count; ++i)
+    //   printf("%x ", res.read_data[i]);
+    // printf("end\n");
     //
   } else if(!strcmp(_CT__UT02, p)) {
     fr.table_id = CT__UT02;
     if(_ctGetDest(list, &dest) != CT__SUCCESS) return CT__FAILURE;
-    ctDcExec(target, addr, &dest, &param, &res, 1);
+    info = (ctDcExecInfo_t) {&dest, &param, &res, 1};
+    ctDcExec(&info);
     // debug
-    printf("service=%d ", res.service);
-    printf("response=%d ", res.response);
-    printf("read_count=%d \n", res.read_count);
-    for(i = 0; i < res.read_count; ++i)
-      printf("%x ", res.read_data[i]);
-    printf("end\n");
+    // printf("service=%d ", res.service);
+    // printf("response=%d ", res.response);
+    // printf("read_count=%d \n", res.read_count);
+    // for(i = 0; i < res.read_count; ++i)
+    //   printf("%x ", res.read_data[i]);
+    // printf("end\n");
     //
   } else if(!strcmp(_CT__BT00, p)) {
     fr.table_id = CT__BT00;
     if(_ctGetDest(list, &dest) != CT__SUCCESS) return CT__FAILURE;
-    ctDcExec(target, addr, &dest, &param, &res, 1);
+    info = (ctDcExecInfo_t) {&dest, &param, &res, 1};
+    ctDcExec(&info);
     // debug
-    printf("service=%d ", res.service);
-    printf("response=%d ", res.response);
-    printf("read_count=%d \n", res.read_count);
-    for(i = 0; i < res.read_count; ++i)
-      printf("%x ", res.read_data[i]);
-    printf("end\n");
+    // printf("service=%d ", res.service);
+    // printf("response=%d ", res.response);
+    // printf("read_count=%d \n", res.read_count);
+    // for(i = 0; i < res.read_count; ++i)
+    //   printf("%x ", res.read_data[i]);
+    // printf("end\n");
     //
   } else {
     printf("Invalid table \"%s\"\n", p);
@@ -90,27 +94,27 @@ int _ctFR(ctList_t* list, ctTarget_t* target, ctAddr_t* addr) {
 }
 
 // to do
-int _ctFW(ctList_t* list, ctTarget_t* target, ctAddr_t* addr) {
+int _ctFW(ctList_t* list) {
   return CT__SUCCESS;
 }
 
 // to do
-int _ctPR(ctList_t* list, ctTarget_t* target, ctAddr_t* addr) {
+int _ctPR(ctList_t* list) {
   return CT__SUCCESS;
 }
 
 // to do
-int _ctPW(ctList_t* list, ctTarget_t* target, ctAddr_t* addr) {
+int _ctPW(ctList_t* list) {
   return CT__SUCCESS;
 }
 
-int ctCmdCall(ctList_t* list, ctTarget_t* target, ctAddr_t* addr) {
+int ctCmdCall(ctList_t* list) {
   char *p;
   while((p = strtok(NULL, CT__DELIM))) {
-    if(!strcmp(_CT__FR, p)) _ctFR(list, target, addr);
-    else if(!strcmp(_CT__FW, p)) _ctFW(list, target, addr);
-    else if(!strcmp(_CT__PR, p)) _ctPR(list, target, addr);
-    else if(!strcmp(_CT__PW, p)) _ctPW(list, target, addr);
+    if(!strcmp(_CT__FR, p)) _ctFR(list);
+    else if(!strcmp(_CT__FW, p)) _ctFW(list);
+    else if(!strcmp(_CT__PR, p)) _ctPR(list);
+    else if(!strcmp(_CT__PW, p)) _ctPW(list);
     else {
       printf("Invalid call \"%s\"\n", p);
       return CT__FAILURE;

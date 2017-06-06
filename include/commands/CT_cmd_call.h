@@ -5,11 +5,10 @@
 #ifndef CT_CMD_CALL_H
 #define CT_CMD_CALL_H
 
-#include "CT_defs.h"
 #include "CT_name_list.h"
 
 // Call command
 //
-int ctCmdCall(ctList_t* list, ctTarget_t* target, ctAddr_t* addr);
+int ctCmdCall(ctList_t* list);
 
 #endif // CT_CMD_CALL_H
