@@ -5,7 +5,7 @@
 #ifndef CT_UNIT_H
 #define CT_UNIT_H
 
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_net.h"
 
 // Unit default commission configuration

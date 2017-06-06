@@ -3,7 +3,7 @@
 //
 
 #include <string.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_event_queue.h"
 
 int ctQueueCreate(ctQueue_t* queue) {

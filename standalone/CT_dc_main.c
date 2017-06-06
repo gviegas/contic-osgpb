@@ -10,9 +10,8 @@
 #define CT__DC_ARGC 7
 #define CT__DC_ARGV_KEY "--key"
 #define CT__DC_ARGV_NODE "--node"
-#define CT__DC_ARGV_SERV "--service"
+#define CT__DC_ARGV_PORT "--port"
 
-// doing
 int main(int argc, char** argv) {
   ctTarget_t target;
   ctAddr_t addr;
@@ -22,7 +21,7 @@ int main(int argc, char** argv) {
     printf("Usage: ");
     printf("%s <KEY> ", CT__DC_ARGV_KEY);
     printf("%s <NODE> ", CT__DC_ARGV_NODE);
-    printf("%s <SERVICE>\n", CT__DC_ARGV_SERV);
+    printf("%s <PORT>\n", CT__DC_ARGV_PORT);
     return CT__FAILURE;
   }
   for(i = 1; i < argc; ++i) {
@@ -48,18 +47,18 @@ int main(int argc, char** argv) {
         return CT__FAILURE;
       }
       strcpy(addr.node, argv[i]);
-    } else if(!strcmp(argv[i], CT__DC_ARGV_SERV)) {
-      if(strlen(argv[++i]) >= sizeof addr.service) {
-        fprintf(stderr, "ERROR: Service name must be shorter\n");
+    } else if(!strcmp(argv[i], CT__DC_ARGV_PORT)) {
+      if(strlen(argv[++i]) >= sizeof addr.port) {
+        fprintf(stderr, "ERROR: Port name must be shorter\n");
         return CT__FAILURE;
       }
-      strcpy(addr.service, argv[i]);
+      strcpy(addr.port, argv[i]);
     } else {
       fprintf(stderr, "ERROR: Invalid argument %s\n", argv[i]);
       return CT__FAILURE;
     }
   }
-
+  // Start the DC
   ctDcStart(&target, &addr);
 
   // // test
@@ -88,14 +87,14 @@ int main(int argc, char** argv) {
   // param[0].pr_request = &prreq;
   //
   // strcpy(dest[0].node, "localhost");
-  // strcpy(dest[0].service, "50111");
+  // strcpy(dest[0].port, "50111");
   //
   // ctDcExec(&target, &addr, dest, param, responses,
   //   sizeof dest / sizeof dest[0]);
   //
   // for(i = 0; i < sizeof responses / sizeof responses[0]; ++i) {
   //   printf("response %d:\n", i + 1);
-  //   printf("service=%d ", responses[i].service);
+  //   printf("service=%d ", responses[i].port);
   //   printf("response=%d ", responses[i].response);
   //   printf("read_count=%d \n", responses[i].read_count);
   //   for(j = 0; j < responses[i].read_count; ++j)

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_config.h"
 #include "CT_file.h"
 #include "CT_unit.h"
@@ -13,10 +13,11 @@
 #define CT__UNIT_ARGC 7
 #define CT__UNIT_ARGV_KEY "--key"
 #define CT__UNIT_ARGV_NODE "--node"
-#define CT__UNIT_ARGV_SERV "--service"
+#define CT__UNIT_ARGV_PORT "--port"
 #define CT__UNIT_ARGV_OPT "--option"
 #define CT__UNIT_ARGV_CLEAR "--clear"
 
+// TODO: "clear" logic needs a revision
 int main(int argc, char** argv) {
   ctTarget_t target;
   ctAddr_t addr;
@@ -26,7 +27,7 @@ int main(int argc, char** argv) {
     printf("Usage: ");
     printf("%s <KEY> ", CT__UNIT_ARGV_KEY);
     printf("%s <NODE> ", CT__UNIT_ARGV_NODE);
-    printf("%s <SERVICE> ", CT__UNIT_ARGV_SERV);
+    printf("%s <PORT> ", CT__UNIT_ARGV_PORT);
     printf("[%s <OPTION>] ", CT__UNIT_ARGV_OPT);
     printf("[%s]\n", CT__UNIT_ARGV_CLEAR);
     return CT__FAILURE;
@@ -54,12 +55,12 @@ int main(int argc, char** argv) {
         return CT__FAILURE;
       }
       strcpy(addr.node, argv[i]);
-    } else if(!strcmp(argv[i], CT__UNIT_ARGV_SERV)) {
-      if(strlen(argv[++i]) >= sizeof addr.service) {
-        fprintf(stderr, "ERROR: Service name must be shorter\n");
+    } else if(!strcmp(argv[i], CT__UNIT_ARGV_PORT)) {
+      if(strlen(argv[++i]) >= sizeof addr.port) {
+        fprintf(stderr, "ERROR: Port name must be shorter\n");
         return CT__FAILURE;
       }
-      strcpy(addr.service, argv[i]);
+      strcpy(addr.port, argv[i]);
     } else if(!strcmp(argv[i], CT__UNIT_ARGV_OPT)) {
       char *end;
       long opt = strtol(argv[++i], &end, 0);
@@ -79,6 +80,7 @@ int main(int argc, char** argv) {
       return CT__FAILURE;
     }
   }
+  // Start the Unit
   ctUnitStart(&target, &addr, clear);
   return CT__SUCCESS;
 }

@@ -6,7 +6,7 @@
 #define CT_NET_H
 
 #define CT__NET_MAXNODE 20
-#define CT__NET_MAXSERV 12
+#define CT__NET_MAXPORT 12
 #define CT__WOULDBLOCK -2
 
 #include "CT_date.h"
@@ -15,7 +15,7 @@
 //
 typedef struct {
   char node[CT__NET_MAXNODE];
-  char service[CT__NET_MAXSERV];
+  char port[CT__NET_MAXPORT];
 } ctAddr_t;
 
 // Bind to addr communication endpoint

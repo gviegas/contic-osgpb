@@ -5,7 +5,7 @@
 #ifndef CT_STATE_H
 #define CT_STATE_H
 
-#include "CT_defs.h"
+#include "CT_definitions.h"
 
 // Process a state change
 //

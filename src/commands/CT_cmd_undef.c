@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "commands/CT_cmd_undef.h"
 
 int ctCmdUndef(ctList_t* list) {

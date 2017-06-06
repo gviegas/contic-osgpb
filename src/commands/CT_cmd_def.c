@@ -4,11 +4,11 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "commands/CT_cmd_def.h"
 
 #define _CT__NODE "node"
-#define _CT__SERV "serv"
+#define _CT__PORT "port"
 
 int ctCmdDef(ctList_t* list) {
   char *b, *p, name[CT__LIST_NAMELEN];
@@ -22,8 +22,8 @@ int ctCmdDef(ctList_t* list) {
       if(!v[1] && !strcmp(p, _CT__NODE)) {
         strcpy(addr.node, b);
         v[1] = 1;
-      } else if(!v[2] && !strcmp(p, _CT__SERV)) {
-        strcpy(addr.service, b);
+      } else if(!v[2] && !strcmp(p, _CT__PORT)) {
+        strcpy(addr.port, b);
         v[2] = 1;
       }
       else {

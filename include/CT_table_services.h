@@ -5,7 +5,7 @@
 #ifndef CT_TABLE_SERVICES_H
 #define CT_TABLE_SERVICES_H
 
-#include "CT_defs.h"
+#include "CT_definitions.h"
 
 // Creates the APDU for an OSGP Full Table Read Request 
 //

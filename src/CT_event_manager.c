@@ -3,7 +3,7 @@
 //
 
 #include <stdio.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_thread.h"
 #include "CT_event_manager.h"
 

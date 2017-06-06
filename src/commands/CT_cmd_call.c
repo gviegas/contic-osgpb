@@ -36,21 +36,21 @@ int _ctFR(ctList_t* list) {
   int i;
   ctParam_t param;
   ctFRRequest_t fr;
-  ctResponse_t res;
+  // ctResponse_t res;
   ctAddr_t dest;
   ctDcExecInfo_t info;
   param.service = REQUEST_FULL_READ;
   param.fr_request = &fr;
 
   if(!(p = strtok(NULL, CT__DELIM))) {
-    printf("Missing parameter <TABLE ID>\n");
+    printf("Missing parameter <TABLE>\n");
     return CT__FAILURE;
   }
 
   if(!strcmp(_CT__UT01, p)) {
     fr.table_id = CT__UT01;
     if(_ctGetDest(list, &dest) != CT__SUCCESS) return CT__FAILURE;
-    info = (ctDcExecInfo_t) {&dest, &param, &res, 1};
+    info = (ctDcExecInfo_t) {&dest, &param, 1};
     ctDcExec(&info);
     // // debug
     // printf("service=%d ", res.service);
@@ -63,7 +63,7 @@ int _ctFR(ctList_t* list) {
   } else if(!strcmp(_CT__UT02, p)) {
     fr.table_id = CT__UT02;
     if(_ctGetDest(list, &dest) != CT__SUCCESS) return CT__FAILURE;
-    info = (ctDcExecInfo_t) {&dest, &param, &res, 1};
+    info = (ctDcExecInfo_t) {&dest, &param, 1};
     ctDcExec(&info);
     // debug
     // printf("service=%d ", res.service);
@@ -76,7 +76,7 @@ int _ctFR(ctList_t* list) {
   } else if(!strcmp(_CT__BT00, p)) {
     fr.table_id = CT__BT00;
     if(_ctGetDest(list, &dest) != CT__SUCCESS) return CT__FAILURE;
-    info = (ctDcExecInfo_t) {&dest, &param, &res, 1};
+    info = (ctDcExecInfo_t) {&dest, &param, 1};
     ctDcExec(&info);
     // debug
     // printf("service=%d ", res.service);

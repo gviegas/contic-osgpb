@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_name_list.h"
 
 int ctListCreate(ctList_t* list) {

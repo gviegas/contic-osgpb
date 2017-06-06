@@ -3,7 +3,7 @@
 //
 
 #include <stdio.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_date.h"
 #include "CT_file.h"
 #include "CT_tables.h"

@@ -17,9 +17,10 @@ static void* _ctDcRun(void* arg) {
   int n;
   while(1) {
     n = ctRecv(apdu.apdu, sizeof apdu.apdu, &src, NULL);
-    if(n < 1) fprintf(stderr, "WARNING: Received invalid response\n");
-    // put response in a container to be processed...
-    else printf("\nOK: APDU received is %d bytes long\n", n); // test
+    if(n < 1)
+      fprintf(stderr, "WARNING: Invalid response received\n");
+    else // put response in a container to be processed...
+      printf("\nOK: APDU received is %d bytes long\n", n); // test
   }
   return NULL;
 }
@@ -29,20 +30,10 @@ int ctDcExec(ctDcExecInfo_t* info) {
   int n, i;
   for(i = 0; i < info->count; ++i) {
     n = ctCreateApdu(&apdu, &info->messages[i], &_ct_target);
-    if(n < 1) continue;
-    if(ctSend(apdu.apdu, n, &info->destinations[i]) != CT__SUCCESS) {
+    if(n < 1)
+      fprintf(stderr, "WARNING: Failed to create apdu %d\n", i);
+    else if(ctSend(apdu.apdu, n, &info->destinations[i]) != CT__SUCCESS)
       fprintf(stderr, "WARNING: Failed to send message %d\n", i);
-      // continue;
-    }
-
-    // if(ctProcessResponse(&responses[i], &res_apdu, &apdu, target)
-    //   != CT__SUCCESS)
-    // {
-    //   fprintf(stderr, "WARNING: Failed to process response %d\n", i);
-    //   memset(&responses[i], -1, sizeof responses[0]);
-    //   continue;
-    // }
-
   }
   return CT__SUCCESS;
 }

@@ -6,7 +6,7 @@
 // #include <pthread.h>
 #include <stdio.h>
 #include <errno.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_thread.h"
 
 int ctThreadCreate(ctThread_t* thread, void* (*exec)(void*), void* arg) {

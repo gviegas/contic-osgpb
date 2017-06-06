@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_name_list.h"
 #include "CT_commands.h"
 #include "CT_cmd.h"

@@ -237,7 +237,7 @@ void createTest() {
 void unitTest() {
   ctAddr_t addr;
   strcpy(addr.node, "localhost");
-  strcpy(addr.service, "50000");
+  strcpy(addr.port, "50000");
   // ctUnitCommissioning();
   ctUnitStart(&t, &addr, 0);
 }
@@ -270,13 +270,13 @@ void dcTest() {
   // param[2].pr_request = &prreq2;
   //
   // strcpy(addr.node, "localhost");
-  // strcpy(addr.service, "60000");
+  // strcpy(addr.port, "60000");
   // strcpy(dest[0].node, "localhost");
-  // strcpy(dest[0].service, "50000");
+  // strcpy(dest[0].port, "50000");
   // strcpy(dest[1].node, "localhost");
-  // strcpy(dest[1].service, "50000");
+  // strcpy(dest[1].port, "50000");
   // strcpy(dest[2].node, "localhost");
-  // strcpy(dest[2].service, "50000");
+  // strcpy(dest[2].port, "50000");
   //
   // ctDcExec(&t, &addr, dest, param, responses, sizeof dest / sizeof dest[0]);
   //
@@ -297,14 +297,14 @@ void netrecvTest() {
   int len;
 
   strcpy(addr.node, "localhost");
-  strcpy(addr.service, "40100");
+  strcpy(addr.port, "40100");
   memset(&src, 0, sizeof src);
 
   ctBind(&addr);
   len = ctRecv(buffer, (sizeof buffer) - 1, &src, NULL);
   buffer[len] = '\0';
 
-  printf("\nnode=%s service=%s", src.node, src.service);
+  printf("\nnode=%s service=%s", src.node, src.port);
   printf("\nreceived: %s (%d)\n", buffer, len);
 }
 
@@ -312,9 +312,9 @@ void netsendTest() {
   char* data = "Tinny Dog";
   ctAddr_t addr, dest;
   strcpy(addr.node, "localhost");
-  strcpy(addr.service, "50100");
+  strcpy(addr.port, "50100");
   strcpy(dest.node, "localhost");
-  strcpy(dest.service, "40100");
+  strcpy(dest.port, "40100");
 
   ctBind(&addr);
   ctSend(data, strlen(data), &dest);
@@ -387,7 +387,7 @@ void* t1(void* args) {
 void threadTest() {
   ctThread_t t;
   int f = ctMutexCreate(&m);
-  int e = ctThreadCreate(&t, t1. NULL);
+  int e = ctThreadCreate(&t, t1, NULL);
   printf("\nnew thread: %d", e);
   printf("\nnew mutex: %d", f);
   ctSleep(5);

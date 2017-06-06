@@ -5,7 +5,7 @@
 #ifndef CT_FILE_H
 #define CT_FILE_H
 
-#include "CT_defs.h"
+#include "CT_definitions.h"
 
 #define CT__BLOCK_LEN 10
 #define CT__DATAFILE "d.block"

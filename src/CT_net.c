@@ -10,7 +10,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
-#include "CT_defs.h"
+#include "CT_definitions.h"
 #include "CT_net.h"
 
 static int _ct_sfd = -1;
@@ -28,7 +28,7 @@ int ctBind(ctAddr_t* addr) {
   hints.ai_family = AF_UNSPEC; // IPv4/6
   hints.ai_socktype = SOCK_DGRAM;
 
-  s = getaddrinfo(addr->node, addr->service, &hints, &result);
+  s = getaddrinfo(addr->node, addr->port, &hints, &result);
   if(s) {
     fprintf(stderr, "ERROR: ctBind - failed to resolve address (%s)\n",
       gai_strerror(s));
@@ -66,7 +66,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
     hints.ai_family = AF_UNSPEC; // IPv4/6
     hints.ai_socktype = SOCK_DGRAM;
 
-    s = getaddrinfo(dest->node, dest->service, &hints, &result);
+    s = getaddrinfo(dest->node, dest->port, &hints, &result);
     if(s) {
       fprintf(stderr, "ERROR: ctSend - failed to resolve address (%s)\n",
         gai_strerror(s));
@@ -125,7 +125,7 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src, ctTimeSpec_t* timeout) {
     return CT__WOULDBLOCK;
 
   s = getnameinfo((struct sockaddr*) &peer_addr, addr_len, src->node,
-    sizeof src->node, src->service, sizeof src->service, 0);
+    sizeof src->node, src->port, sizeof src->port, 0);
 
   if(s) {
     fprintf(stderr, "ERROR: ctRecv - failed to resolve address (%s)\n",
