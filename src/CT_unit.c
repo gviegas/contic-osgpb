@@ -54,6 +54,7 @@ int ctUnitCommissioning() {
   return CT__SUCCESS;
 }
 
+// TODO: launch events when restarting without clear...
 int ctUnitStart(ctTarget_t* target, ctAddr_t* addr, int clear) {
   ctApdu_t apdu, res_apdu;
   ctAddr_t src;

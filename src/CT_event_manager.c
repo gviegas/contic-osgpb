@@ -12,8 +12,8 @@ static ctThread_t _ct_thread;
 static ctMutex_t _ct_mutex;
 static ctCond_t _ct_cond;
 static int _ct_wake;
+static int _ct_ready = 0;
 
-// to test more...
 static void* _ctManagerRun(void* arg) {
   ctEvent_t event, *p_event = NULL;
   ctTimeSpec_t timeout, *p_timeout = NULL;
@@ -21,6 +21,7 @@ static void* _ctManagerRun(void* arg) {
   ctGetTimeSpec(&timeout); // subtle...
   while(1) {
     ctLock(&_ct_mutex);
+    _ct_ready = 1;
     _ct_wake = w = 0;
     while(!_ct_wake && w != CT__TIMEDOUT)
       w = ctWait(&_ct_cond, &_ct_mutex, p_timeout);
@@ -70,11 +71,15 @@ int ctNewEvent(ctEvent_t* event) {
     fprintf(stderr, "ERROR: Invalid new event\n");
     return CT__FAILURE;
   }
+  if(!_ct_ready) {
+    fprintf(stderr, "ERROR: Manager is starting\n");
+    return CT__NOTREADY;
+  }
   ctLock(&_ct_mutex);
   if(ctQueuePut(&_ct_queue, event) == CT__FAILURE) {
     ctUnlock(&_ct_mutex);
     fprintf(stderr, "ERROR: Failed to insert a new event\n");
-    return CT__FAILURE;
+    return CT__DSFULL;
   }
   ctQueueSort(&_ct_queue);
   _ct_wake = 1;
