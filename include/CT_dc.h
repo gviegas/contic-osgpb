@@ -23,6 +23,6 @@ int ctDcExec(ctDcExecInfo_t* info);
 
 // Start the DC
 //
-int ctDcStart(ctTarget_t* target, ctAddr_t* addr);
+int ctDcStart(ctTarget_t* target, ctAddr_t* addr, char* in, char* out);
 
 #endif // CT_DC_H

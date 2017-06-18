@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
   ctAddr_t addr;
   char buf[3];
   int i, j, clear = 0;
+
   if(argc < CT__UNIT_ARGC) {
     printf("Usage: ");
     printf("%s <KEY> ", CT__UNIT_ARGV_KEY);
@@ -32,6 +33,7 @@ int main(int argc, char** argv) {
     printf("[%s]\n", CT__UNIT_ARGV_CLEAR);
     return CT__FAILURE;
   }
+
   for(i = 1; i < argc; ++i) {
     if(!strcmp(argv[i], CT__UNIT_ARGV_KEY)) {
       if(strlen(argv[++i]) == (2 * sizeof target.key)) {

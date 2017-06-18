@@ -11,19 +11,26 @@
 #define CT__DC_ARGV_KEY "--key"
 #define CT__DC_ARGV_NODE "--node"
 #define CT__DC_ARGV_PORT "--port"
+#define CT__DC_ARGV_IN "--in"
+#define CT__DC_ARGV_OUT "--out"
 
 int main(int argc, char** argv) {
   ctTarget_t target;
   ctAddr_t addr;
-  char buf[3];
+  char *in, *out, buf[3];
   int i, j;
+  in = out = NULL;
+
   if(argc < CT__DC_ARGC) {
     printf("Usage: ");
     printf("%s <KEY> ", CT__DC_ARGV_KEY);
     printf("%s <NODE> ", CT__DC_ARGV_NODE);
-    printf("%s <PORT>\n", CT__DC_ARGV_PORT);
+    printf("%s <PORT> ", CT__DC_ARGV_PORT);
+    printf("[%s <INPUT>] ", CT__DC_ARGV_IN);
+    printf("[%s <OUTPUT>]\n", CT__DC_ARGV_OUT);
     return CT__FAILURE;
   }
+
   for(i = 1; i < argc; ++i) {
     if(!strcmp(argv[i], CT__DC_ARGV_KEY)) {
       if(strlen(argv[++i]) == (2 * sizeof target.key)) {
@@ -53,13 +60,25 @@ int main(int argc, char** argv) {
         return CT__FAILURE;
       }
       strcpy(addr.port, argv[i]);
+    } else if(!strcmp(argv[i], CT__DC_ARGV_IN)) {
+      if(++i == argc) {
+        fprintf(stderr, "ERROR: Missing path for option %s\n", argv[i]);
+        return CT__FAILURE;
+      }
+      in = argv[i];
+    } else if(!strcmp(argv[i], CT__DC_ARGV_OUT)) {
+      if(++i == argc) {
+        fprintf(stderr, "ERROR: Missing path for option %s\n", argv[i]);
+        return CT__FAILURE;
+      }
+      out = argv[i];
     } else {
       fprintf(stderr, "ERROR: Invalid argument %s\n", argv[i]);
       return CT__FAILURE;
     }
   }
   // Start the DC
-  ctDcStart(&target, &addr);
+  ctDcStart(&target, &addr, in, out);
 
   // // test
   // ctAddr_t dest[1];

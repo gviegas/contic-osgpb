@@ -25,7 +25,7 @@ static int _ctParse(char* buf, ctList_t* list) {
     else if(!strcmp(p, _CT__LS)) ctCmdLs(list);
     else if(!strcmp(p, _CT__CALL)) ctCmdCall(list);
     // else {
-    //   printf("Invalid option\n");
+    //   printf("invalid command\n");
     //   break;
     // }
   } while((p = strtok(NULL, CT__DELIM)));
@@ -48,19 +48,31 @@ static int _ctInput(char* buf) {
   return CT__SUCCESS;
 }
 
-int ctCmdStart() {
+static void _ctPipe(char* buf, ctList_t* list) {
+  while(1) {
+    _ctInput(buf);  // err check
+    _ctParse(buf, list);  // err check
+    fflush(stdout);
+  }
+}
+
+static void _ctTty(char* buf, ctList_t* list) {
+  printf("[DC Interactive shell started]\n");
+  while(1) {
+    printf("%sDC: ", _CT__TK);
+    _ctInput(buf);  // err check
+    _ctParse(buf, list);  // err check
+  }
+}
+
+int ctCmdStart(int interactive) {
   char buf[_CT__BUFLEN] = {0};
   ctList_t list;
   if(ctListCreate(&list) != CT__SUCCESS) {
     fprintf(stderr, "ERROR: Failed to create the name list\n");
     return CT__FAILURE;
   }
-  printf("[DC Interactive shell started]\n");
-  while(1) {
-    // printf("%s DC: ", _CT__TK);
-    fflush(stdout);
-    _ctInput(buf); // err check
-    _ctParse(buf, &list); // err check
-  }
+  if(interactive) _ctTty(buf, &list);
+  else _ctPipe(buf, &list);
   return CT__SUCCESS;
 }

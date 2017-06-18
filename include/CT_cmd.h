@@ -5,8 +5,8 @@
 #ifndef CT_CMD_H
 #define CT_CMD_H
 
-// Start an interactice command shell
+// Start the command interpreter
 //
-int ctCmdStart();
+int ctCmdStart(int interactive);
 
 #endif // CT_CMD_H
