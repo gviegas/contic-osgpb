@@ -52,12 +52,13 @@ int ctCmdStart() {
   char buf[_CT__BUFLEN] = {0};
   ctList_t list;
   if(ctListCreate(&list) != CT__SUCCESS) {
-    fprintf(stderr, "Failed to create the name list\n");
+    fprintf(stderr, "ERROR: Failed to create the name list\n");
     return CT__FAILURE;
   }
   printf("[DC Interactive shell started]\n");
   while(1) {
-    printf("%s DC: ", _CT__TK);
+    // printf("%s DC: ", _CT__TK);
+    fflush(stdout);
     _ctInput(buf); // err check
     _ctParse(buf, &list); // err check
   }

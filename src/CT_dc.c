@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "CT_thread.h"
+#include "CT_pipe.h"
 #include "CT_cmd.h"
 #include "CT_dc.h"
 
@@ -50,6 +51,8 @@ int ctDcStart(ctTarget_t* target, ctAddr_t* addr) {
     fprintf(stderr, "ERROR: DC failed to create thread\n");
     return CT__FAILURE;
   }
+  ctNpipeIn("../contic-simulator/in"); // testing
+  ctNpipeOut("../contic-simulator/out"); // testing
   ctCmdStart();
   return CT__SUCCESS;
 }
