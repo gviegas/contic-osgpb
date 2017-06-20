@@ -14,6 +14,7 @@
 //
 typedef struct {
   int key;
+  long timestamp;
   ctAddr_t addr;
   ctApdu_t apdu;
 } ctEntry_t;

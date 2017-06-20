@@ -33,7 +33,7 @@ int _ctGetDest(ctList_t* list, ctAddr_t* addr) {
 
 int _ctFR(ctList_t* list) {
   char *p;
-  int i;
+  // int i;
   ctParam_t param;
   ctFRRequest_t fr;
   // ctResponse_t res;

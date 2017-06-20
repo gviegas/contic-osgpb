@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "CT_definitions.h"
+#include "CT_date.h"
 #include "CT_message_map.h"
 
 int ctMapCreate(ctMap_t* map) {
@@ -26,6 +27,7 @@ ctEntry_t* ctMapAdd(ctMap_t* map, int key) {
   int i, n;
   size_t sz;
   ctEntry_t** aux;
+  ctTimeSpec_t ts;
   if(ctMapFind(map, key)) return NULL; // NOTE: no duplicate key
   if(map->size == map->total) {
     n = 1 + map->total + map->total / 10;
@@ -47,6 +49,8 @@ ctEntry_t* ctMapAdd(ctMap_t* map, int key) {
   if(!map->entries[i]) return NULL;
   ++map->size;
   map->entries[i]->key = key;
+  ctGetTimeSpec(&ts);
+  map->entries[i]->timestamp = ts.sec;
   return map->entries[i];
 }
 

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "CT_date.h"
 #include "CT_thread.h"
 #include "CT_pipe.h"
 #include "CT_message_map.h"
@@ -14,10 +15,30 @@
 static ctTarget_t _ct_target;
 static ctAddr_t _ct_addr;
 static ctMap_t _ct_map;
+static ctMutex_t _ct_mutex;
+
+// TODO
+static void* _ctDcAnalyzer(void* arg) {
+  ctTimeSpec_t ts;
+  ctEntry_t* entry;
+  int i;
+  while(1) {
+    ctLock(&_ct_mutex);
+    // start time
+    if(ctMapSize(&_ct_map)) {
+      // for each entry, check if timed out
+      // if so, delete it and print warning
+      // else leave unchanged
+    }
+    ctUnlock(&_ct_mutex);
+    // sleep (timeout - (now - start time))
+  }
+  return NULL;
+}
 
 // TODO: call a print/format function from cmd (to correctly place TK
 // on interactive mode) with processed response plus src info
-static void* _ctDcRun(void* arg) {
+static void* _ctDcReceiver(void* arg) {
   ctApdu_t apdu;
   ctAddr_t src;
   ctResponse_t res;
@@ -28,18 +49,23 @@ static void* _ctDcRun(void* arg) {
     if(n < 1)
       fprintf(stderr, "WARNING: Invalid response received\n");
     else {
+      ctLock(&_ct_mutex);
       entry = ctMapFind(&_ct_map, atoi(src.port));
       if(!entry) {
+        ctUnlock(&_ct_mutex);
         fprintf(stderr, "WARNING: Source not mapped\n");
         continue;
       }
       r = ctProcessResponse(&res, &apdu, &entry->apdu, &_ct_target);
       if(r != CT__SUCCESS) {
+        ctUnlock(&_ct_mutex);
         fprintf(stderr, "WARNING: Failed to process respose from %s %s\n",
           src.node, src.port);
         continue;
       }
       r = ctMapDelete(&_ct_map, entry->key);
+      ctUnlock(&_ct_mutex);
+      // NOTE: this if clause should never happen with locks...
       if(r != CT__SUCCESS)
         fprintf(stderr, "WARNING: Failed to delete entry %d\n", entry->key);
 
@@ -61,6 +87,9 @@ static void* _ctDcRun(void* arg) {
 int ctDcExec(ctDcExecInfo_t* info) {
   ctEntry_t* entry;
   int n, i;
+  // NOTE: other threads could starve
+  // consider moving this lock inside the loop
+  ctLock(&_ct_mutex);
   for(i = 0; i < info->count; ++i) {
     entry = ctMapAdd(&_ct_map, atoi(info->destinations[i].port));
     if(!entry) continue;
@@ -71,11 +100,12 @@ int ctDcExec(ctDcExecInfo_t* info) {
     else if(ctSend(entry->apdu.apdu, n, &entry->addr) != CT__SUCCESS)
       fprintf(stderr, "WARNING: Failed to send message %d\n", i);
   }
+  ctUnlock(&_ct_mutex);
   return CT__SUCCESS;
 }
 
 int ctDcStart(ctTarget_t* target, ctAddr_t* addr, char* in, char* out) {
-  ctThread_t thr;
+  ctThread_t thr1, thr2;
   _ct_target = *target;
   _ct_addr = *addr;
   if(ctMapCreate(&_ct_map) != CT__SUCCESS) {
@@ -83,11 +113,19 @@ int ctDcStart(ctTarget_t* target, ctAddr_t* addr, char* in, char* out) {
     return CT__FAILURE;
   }
   if(ctBind(addr) != CT__SUCCESS) {
-    fprintf(stderr, "ERROR: Failed to bind\n");
+    fprintf(stderr, "ERROR: DC failed to bind\n");
     return CT__FAILURE;
   }
-  if(ctThreadCreate(&thr, _ctDcRun, NULL) != CT__SUCCESS) {
-    fprintf(stderr, "ERROR: DC failed to create thread\n");
+  if(ctMutexCreate(&_ct_mutex) != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: DC failed to create mutex\n");
+    return CT__FAILURE;
+  }
+  if(ctThreadCreate(&thr1, _ctDcReceiver, NULL) != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: DC failed to create receiver thread\n");
+    return CT__FAILURE;
+  }
+  if(ctThreadCreate(&thr2, _ctDcAnalyzer, NULL) != CT__SUCCESS) {
+    fprintf(stderr, "ERROR: DC failed to create analyzer thread\n");
     return CT__FAILURE;
   }
   if(in && ctNpipeIn(in) != CT__SUCCESS) {
