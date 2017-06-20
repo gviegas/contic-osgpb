@@ -38,13 +38,17 @@ int ctMapSize(ctMap_t* map);
 //
 ctEntry_t* ctMapAdd(ctMap_t* map, int key);
 
-// Get and remove the entry of specified key
+// Delete the entry of specified key
 //
-ctEntry_t* ctMapGet(ctMap_t* map, int key);
+int ctMapDelete(ctMap_t* map, int key);
 
-// Get and remove one of the entries
+// Find the entry of specified key
 //
-ctEntry_t* ctMapPop(ctMap_t* map);
+ctEntry_t* ctMapFind(ctMap_t* map, int key);
+
+// Find any entry
+//
+ctEntry_t* ctMapAny(ctMap_t* map);
 
 // Clear the map
 //
