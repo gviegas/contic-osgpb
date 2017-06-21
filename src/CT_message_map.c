@@ -13,7 +13,7 @@ int ctMapCreate(ctMap_t* map) {
   if(!map) return CT__FAILURE;
   map->entries = (ctEntry_t**) calloc(CT__MAP_HINTLEN, sizeof(ctEntry_t*));
   if(!map->entries) return CT__FAILURE;
-  map->size = 0;
+  map->size = map->iter = map->seen = 0;
   map->total = CT__MAP_HINTLEN;
   return CT__SUCCESS;
 }
@@ -51,6 +51,7 @@ ctEntry_t* ctMapAdd(ctMap_t* map, int key) {
   map->entries[i]->key = key;
   ctGetTimeSpec(&ts);
   map->entries[i]->timestamp = ts.sec;
+  map->seen = 0; // reset iter
   return map->entries[i];
 }
 
@@ -60,6 +61,7 @@ int ctMapDelete(ctMap_t* map, int key) {
   free(entry);
   entry = NULL;
   --map->size;
+  map->seen = 0; // reset iter
   return CT__SUCCESS;
 }
 
@@ -86,19 +88,52 @@ ctEntry_t* ctMapAny(ctMap_t* map) {
   return map->entries[i];
 }
 
-int ctMapClear(ctMap_t* map) {
+ctEntry_t* ctMapNext(ctMap_t* map) {
   int i;
-  if(map && map->size) {
-    for(i = 0; map->size; ++i) {
-      if(map->entries[i]) {
-        free(map->entries[i]);
-        map->entries[i] = NULL;
-        --map->size;
-      }
+  if(!map || !map->size) return NULL;
+  if(map->seen == map->size) {
+    map->seen = 0;
+    return NULL;
+  }
+  i = map->iter;
+  do {
+    i = (i+1) % map->total;
+    if(map->entries[i]) {
+      map->iter = i;
+      ++map->seen;
+      break;
+    }
+  } while(map->seen != map->size);
+  return map->entries[map->iter];
+}
+
+int ctMapOut(ctMap_t* map) {
+  if(!map || !map->seen || !map->entries[map->iter])
+    return CT__FAILURE;
+  free(map->entries[map->iter]);
+  map->entries[map->iter] = NULL;
+  --map->size;
+  return CT__SUCCESS;
+}
+
+void ctMapClear(ctMap_t* map) {
+  int i;
+  if(!map) return;
+  for(i = 0; map->size; ++i) {
+    if(map->entries[i]) {
+      free(map->entries[i]);
+      map->entries[i] = NULL;
+      --map->size;
     }
   }
-  free(map->entries);
-  map->entries = NULL;
-  map->total = 0;
-  return CT__SUCCESS;
+  map->seen = 0;
+}
+
+void ctMapDestroy(ctMap_t* map) {
+  if(map) {
+    ctMapClear(map);
+    free(map->entries);
+    map->entries = NULL;
+    map->iter = map->total = 0;
+  }
 }

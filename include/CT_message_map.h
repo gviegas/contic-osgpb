@@ -25,6 +25,8 @@ typedef struct {
   ctEntry_t** entries;
   int size;
   int total;
+  int iter;
+  int seen;
 } ctMap_t;
 
 // Create a message map
@@ -51,8 +53,24 @@ ctEntry_t* ctMapFind(ctMap_t* map, int key);
 //
 ctEntry_t* ctMapAny(ctMap_t* map);
 
+// Iterate over entries
+//
+// NOTE: Do not call ctMapAdd() or ctMapDelete() while iterating
+// calling any of this functions will reset the iterator
+// Call ctMapOut() to remove the last entry returned by this function
+//
+ctEntry_t* ctMapNext(ctMap_t* map);
+
+// Remove the last entry returned by ctMapNext()
+//
+int ctMapOut(ctMap_t* map);
+
 // Clear the map
 //
-int ctMapClear(ctMap_t* map);
+void ctMapClear(ctMap_t* map);
+
+// Destroy the map
+//
+void ctMapDestroy(ctMap_t* map);
 
 #endif // CT_MESSAGE_MAP_H

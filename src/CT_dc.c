@@ -12,26 +12,32 @@
 #include "CT_cmd.h"
 #include "CT_dc.h"
 
+#define _CT__ANALYZER_TO 5
+
 static ctTarget_t _ct_target;
 static ctAddr_t _ct_addr;
 static ctMap_t _ct_map;
 static ctMutex_t _ct_mutex;
 
-// TODO
 static void* _ctDcAnalyzer(void* arg) {
   ctTimeSpec_t ts;
   ctEntry_t* entry;
-  int i;
+  long diff;
   while(1) {
     ctLock(&_ct_mutex);
-    // start time
-    if(ctMapSize(&_ct_map)) {
-      // for each entry, check if timed out
-      // if so, delete it and print warning
-      // else leave unchanged
+    ctGetTimeSpec(&ts);
+    while((entry = ctMapNext(&_ct_map))) {
+      diff = ts.sec - entry->timestamp;
+      if(diff < _CT__ANALYZER_TO) continue;
+      printf("No response from %s %s\n", entry->addr.node, entry->addr.port);
+      if(ctMapOut(&_ct_map) != CT__SUCCESS)
+        fprintf(stderr, "WARNING: Failed to remove pending response\n");
     }
     ctUnlock(&_ct_mutex);
-    // sleep (timeout - (now - start time))
+    diff = ts.sec;
+    ctGetTimeSpec(&ts);
+    diff = ts.sec - diff;
+    ctSleep(_CT__ANALYZER_TO - diff);
   }
   return NULL;
 }
