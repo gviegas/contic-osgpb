@@ -5,7 +5,7 @@
 #ifndef CT_APDU_H
 #define CT_APDU_H
 
-#include "CT_defs.h"
+#include "CT_definitions.h"
 
 // Available services
 //
@@ -39,7 +39,7 @@ typedef struct {
 typedef struct {
   uint16_t table_id;
   uint16_t count;
-  uint8_t data[CT__LEN_MAXAPDU];
+  uint8_t data[CT__LEN_APDU];
 } ctFWRequest_t;
 
 // Partial Table Write Request parameters
@@ -48,7 +48,7 @@ typedef struct {
   uint16_t table_id;
   uint8_t offset[3];
   uint16_t count;
-  uint8_t data[CT__LEN_MAXAPDU];
+  uint8_t data[CT__LEN_APDU];
 } ctPWRequest_t;
 
 // Table Read Response parameters
@@ -56,7 +56,7 @@ typedef struct {
 typedef struct {
   uint8_t response;
   uint16_t count;
-  uint8_t data[CT__LEN_MAXAPDU];
+  uint8_t data[CT__LEN_APDU];
   uint8_t* request;
   uint8_t req_count;
 } ctRResponse_t;
@@ -86,7 +86,7 @@ typedef struct {
 // Application Protocol Data Unit
 //
 typedef struct {
-  uint8_t apdu[CT__LEN_MAXAPDU];
+  uint8_t apdu[CT__LEN_APDU];
 } ctApdu_t;
 
 // Processed Response
@@ -95,7 +95,7 @@ typedef struct {
   int service;
   uint8_t response;
   uint16_t read_count;
-  uint8_t read_data[CT__LEN_MAXAPDU - CT__LEN_DIGEST - 4];
+  uint8_t read_data[CT__LEN_APDU - CT__LEN_DIGEST - 4];
 } ctResponse_t;
 
 // Creates a new APDU

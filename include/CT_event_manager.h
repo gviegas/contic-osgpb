@@ -7,6 +7,9 @@
 
 #include "CT_event_queue.h"
 
+#define CT__NOTREADY -3
+#define CT__DSFULL -4
+
 // Start the event manager
 //
 int ctManagerStart();

@@ -24,7 +24,7 @@ typedef pthread_cond_t ctCond_t; // NOTE: not generic enough
 
 // Create a new thread
 //
-int ctThreadCreate(ctThread_t* thread, void* (*exec)(void*));
+int ctThreadCreate(ctThread_t* thread, void* (*exec)(void*), void* arg);
 
 // Create a new mutex
 //

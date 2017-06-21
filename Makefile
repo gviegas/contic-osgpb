@@ -4,29 +4,37 @@
 
 SRC_DIR = src
 INC_DIR = include
+BIN_DIR = bin
+STAND_DIR = standalone
+TEST_DIR = test
+CMDS_DIR = $(SRC_DIR)/commands
+EVENTS_DIR = $(SRC_DIR)/events
 
 CC = gcc
-OPTS = -Wall
+OPTS = -Wall -g
 FLAGS = -I$(INC_DIR)
 LIBS = -pthread
-OUT = -o bin/alpha
 
-OBJS = $(SRC_DIR)/*
+OBJS = $(SRC_DIR)/*.c $(CMDS_DIR)/*.c $(EVENTS_DIR)/*.c
 
-EXAMPLE_DC = example/example_dc.c
-EXAMPLE_UNIT = example/example_unit.c
-TEST = test/test.c
+UNIT = $(STAND_DIR)/CT_unit_main.c
+UNIT_OUT = -o $(BIN_DIR)/unit
+DC = $(STAND_DIR)/CT_dc_main.c
+DC_OUT = -o $(BIN_DIR)/dc
 
-all: dc unit test
+TEST = $(TEST_DIR)/test.c
+TEST_OUT = -o $(BIN_DIR)/test
 
-dc: $(OBJS) $(INC)/*
-	$(CC) $(OPTS) $(OBJS) $(EXAMPLE_DC) $(FLAGS) $(LIBS) -o bin/dc
+all: unit dc test
 
 unit: $(OBJS) $(INC)/*
-	$(CC) $(OPTS) $(OBJS) $(EXAMPLE_UNIT) $(FLAGS) $(LIBS) -o bin/unit
+	$(CC) $(OPTS) $(OBJS) $(UNIT) $(FLAGS) $(LIBS) $(UNIT_OUT)
+
+dc: $(OBJS) $(INC)/*
+	$(CC) $(OPTS) $(OBJS) $(DC) $(FLAGS) $(LIBS) $(DC_OUT)
 
 test: $(OBJS) $(INC)/*
-	$(CC) $(OPTS) $(OBJS) $(TEST) $(FLAGS) $(LIBS) -o bin/test
+	$(CC) $(OPTS) $(OBJS) $(TEST) $(FLAGS) $(LIBS) $(TEST_OUT)
 
 clean:
 	rm -f bin/*

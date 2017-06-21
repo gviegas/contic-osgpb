@@ -14,14 +14,17 @@
 #include "CT_table_access.h"
 #include "CT_tables.h"
 #include "CT_file.h"
-#include "CT_unit.h"
-#include "CT_internal.h"
 #include "CT_net.h"
 #include "CT_event_queue.h"
 #include "CT_thread.h"
 #include "CT_event_manager.h"
+#include "CT_dc.h"
+#include "CT_unit.h"
+#include "CT_custom_events.h"
+#include "CT_state.h"
+#include "CT_cmd.h"
 
-ctTarget_t t = {0x02, 0x03};
+static ctTarget_t t = {0x02, 0x03};
 
 void servicesTest() {
   uint8_t b[1024];
@@ -49,7 +52,7 @@ void securityTest() {
 
 void apduTest() {
   // req
-  ctParam_t param;
+  // ctParam_t param;
 
   // ctFRRequest_t frreq;
   // frreq.table_id = CT__ET12;
@@ -73,24 +76,24 @@ void apduTest() {
   // param.service = REQUEST_FULL_WRITE;
   // param.fw_request = &fwreq;
 
-  ctPWRequest_t pwreq;
-  pwreq.table_id = CT__ET11;
-  pwreq.offset[0] = 0;
-  pwreq.offset[1] = 0;
-  pwreq.offset[2] = 28;
-  uint8_t d[] = {10,9,8,7,6,5,4,3,2,1};
-  memcpy(pwreq.data, d, sizeof d);
-  pwreq.count = sizeof d;
-  param.service = REQUEST_PART_WRITE;
-  param.pw_request = &pwreq;
-
-  ctApdu_t apdu;
-  int c = ctCreateApdu(&apdu, &param, &t);
-
-  int i;
-  printf("\napdu req: ");
-  for(i = 0; i < c; ++i) printf("%x ", apdu.apdu[i]);
-  printf("\n");
+  // ctPWRequest_t pwreq;
+  // pwreq.table_id = CT__ET11;
+  // pwreq.offset[0] = 0;
+  // pwreq.offset[1] = 0;
+  // pwreq.offset[2] = 28;
+  // uint8_t d[] = {10,9,8,7,6,5,4,3,2,1};
+  // memcpy(pwreq.data, d, sizeof d);
+  // pwreq.count = sizeof d;
+  // param.service = REQUEST_PART_WRITE;
+  // param.pw_request = &pwreq;
+  //
+  // ctApdu_t apdu;
+  // int c = ctCreateApdu(&apdu, &param, &t);
+  //
+  // int i;
+  // printf("\napdu req: ");
+  // for(i = 0; i < c; ++i) printf("%x ", apdu.apdu[i]);
+  // printf("\n");
 
   //////////////////////////////
   // res
@@ -116,16 +119,16 @@ void apduTest() {
 
   //////////////////////////////
   // validate req
-  ctApdu_t apdu2;
-
-  // apdu.apdu[3] = 0xdd;
-  int c2 = ctProcessRequest(&apdu2, &apdu, &t);
-
-  if(c2 != CT__FAILURE) {
-    printf("\nprocess req: %d\n", c2);
-    for(i = 0; i < c2; ++i) printf("%x ", apdu2.apdu[i]);
-    printf("\n");
-  } else printf("\nrequest failed\n");
+  // ctApdu_t apdu2;
+  //
+  // // apdu.apdu[3] = 0xdd;
+  // int c2 = ctProcessRequest(&apdu2, &apdu, &t);
+  //
+  // if(c2 != CT__FAILURE) {
+  //   printf("\nprocess req: %d\n", c2);
+  //   for(i = 0; i < c2; ++i) printf("%x ", apdu2.apdu[i]);
+  //   printf("\n");
+  // } else printf("\nrequest failed\n");
 
   //////////////////////////////
   // validate res
@@ -201,10 +204,6 @@ void btTest() {
 }
 
 void etTest() {
-  ctET00_t et00;
-  printf("et00: %lu\n", sizeof et00);
-  ctET01_t et01;
-  printf("et01: %lu\n", sizeof et01);
   ctET04_t et04;
   printf("et04: %lu\n", sizeof et04);
   ctET11_t et11;
@@ -236,13 +235,60 @@ void createTest() {
 }
 
 void unitTest() {
-  ctDefaultUnitCommission();
+  ctAddr_t addr;
+  strcpy(addr.node, "localhost");
+  strcpy(addr.port, "50000");
+  // ctUnitCommissioning();
+  ctUnitStart(&t, &addr, 0);
 }
 
-void dcTest() {};
-
-void internalTest() {
-  ctStartInternal();
+void dcTest() {
+  // int i, j;
+  // ctAddr_t addr, dest[3];
+  // ctParam_t param[3];
+  // ctResponse_t responses[3];
+  //
+  // ctFRRequest_t frreq1; // full table read request
+  // frreq1.table_id = CT__BT00; // basic table 00
+  // param[0].service = REQUEST_FULL_READ;
+  // param[0].fr_request = &frreq1;
+  //
+  // ctPRRequest_t prreq1; // partial table read request
+  // prreq1.table_id = CT__ET01; // extended table 01
+  // memset(prreq1.offset, 0, sizeof prreq1.offset);
+  // prreq1.offset[2] = 0x24;
+  // prreq1.count = 0x0c;
+  // param[1].service = REQUEST_PART_READ;
+  // param[1].pr_request = &prreq1;
+  //
+  // ctPRRequest_t prreq2; // partial table read request
+  // prreq2.table_id = CT__ET01; // extended table 01
+  // memset(prreq2.offset, 0, sizeof prreq2.offset);
+  // // prreq12.offset[2] = 0x0c;
+  // prreq2.count = 0x0c;
+  // param[2].service = REQUEST_PART_READ;
+  // param[2].pr_request = &prreq2;
+  //
+  // strcpy(addr.node, "localhost");
+  // strcpy(addr.port, "60000");
+  // strcpy(dest[0].node, "localhost");
+  // strcpy(dest[0].port, "50000");
+  // strcpy(dest[1].node, "localhost");
+  // strcpy(dest[1].port, "50000");
+  // strcpy(dest[2].node, "localhost");
+  // strcpy(dest[2].port, "50000");
+  //
+  // ctDcExec(&t, &addr, dest, param, responses, sizeof dest / sizeof dest[0]);
+  //
+  // for(i = 0; i < sizeof responses / sizeof responses[0]; ++i) {
+  //   printf("response %d:\n", i + 1);
+  //   printf("service=%d ", responses[i].service);
+  //   printf("response=%d ", responses[i].response);
+  //   printf("read_count=%d \n", responses[i].read_count);
+  //   for(j = 0; j < responses[i].read_count; ++j)
+  //     printf("%x ", responses[i].read_data[j]);
+  //   printf("\n--------\n");
+  // }
 }
 
 void netrecvTest() {
@@ -251,14 +297,14 @@ void netrecvTest() {
   int len;
 
   strcpy(addr.node, "localhost");
-  strcpy(addr.service, "40100");
+  strcpy(addr.port, "40100");
   memset(&src, 0, sizeof src);
 
   ctBind(&addr);
-  len = ctRecv(buffer, (sizeof buffer) - 1, &src);
+  len = ctRecv(buffer, (sizeof buffer) - 1, &src, NULL);
   buffer[len] = '\0';
 
-  printf("\nnode=%s service=%s", src.node, src.service);
+  printf("\nnode=%s service=%s", src.node, src.port);
   printf("\nreceived: %s (%d)\n", buffer, len);
 }
 
@@ -266,9 +312,9 @@ void netsendTest() {
   char* data = "Tinny Dog";
   ctAddr_t addr, dest;
   strcpy(addr.node, "localhost");
-  strcpy(addr.service, "50100");
+  strcpy(addr.port, "50100");
   strcpy(dest.node, "localhost");
-  strcpy(dest.service, "40100");
+  strcpy(dest.port, "40100");
 
   ctBind(&addr);
   ctSend(data, strlen(data), &dest);
@@ -341,7 +387,7 @@ void* t1(void* args) {
 void threadTest() {
   ctThread_t t;
   int f = ctMutexCreate(&m);
-  int e = ctThreadCreate(&t, t1);
+  int e = ctThreadCreate(&t, t1, NULL);
   printf("\nnew thread: %d", e);
   printf("\nnew mutex: %d", f);
   ctSleep(5);
@@ -383,7 +429,7 @@ void condTest() {
   ctThread_t t;
   printf("\nmutex: %d", ctMutexCreate(&m));
   printf("\ncond: %d", ctCondCreate(&c));
-  printf("\nthread: %d",ctThreadCreate(&t, t2));
+  printf("\nthread: %d",ctThreadCreate(&t, t2, NULL));
   ctSleep(10);
   printf("\nwaking you up...");
   fflush(stdout);
@@ -430,11 +476,10 @@ void mgrnapTest() {
 }
 
 int main(int argc, char** argv) {
-  srand(time(NULL));
   uint8_t seq[] = {0xf5,0x2f,0x54,0x81};
   uint8_t key[] = {0xdf,0x01,0x02,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf,0xaf};
   memcpy(t.sequence, seq, sizeof seq);
-  memcpy(t.s_omak, key, sizeof key);
+  memcpy(t.key, key, sizeof key);
 
   // apduTest();
   // btTest();
@@ -476,15 +521,12 @@ int main(int argc, char** argv) {
   // ctRead(CT__ET00, &et00, sizeof et00, 0);
   // printf("%x\n", et00.measure_devices_used);
 
-  // internalTest();
-  // sleep(900);
-
   // eventTest();
 
   // threadTest();
   // condTest();
   // mgrTest();
-  mgrnapTest();
+  // mgrnapTest();
 
   // printf("\n|ET01|\n");
   // ctMeasureData_t entries[10];
@@ -499,10 +541,23 @@ int main(int argc, char** argv) {
   //   );
   // }
 
-  // dcTest();
-
   // netrecvTest();
   // netsendTest();
+
+  // ctStartInternal();
+  // ctSleep(60);
+  // unitTest();
+  // dcTest();
+
+  // ctStateHasChanged(CT__BT00);
+  // ctStateHasChanged(CT__BT06);
+
+  // ctCmdStart(&t);
+
+  // printf("BLOCK: %lu bytes\n", sizeof(ctBlock_t));
+  // printf("BT00: %lu bytes\n", sizeof(ctBT00_t));
+  // printf("ET00: %lu bytes\n", sizeof(ctET00_t));
+  // printf("ET01 %lu bytes\n", sizeof(ctET01_t));
 
   return 0;
 }

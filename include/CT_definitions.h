@@ -11,15 +11,22 @@
 //
 #define CT__SUCCESS 0
 #define CT__FAILURE 1
+
+// Str definitions
+#define CT__DELIM " \n\t" // \v\r\f...
+#define CT__ENDL "\n" // '\n'
+
 // EN14908-1 type code
 //
 #define CT__TYPE_CODE 0
-// Request command codes
+
+// Request messages codes
 //
-#define CT__CMD_FULLREAD  0x30
-#define CT__CMD_PARTREAD  0x3F
-#define CT__CMD_FULLWRITE 0x40
-#define CT__CMD_PARTWRITE 0x4F
+#define CT__MSG_FULLREAD  0x30
+#define CT__MSG_PARTREAD  0x3F
+#define CT__MSG_FULLWRITE 0x40
+#define CT__MSG_PARTWRITE 0x4F
+
 // Response codes
 //
 #define CT__RES_OK  0
@@ -34,14 +41,16 @@
 #define CT__RES_SEQ 0x0C
 #define CT__RES_INC 0x1E
 #define CT__RES_ICA 0x1F
-// Buffer size
+
+// Protocol buffer sizes
 //
-#define CT__LEN_MAXAPDU   114
+#define CT__LEN_APDU   114
 #define CT__LEN_PARTREAD  84
 #define CT__LEN_PARTWRITE 75
 #define CT__LEN_SEQN      4
 #define CT__LEN_DIGEST    8
 #define CT__LEN_OMAK      12
+
 // Basic table IDs
 //
 #define CT__BT00 0
@@ -64,34 +73,37 @@
 #define CT__BT62 62
 #define CT__BT63 63
 #define CT__BT64 64
+
 // Extended table IDs
 //
 #define CT__ETOFFSET 2048
-#define CT__ET00 CT__ETOFFSET
-#define CT__ET01 CT__ETOFFSET + 1
 #define CT__ET04 CT__ETOFFSET + 4
 #define CT__ET11 CT__ETOFFSET + 11
 #define CT__ET12 CT__ETOFFSET + 12
 #define CT__ET21 CT__ETOFFSET + 21
 #define CT__ET42 CT__ETOFFSET + 42
-// Basic procedure IDs
-//
-#define CT__BP10 10
-// Extended procedure IDs
-//
-#define CT__EPOFFSET CT__ETOFFSET
-#define CT__EP06 CT__EPOFFSET + 6
-#define CT__EP11 CT__EPOFFSET + 11
-#define CT__EP12 CT__EPOFFSET + 12
-#define CT__EP16 CT__EPOFFSET + 16
 
-// OSGP target/device/slave info
+// Unified table IDs
+//
+#define CT__UTOFFSET 16384
+#define CT__UT00 CT__UTOFFSET
+#define CT__UT01 CT__UTOFFSET + 1
+#define CT__UT02 CT__UTOFFSET + 2
+
+// Table types
+//
+#define CT__TTYPE_RDONLY 0
+#define CT__TTYPE_WRONLY 1
+#define CT__TTYPE_RDWR   2
+#define CT__TTYPE_EVENT  3
+
+// Target/Device/Slave info
 //
 typedef struct {
   uint8_t subnet;
   uint8_t node;
   uint8_t sequence[CT__LEN_SEQN];
-  uint8_t s_omak[CT__LEN_OMAK];
+  uint8_t key[CT__LEN_OMAK];
 } ctTarget_t;
 
 #endif // CT_DEFS_H
