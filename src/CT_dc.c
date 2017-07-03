@@ -57,7 +57,7 @@ static void* _ctDcReceiver(void* arg) {
       entry = ctMapFind(&_ct_map, atoi(src.port));
       if(!entry) {
         ctUnlock(&_ct_mutex);
-        fprintf(stderr, "WARNING: Source not mapped\n");
+        fprintf(stderr, "WARNING: Source not mapped (%s)\n", src.port);
         continue;
       }
       r = ctProcessResponse(&res, &apdu, &entry->apdu, &_ct_target);

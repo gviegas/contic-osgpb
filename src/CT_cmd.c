@@ -83,25 +83,41 @@ int ctCmdStart(int interactive) {
 
 void ctCmdPrint(ctAddr_t* addr, ctResponse_t* res) {
   int i;
-  printf("\n[OK]");
-  printf("\nFrom: %s %s\n", addr->node, addr->port);
-  printf("Data:");
-  for(i = 0; i < res->read_count; ++i) {
-    if(!(i % 16)) printf("\n\t");
-    printf(" %x", res->read_data[i]);
+  if(_ct_tty) {
+    printf("\n[OK]");
+    printf("\nFrom: %s %s", addr->node, addr->port);
+    printf("\nData:");
+    for(i = 0; i < res->read_count; ++i) {
+      if(!(i % 16)) printf("\n\t");
+      printf(" %x", res->read_data[i]);
+    }
+    printf("\n");
+    printf("%sDC: ", _CT__TK);
+  } else {
+    printf("\n[OK]");
+    printf("\nFrom:%s %s", addr->node, addr->port);
+    printf("\nData:");
+    for(i = 0; i < res->read_count; ++i)
+      printf("%x%s", res->read_data[i], i+1 == res->read_count ? "" : " ");
+    printf("\n");
+    printf("[EOF]");
   }
-  printf("\n");
-  if(_ct_tty) printf("%sDC: ", _CT__TK);
-  else printf("[EOF]");
   fflush(stdout);
 }
 
 void ctCmdErr(ctAddr_t* addr, char* err) {
-  printf("\n[ERR]");
-  printf("\nOffender: %s %s", addr->node, addr->port);
-  printf("\nError: %s", err);
-  printf("\n");
-  if(_ct_tty) printf("%sDC: ", _CT__TK);
-  else printf("[EOF]");
+  if(_ct_tty) {
+    printf("\n[ERR]");
+    printf("\nOffender: %s %s", addr->node, addr->port);
+    printf("\nError: %s", err);
+    printf("\n");
+    printf("%sDC: ", _CT__TK);
+  } else {
+    printf("\n[ERR]");
+    printf("\nOffender:%s %s", addr->node, addr->port);
+    printf("\nError:%s", err);
+    printf("\n");
+    printf("[EOF]");
+  }
   fflush(stdout);
 }
