@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "CT_definitions.h"
+#include "CT_thread.h"
 #include "CT_name_list.h"
 #include "CT_commands.h"
 #include "CT_cmd.h"
@@ -15,6 +16,8 @@
 #define _CT__CALL "call"
 #define _CT__DEF "def"
 #define _CT__UNDEF "undef"
+
+static int _ct_tty;
 
 static int _ctParse(char* buf, ctList_t* list) {
   char *p = strtok(buf, CT__DELIM);
@@ -36,6 +39,7 @@ static int _ctInput(char* buf) {
   char c;
   if(!fgets(buf, _CT__BUFLEN, stdin)) {
     fprintf(stderr, "ERROR: EOF - no input\n");
+    ctSleep(3);
     return CT__FAILURE;
   }
   if(!strchr(buf, '\n')) {
@@ -72,7 +76,32 @@ int ctCmdStart(int interactive) {
     fprintf(stderr, "ERROR: Failed to create the name list\n");
     return CT__FAILURE;
   }
-  if(interactive) _ctTty(buf, &list);
+  if((_ct_tty = interactive)) _ctTty(buf, &list);
   else _ctPipe(buf, &list);
   return CT__SUCCESS;
+}
+
+void ctCmdPrint(ctAddr_t* addr, ctResponse_t* res) {
+  int i;
+  printf("\n[OK]");
+  printf("\nFrom: %s %s\n", addr->node, addr->port);
+  printf("Data:");
+  for(i = 0; i < res->read_count; ++i) {
+    if(!(i % 16)) printf("\n\t");
+    printf(" %x", res->read_data[i]);
+  }
+  printf("\n");
+  if(_ct_tty) printf("%sDC: ", _CT__TK);
+  else printf("[EOF]");
+  fflush(stdout);
+}
+
+void ctCmdErr(ctAddr_t* addr, char* err) {
+  printf("\n[ERR]");
+  printf("\nOffender: %s %s", addr->node, addr->port);
+  printf("\nError: %s", err);
+  printf("\n");
+  if(_ct_tty) printf("%sDC: ", _CT__TK);
+  else printf("[EOF]");
+  fflush(stdout);
 }

@@ -29,7 +29,7 @@ static void* _ctDcAnalyzer(void* arg) {
     while((entry = ctMapNext(&_ct_map))) {
       diff = ts.sec - entry->timestamp;
       if(diff < _CT__ANALYZER_TO) continue;
-      printf("No response from %s %s\n", entry->addr.node, entry->addr.port);
+      ctCmdErr(&entry->addr, "No response");
       if(ctMapOut(&_ct_map) != CT__SUCCESS)
         fprintf(stderr, "WARNING: Failed to remove pending response\n");
     }
@@ -42,14 +42,12 @@ static void* _ctDcAnalyzer(void* arg) {
   return NULL;
 }
 
-// TODO: call a print/format function from cmd (to correctly place TK
-// on interactive mode) with processed response plus src info
 static void* _ctDcReceiver(void* arg) {
   ctApdu_t apdu;
   ctAddr_t src;
   ctResponse_t res;
   ctEntry_t* entry;
-  int n, r, i;
+  int n, r;
   while(1) {
     n = ctRecv(apdu.apdu, sizeof apdu.apdu, &src, NULL);
     if(n < 1)
@@ -74,17 +72,7 @@ static void* _ctDcReceiver(void* arg) {
       // NOTE: this if clause should never happen with locks...
       if(r != CT__SUCCESS)
         fprintf(stderr, "WARNING: Failed to delete entry %d\n", entry->key);
-
-      // testing
-      printf("\nFrom: %s %s\n", src.node, src.port);
-      printf("Data:");
-      for(i = 0; i < res.read_count; ++i) {
-        if(!(i % 16)) printf("\n\t");
-        printf(" %x", res.read_data[i]);
-      }
-      fflush(stdout);
-      //
-
+      ctCmdPrint(&src, &res);
     }
   }
   return NULL;
