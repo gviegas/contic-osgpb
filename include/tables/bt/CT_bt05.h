@@ -10,7 +10,7 @@
 // BT05 - Device Identification
 //
 typedef struct {
-  // NOTE: Packed BCD encoding - each entry will hold TWO values
+  // NOTE: Packed BCD encoding
   uint8_t identification[10];
 } ctBT05_t;
 

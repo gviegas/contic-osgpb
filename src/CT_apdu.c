@@ -55,7 +55,7 @@ int ctCreateApdu(ctApdu_t* apdu, ctParam_t* param, ctTarget_t* target) {
         param->w_response->req_count, c, target);
     break;
     default:
-      fprintf(stderr, "\nInvalid service %d\n", param->service);
+      fprintf(stderr, "ERROR: Invalid service %d\n", param->service);
       return CT__FAILURE;
   }
   return c;
@@ -89,18 +89,18 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
           p.service = RESPONSE_PART_WRITE;
         break;
         default:
-          fprintf(stderr, "\nInvalid command %x\n", apdu->apdu[1]);
+          fprintf(stderr, "ERROR: Invalid command %x\n", apdu->apdu[1]);
           return CT__FAILURE;
       }
     break;
     default:
-      fprintf(stderr, "\nInvalid apdu type code %x\n", apdu->apdu[0]);
+      fprintf(stderr, "ERROR: Invalid apdu type code %x\n", apdu->apdu[0]);
       return CT__FAILURE;
   }
 
   r = ctValidate(apdu->apdu+c, apdu->apdu, NULL, c, 0, target);
   if(r != CT__SUCCESS) {
-    fprintf(stderr, "\nValidation failed\n");
+    fprintf(stderr, "ERROR: Validation failed\n");
     return r;
   }
   switch(p.service) {
@@ -112,7 +112,7 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
       p.r_response = &rres;
       r = ctTableRead(&p, target);
       if(r == CT__FAILURE)
-        fprintf(stderr, "\nTable operation failed\n");
+        fprintf(stderr, "ERROR: Table operation failed\n");
       else
         r = ctCreateApdu(res_apdu, &p, target);
     break;
@@ -124,7 +124,7 @@ int ctProcessRequest(ctApdu_t* res_apdu, ctApdu_t* apdu, ctTarget_t* target) {
       p.w_response = &wres;
       r = ctTableWrite(&p, target);
       if(r == CT__FAILURE)
-        fprintf(stderr, "\nTable operation failed\n");
+        fprintf(stderr, "ERROR: Table operation failed\n");
       else
         r = ctCreateApdu(res_apdu, &p, target);
     break;
@@ -142,16 +142,6 @@ int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
       switch(apdu->apdu[1]) {
         case CT__RES_OK:
         case CT__RES_ERR:
-        case CT__RES_BSY:
-        case CT__RES_DIG:
-        case CT__RES_IAR:
-        case CT__RES_ICA:
-        case CT__RES_INC:
-        case CT__RES_ISC:
-        case CT__RES_ISS:
-        case CT__RES_ONP:
-        case CT__RES_SEQ:
-        case CT__RES_SNS:
           switch(req_apdu->apdu[1]) {
             case CT__MSG_FULLREAD:
               req_c = 1 + 1 + 2 + CT__LEN_SEQN;
@@ -182,24 +172,24 @@ int ctProcessResponse(ctResponse_t* buffer, ctApdu_t* apdu, ctApdu_t* req_apdu,
               buffer->service = RESPONSE_PART_WRITE;
             break;
             default:
-              fprintf(stderr, "\nInvalid request\n");
+              fprintf(stderr, "ERROR: Invalid request\n");
               return CT__FAILURE;
           }
         break;
         default:
-          fprintf(stderr, "\nInvalid response %x\n", apdu->apdu[1]);
+          fprintf(stderr, "ERROR: Invalid response %x\n", apdu->apdu[1]);
           return CT__FAILURE;
       }
     break;
     default:
-      fprintf(stderr, "\nInvalid apdu type code %x\n", apdu->apdu[0]);
+      fprintf(stderr, "ERROR: Invalid apdu type code %x\n", apdu->apdu[0]);
       return CT__FAILURE;
   }
 
   r = ctValidate(apdu->apdu+res_c, req_apdu->apdu, apdu->apdu, req_c, res_c,
     target);
   if(r == CT__FAILURE) {
-    fprintf(stderr, "\nValidation failed\n");
+    fprintf(stderr, "ERROR: Validation failed\n");
     return r;
   }
   buffer->response = apdu->apdu[1];

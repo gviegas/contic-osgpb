@@ -5,7 +5,7 @@
 #ifndef CT_THREAD_H
 #define CT_THREAD_H
 
-#include <pthread.h> // ugh...
+#include <pthread.h> // TODO: this should be included on src
 #include "CT_date.h"
 
 #define CT__TIMEDOUT -1
@@ -16,11 +16,15 @@ typedef unsigned long int ctThread_t;
 
 // Mutex type
 //
-typedef pthread_mutex_t ctMutex_t; // NOTE: not generic enough
+// TODO: remove dependency from header
+//
+typedef pthread_mutex_t ctMutex_t;
 
 // Cond type
 //
-typedef pthread_cond_t ctCond_t; // NOTE: not generic enough
+// TODO: remove dependency from header
+//
+typedef pthread_cond_t ctCond_t;
 
 // Create a new thread
 //

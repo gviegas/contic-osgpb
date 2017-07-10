@@ -27,10 +27,7 @@ static int _ctParse(char* buf, ctList_t* list) {
     else if(!strcmp(p, _CT__UNDEF)) ctCmdUndef(list);
     else if(!strcmp(p, _CT__LS)) ctCmdLs(list);
     else if(!strcmp(p, _CT__CALL)) ctCmdCall(list);
-    // else {
-    //   printf("invalid command\n");
-    //   break;
-    // }
+    // else print "invalid command"
   } while((p = strtok(NULL, CT__DELIM)));
   return CT__SUCCESS;
 }
@@ -54,8 +51,8 @@ static int _ctInput(char* buf) {
 
 static void _ctPipe(char* buf, ctList_t* list) {
   while(1) {
-    _ctInput(buf);  // err check
-    _ctParse(buf, list);  // err check
+    _ctInput(buf);
+    _ctParse(buf, list);
     fflush(stdout);
   }
 }
@@ -64,8 +61,8 @@ static void _ctTty(char* buf, ctList_t* list) {
   printf("[DC Interactive shell started]\n");
   while(1) {
     printf("%sDC: ", _CT__TK);
-    _ctInput(buf);  // err check
-    _ctParse(buf, list);  // err check
+    _ctInput(buf);
+    _ctParse(buf, list);
   }
 }
 

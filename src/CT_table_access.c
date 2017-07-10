@@ -24,12 +24,12 @@ int ctTableRead(ctParam_t* param, ctTarget_t* target) {
       ((uint32_t)param->r_response->request[6] & 0x000000ff);
     c = ctRead(table_id, param->r_response->data, count, offset);
   } else {
-    fprintf(stderr, "\nInvalid table read operation\n");
+    fprintf(stderr, "ERROR: Invalid table read operation\n");
     return CT__FAILURE;
   }
 
   param->r_response->count = c;
-  // to do: service error check
+  // TODO: service error check
   param->r_response->response = c > 0 ? CT__RES_OK : CT__RES_ERR;
 
   return CT__SUCCESS;
@@ -53,11 +53,11 @@ int ctTableWrite(ctParam_t* param, ctTarget_t* target) {
       ((uint32_t)param->w_response->request[6] & 0x000000ff);
     c = ctWrite(table_id, param->w_response->request+9, count, offset);
   } else {
-    fprintf(stderr, "\nInvalid table write operation\n");
+    fprintf(stderr, "ERROR: Invalid table write operation\n");
     return CT__FAILURE;
   }
 
-  // to do: service error check
+  // TODO: service error check
   param->w_response->response = c > 0 ? CT__RES_OK : CT__RES_ERR;
 
   // Notify state change

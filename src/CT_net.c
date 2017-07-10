@@ -20,7 +20,7 @@ int ctBind(ctAddr_t* addr) {
   int s;
 
   if(_ct_sfd != -1) {
-    fprintf(stderr, "ERROR: already bound\n");
+    fprintf(stderr, "ERROR: Already bound\n");
     return CT__FAILURE;
   }
 
@@ -30,7 +30,7 @@ int ctBind(ctAddr_t* addr) {
 
   s = getaddrinfo(addr->node, addr->port, &hints, &result);
   if(s) {
-    fprintf(stderr, "ERROR: ctBind - failed to resolve address (%s)\n",
+    fprintf(stderr, "ERROR: Failed to resolve address (%s)\n",
       gai_strerror(s));
     return CT__FAILURE;
   }
@@ -44,7 +44,7 @@ int ctBind(ctAddr_t* addr) {
   }
 
   if(rp == NULL) {
-    fprintf(stderr, "ERROR: ctBind - failed to bind\n");
+    fprintf(stderr, "ERROR: Failed to bind\n");
     return CT__FAILURE;
   }
 
@@ -58,7 +58,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
     size_t n;
 
     if(_ct_sfd == -1) {
-      fprintf(stderr, "ERROR: ctSend - unbound\n");
+      fprintf(stderr, "ERROR: Unbound\n");
       return CT__FAILURE;
     }
 
@@ -68,7 +68,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
 
     s = getaddrinfo(dest->node, dest->port, &hints, &result);
     if(s) {
-      fprintf(stderr, "ERROR: ctSend - failed to resolve address (%s)\n",
+      fprintf(stderr, "ERROR: Failed to resolve address (%s)\n",
         gai_strerror(s));
       return CT__FAILURE;
     }
@@ -82,7 +82,7 @@ int ctSend(void* data, size_t len, ctAddr_t* dest) {
     freeaddrinfo(result);
 
     if(n != len) {
-      fprintf(stderr, "ERROR: ctSend - send failed\n");
+      fprintf(stderr, "ERROR: Send failed\n");
       return CT__FAILURE;
     }
 
@@ -97,7 +97,7 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src, ctTimeSpec_t* timeout) {
   int s;
 
   if(_ct_sfd == -1) {
-    fprintf(stderr, "ERROR: ctRecv unbound\n");
+    fprintf(stderr, "ERROR: Unbound\n");
     return -1;
   }
 
@@ -105,14 +105,14 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src, ctTimeSpec_t* timeout) {
     t.tv_sec = timeout->sec;
     t.tv_usec = timeout->nsec / 1000;
     if(setsockopt(_ct_sfd, SOL_SOCKET, SO_RCVTIMEO, &t, sizeof t)) {
-      fprintf(stderr, "ERROR: ctRecv failed to set timeout\n");
+      fprintf(stderr, "ERROR: Failed to set timeout\n");
       return -1;
     }
   } else {
     t.tv_sec = 0;
     t.tv_usec = 0;
     if(setsockopt(_ct_sfd, SOL_SOCKET, SO_RCVTIMEO, &t, sizeof t)) {
-      fprintf(stderr, "ERROR: ctRecv failed to set NO timeout\n");
+      fprintf(stderr, "ERROR: Failed to set NO timeout\n");
       return -1;
     }
   }
@@ -128,7 +128,7 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src, ctTimeSpec_t* timeout) {
     sizeof src->node, src->port, sizeof src->port, 0);
 
   if(s) {
-    fprintf(stderr, "ERROR: ctRecv - failed to resolve address (%s)\n",
+    fprintf(stderr, "ERROR: Failed to resolve address (%s)\n",
       gai_strerror(s));
     return -1;
   }
@@ -138,7 +138,7 @@ int ctRecv(void* buffer, size_t len, ctAddr_t* src, ctTimeSpec_t* timeout) {
 
 int ctUnbind() {
   if(close(_ct_sfd)) {
-    fprintf(stderr, "ERROR: ctUnbind - failed to unbind\n");
+    fprintf(stderr, "ERROR: Failed to unbind\n");
     return CT__FAILURE;
   }
   _ct_sfd = -1;

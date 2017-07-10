@@ -21,7 +21,7 @@ void ctStateHasChanged(uint16_t table_id) {
       table_id);
   else if(entry.type == CT__TTYPE_EVENT) {
     if(ctCustomEvent(table_id, &event) != CT__SUCCESS)
-      fprintf(stderr, "WARNING: Requested event for table %d not implemented\n",
+      fprintf(stderr, "ERROR: Requested event for table %d not implemented\n",
         table_id);
     else {
       while((e = ctNewEvent(&event)) == CT__NOTREADY);

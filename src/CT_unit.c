@@ -11,6 +11,12 @@
 #include "CT_apdu.h"
 #include "CT_unit.h"
 
+static void _ctComStateChange() {
+  ctStateHasChanged(CT__BT00);
+  ctStateHasChanged(CT__UT01);
+  ctStateHasChanged(CT__UT02);
+}
+
 int ctUnitCommissioning() {
   // BT00
   ctBT00_t bt00;
@@ -47,14 +53,11 @@ int ctUnitCommissioning() {
   if(ctWrite(CT__UT01, &ut01, sizeof ut01, 0) < sizeof ut01) return CT__FAILURE;
   if(ctWrite(CT__UT02, &ut02, sizeof ut02, 0) < sizeof ut02) return CT__FAILURE;
 
-  ctStateHasChanged(CT__BT00);
-  ctStateHasChanged(CT__UT01);
-  ctStateHasChanged(CT__UT02);
+  _ctComStateChange();
 
   return CT__SUCCESS;
 }
 
-// TODO: launch events when restarting without clear...
 int ctUnitStart(ctTarget_t* target, ctAddr_t* addr, int clear) {
   ctApdu_t apdu, res_apdu;
   ctAddr_t src;
@@ -63,7 +66,9 @@ int ctUnitStart(ctTarget_t* target, ctAddr_t* addr, int clear) {
     fprintf(stderr, "ERROR: Failed to start the event manager\n");
     return CT__FAILURE;
   }
-  if(clear && ctUnitCommissioning() != CT__SUCCESS) {
+  if(!clear)
+    _ctComStateChange();
+  else if(ctUnitCommissioning() != CT__SUCCESS) {
     fprintf(stderr, "ERROR: Unit commissioning failed\n");
     return CT__FAILURE;
   }

@@ -16,7 +16,7 @@ int ctQueueCreate(ctQueue_t* queue) {
 }
 
 int ctQueueSize(ctQueue_t* queue) {
-  if(!queue) return -1; // CT__FAILURE;
+  if(!queue) return -1;
   return queue->size;
 }
 
@@ -48,7 +48,7 @@ int ctQueuePeek(ctQueue_t* queue, ctEvent_t** event) {
   return CT__FAILURE;
 }
 
-// good enough for ~20 entries
+// NOTE: good enough for ~20 entries
 int ctQueueSort(ctQueue_t* queue) {
   if(!queue) return CT__FAILURE;
   int i, j;

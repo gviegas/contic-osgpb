@@ -19,7 +19,7 @@ int ctMapCreate(ctMap_t* map) {
 }
 
 int ctMapSize(ctMap_t* map) {
-  if(!map) return CT__FAILURE;
+  if(!map) return -1;
   return map->size;
 }
 

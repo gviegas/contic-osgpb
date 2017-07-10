@@ -26,7 +26,7 @@ int ctCustomEvent(uint16_t table_id, ctEvent_t* event) {
     }
     break;
     // case MY_CUSTOM_TABLE:
-    // fill event structure with my custom event params...
+    // Fill event structure with my custom event params...
     default:
       return CT__FAILURE;
   }
