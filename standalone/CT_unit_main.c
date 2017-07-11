@@ -24,12 +24,17 @@ int main(int argc, char** argv) {
   int i, j, clear = 0;
 
   if(argc < CT__UNIT_ARGC) {
-    printf("Usage: ");
-    printf("%s <KEY> ", CT__UNIT_ARGV_KEY);
-    printf("%s <NODE> ", CT__UNIT_ARGV_NODE);
-    printf("%s <PORT> ", CT__UNIT_ARGV_PORT);
-    printf("[%s <OPTION>] ", CT__UNIT_ARGV_OPT);
-    printf("[%s]\n", CT__UNIT_ARGV_CLEAR);
+    printf("------------------------------------------------------------\n");
+    printf("Contic OSGPb (as Unit) - Answer DC requests & execute events\n");
+    printf("------------------------------------------------------------\n\n");
+    printf("\tUsage: %s OPTIONS\n\n", argv[0]);
+    printf("Where OPTIONS:\n\n");
+    printf("%s <KEY>\t\t12 bytes key (or 0 for default)\n", CT__UNIT_ARGV_KEY);
+    printf("%s <NODE>\t\tNode to bind at (e.g. localhost)\n", CT__UNIT_ARGV_NODE);
+    printf("%s <PORT>\t\tPort to bind at (e.g 12345)\n", CT__UNIT_ARGV_PORT);
+    printf("[%s <OPTION>]\tInternal options\n", CT__UNIT_ARGV_OPT);
+    printf("[%s]\t\tCreate a new data block (WARNING: all data will be lost)\n\n",
+      CT__UNIT_ARGV_CLEAR);
     return CT__FAILURE;
   }
 

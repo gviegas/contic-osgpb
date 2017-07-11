@@ -22,12 +22,16 @@ int main(int argc, char** argv) {
   in = out = NULL;
 
   if(argc < CT__DC_ARGC) {
-    printf("Usage: ");
-    printf("%s <KEY> ", CT__DC_ARGV_KEY);
-    printf("%s <NODE> ", CT__DC_ARGV_NODE);
-    printf("%s <PORT> ", CT__DC_ARGV_PORT);
-    printf("[%s <INPUT>] ", CT__DC_ARGV_IN);
-    printf("[%s <OUTPUT>]\n", CT__DC_ARGV_OUT);
+    printf("------------------------------------------------------------\n");
+    printf("Contic OSGPb (as DC) - Command Contic OSGPb Units\n");
+    printf("------------------------------------------------------------\n\n");
+    printf("\tUsage: %s OPTIONS\n\n", argv[0]);
+    printf("Where OPTIONS:\n\n");
+    printf("%s <KEY>\t\t12 bytes key (or 0 for default)\n", CT__DC_ARGV_KEY);
+    printf("%s <NODE>\t\tNode to bind at (e.g. localhost)\n", CT__DC_ARGV_NODE);
+    printf("%s <PORT>\t\tPort to bind at (e.g 12345)\n", CT__DC_ARGV_PORT);
+    printf("[%s <INPUT>]\t\tPath of FIFO to read from\n", CT__DC_ARGV_IN);
+    printf("[%s <OUTPUT>]\tPath of FIFO to write to\n\n", CT__DC_ARGV_OUT);
     return CT__FAILURE;
   }
 
