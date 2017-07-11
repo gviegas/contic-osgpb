@@ -16,7 +16,7 @@ int ctListCreate(ctList_t* list) {
 }
 
 int ctListSize(ctList_t* list) {
-  if(!list) return -1; // failure...
+  if(!list) return -1;
   return list->size;
 }
 
@@ -81,7 +81,7 @@ ctNode_t* ctListFirst(ctList_t* list) {
 
 ctNode_t* ctListNext(ctList_t* list, ctNode_t* node) {
   if(!list || !node) return NULL;
-  return node->next; // wont bother to check if node really is part of this list
+  return node->next; // NOTE: node could not belong to given list...
 }
 
 void ctListClear(ctList_t* list) {

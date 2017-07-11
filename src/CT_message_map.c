@@ -19,7 +19,7 @@ int ctMapCreate(ctMap_t* map) {
 }
 
 int ctMapSize(ctMap_t* map) {
-  if(!map) return CT__FAILURE;
+  if(!map) return -1;
   return map->size;
 }
 
@@ -56,13 +56,23 @@ ctEntry_t* ctMapAdd(ctMap_t* map, int key) {
 }
 
 int ctMapDelete(ctMap_t* map, int key) {
-  ctEntry_t* entry;
-  if(!(entry = ctMapFind(map, key))) return CT__FAILURE;
-  free(entry);
-  entry = NULL;
-  --map->size;
-  map->seen = 0; // reset iter
-  return CT__SUCCESS;
+  int n, c, i;
+  if(!map) return CT__FAILURE;
+  n = c = 0;
+  i = key % map->total;
+  for(; n < map->total && c < map->size; i = (i+1) % map->total, ++n) {
+    if(map->entries[i]) {
+      if(map->entries[i]->key == key) {
+        free(map->entries[i]);
+        map->entries[i] = NULL;
+        --map->size;
+        map->seen = 0; // reset iter
+        return CT__SUCCESS;
+      }
+      ++c;
+    }
+  }
+  return CT__FAILURE;
 }
 
 ctEntry_t* ctMapFind(ctMap_t* map, int key) {

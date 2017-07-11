@@ -6,7 +6,6 @@ SRC_DIR = src
 INC_DIR = include
 BIN_DIR = bin
 STAND_DIR = standalone
-TEST_DIR = test
 CMDS_DIR = $(SRC_DIR)/commands
 EVENTS_DIR = $(SRC_DIR)/events
 
@@ -22,19 +21,13 @@ UNIT_OUT = -o $(BIN_DIR)/unit
 DC = $(STAND_DIR)/CT_dc_main.c
 DC_OUT = -o $(BIN_DIR)/dc
 
-TEST = $(TEST_DIR)/test.c
-TEST_OUT = -o $(BIN_DIR)/test
-
-all: unit dc test
+all: unit dc
 
 unit: $(OBJS) $(INC)/*
 	$(CC) $(OPTS) $(OBJS) $(UNIT) $(FLAGS) $(LIBS) $(UNIT_OUT)
 
 dc: $(OBJS) $(INC)/*
 	$(CC) $(OPTS) $(OBJS) $(DC) $(FLAGS) $(LIBS) $(DC_OUT)
-
-test: $(OBJS) $(INC)/*
-	$(CC) $(OPTS) $(OBJS) $(TEST) $(FLAGS) $(LIBS) $(TEST_OUT)
 
 clean:
 	rm -f bin/*

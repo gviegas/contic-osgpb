@@ -8,7 +8,7 @@
 #include "CT_net.h"
 #include "CT_apdu.h"
 
-#define CT__MAP_HINTLEN 1000
+#define CT__MAP_HINTLEN 4096
 
 // Entry type
 //

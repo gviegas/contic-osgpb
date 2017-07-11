@@ -8,7 +8,7 @@
 
 int ctNpipeIn(char* path) {
   if(!(freopen(path, "r", stdin))) {
-    fprintf(stderr, "ERROR: failed to open pipe for reading on %s\n", path);
+    fprintf(stderr, "ERROR: Failed to open pipe for reading on %s\n", path);
     return CT__FAILURE;
   }
   return CT__SUCCESS;
@@ -16,7 +16,7 @@ int ctNpipeIn(char* path) {
 
 int ctNpipeOut(char* path) {
   if(!(freopen(path, "w", stdout))) {
-    fprintf(stderr, "ERROR: failed to open pipe for writing on %s\n", path);
+    fprintf(stderr, "ERROR: Failed to open pipe for writing on %s\n", path);
     return CT__FAILURE;
   }
   return CT__SUCCESS;

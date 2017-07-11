@@ -17,7 +17,6 @@
 #define CT__UNIT_ARGV_OPT "--option"
 #define CT__UNIT_ARGV_CLEAR "--clear"
 
-// TODO: "clear" logic needs a revision
 int main(int argc, char** argv) {
   ctTarget_t target;
   ctAddr_t addr;

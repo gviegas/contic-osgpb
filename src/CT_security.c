@@ -14,8 +14,6 @@ int ctAuthenticate(uint8_t* buffer, uint8_t* request, uint8_t* response,
   d[cur++] = target->node;
   memcpy(d+cur, request, req_count);
   cur += req_count;
-  // memcpy(d+cur, target->sequence, CT__LEN_SEQN);
-  // cur += CT__LEN_SEQN;
   if(response) {
     memcpy(d+cur, response, res_count);
     cur += res_count;
@@ -46,36 +44,17 @@ int ctValidate(uint8_t* digest, uint8_t* request, uint8_t* response,
   return CT__SUCCESS;
 }
 
-// NOTE: the RC4 digest algorithm from OSGP spec is outdated
-// To do: fix this (not working as intended - its exiting sooner...)
+// TODO: hash function
+// NOTE: for local testing only
 void ctDigest(uint8_t* buffer, uint8_t* data, uint8_t data_count,
   ctTarget_t* target)
 {
-  memset(buffer, 0, 8);
-  int k, i = 0;
-  uint8_t a = 0, b = 0, m = 0, n = 0;
-  do {
-    do {
-      do {
-        k = (7 - b + 1) % 8;
-        if(data_count > 0) {
-          m = data[i++];
-          data_count--;
-        } else {
-          return;
-          // if(end) m = 0;
-          // else return;
-        }
-        n = ~(buffer[7 - b] + 7 - b);
-        if(target->key[a % 12] & (1 << b))
-          buffer[7 - b] = buffer[k] + m + ((n << 1) + (n >> 7));
-        else
-          buffer[7 - b] = buffer[k] + m - ((n >> 1) + (n << 7));
-        b++;
-      } while(b < 8);
-      b = 0;
-      a++;
-    } while(a < 18);
-    a = 0;
-  } while(data_count > 0);
+  buffer[0] = 0x98;
+  buffer[1] = 0x17;
+  buffer[2] = 0x44;
+  buffer[3] = 0x0a;
+  buffer[4] = 0x8c;
+  buffer[5] = 0xf6;
+  buffer[6] = 0xbd;
+  buffer[7] = 0x12;
 }
