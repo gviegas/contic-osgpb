@@ -58,7 +58,7 @@ static void _ctPipe(char* buf, ctList_t* list) {
 }
 
 static void _ctTty(char* buf, ctList_t* list) {
-  printf("[DC Interactive shell started]\n");
+  printf("[DC interactive shell started]\n");
   while(1) {
     printf("%sDC: ", _CT__TK);
     _ctInput(buf);

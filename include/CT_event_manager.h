@@ -12,6 +12,11 @@
 
 // Start the event manager
 //
+// NOTE: currently there is no way to remove events from the manager's event
+// queue. This is a problem for INTERVAL events - they will stay forever in the
+// system (unless you reboot it), and rewriting event tables will fire new
+// instances of the same events (which probably isn't desired).
+//
 int ctManagerStart();
 
 // Create a new event
