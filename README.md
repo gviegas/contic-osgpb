@@ -8,7 +8,7 @@ The Contic OSGPb is a small Smart Grid application to deploy and manage a networ
 A Data Concentrator works by issuing write and read operations to one or more Units on the network. Each Unit has a local database to store the data it generates (e.g. data from energy consumption). Commands from a Data Concentrator are used to write to/read from this database, possibly triggering events on the given unit.
 
 ## Build and Run
-A C99 compiler and a POSIX.1-2008 compliant system are needed to build and run this project. The [Makefile](Makefile) is used to build the two applications (Data Concentrator and Unit). Once the applications are built, they are ready to be run/deployed.
+A C99 compiler and a POSIX.1-2008 compliant system are needed to build and run this project. An executable is created for each operation mode (Data Concentrator or Unit), and the [Makefile](Makefile) can be used to build both applications. Once the applications are built, they are ready to be run/deployed.
 
 #### To build and run the Data Concentrator:
 ```sh
